@@ -85,6 +85,11 @@
           <p class="desc">A learned stopping rule for self-consistency sampling: after each answer, a value function decides whether one more sample is worth its cost. On all 1,319 GSM8K test problems it failed a success rule fixed before the run; simpler rules did better.</p>
         </li>
         <li class="entry">
+          <h3 class="title"><a href="https://github.com/mottopanikeiku/verge-lab" data-print="github.com/mottopanikeiku/verge-lab">Verge Lab</a></h3>
+          <p class="year"><time datetime="2026">2026</time></p>
+          <p class="desc">A Pareto rule for choosing preference pairs from multi-aspect judge scores, abstaining when the aspects trade off. On 1,200 UltraFeedback pairs it defended 820 and abstained on 380; where the dataset’s overall scores differed, it disagreed with them 18.7% of the time.</p>
+        </li>
+        <li class="entry">
           <h3 class="title"><a href="https://github.com/mottopanikeiku/faultline" data-print="github.com/mottopanikeiku/faultline">Faultline</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">A factory simulator where two hidden faults look the same until a cheap test tells them apart, used to train recurrent PPO agents to test before they repair. Training only on ambiguous cases scored highest, but across eight seeds its edge over simpler curricula wasn’t reliable.</p>
@@ -103,7 +108,7 @@
         <li class="entry">
           <h3 class="title"><a href="https://github.com/mottopanikeiku/heliostune" data-print="github.com/mottopanikeiku/heliostune">HeliosTune</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">A Thompson-sampling autotuner for Triton kernels, built to test whether timing data from cheaper GPUs can warm-start tuning on an H100. It can’t, at least on this data: the selected transfer weight was zero, and a cold-start tuner did slightly better.</p>
+          <p class="desc">A Thompson-sampling autotuner for Triton kernels, built to test whether timing data from cheaper GPUs can warm-start tuning on an H100. It can’t, at least on this data: the selected transfer weight was zero, a cold-start tuner did slightly better, and torch.matmul beat both.</p>
         </li>
         <li class="entry">
           <h3 class="title">Aperture</h3>
