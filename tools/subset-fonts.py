@@ -2,7 +2,7 @@
 
     uv run --with fonttools --with brotli tools/subset-fonts.py
 
-Downloads the variable TTFs from google/fonts, pins the optical size (17 for
+Downloads the roman variable TTF from google/fonts, pins the optical size (17 for
 text, 28 for the intro), keeps only the weights the site uses, subsets to
 Latin-1 plus Turkish, and writes WOFF2. Source Serif carries the Reserved
 Font Name "Source", so the modified files are renamed; the copyright and
@@ -20,7 +20,6 @@ from fontTools.varLib import instancer
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 BASE = "https://github.com/google/fonts/raw/main/ofl/sourceserif4/"
 ROMAN = "SourceSerif4%5Bopsz,wght%5D.ttf"
-ITALIC = "SourceSerif4-Italic%5Bopsz,wght%5D.ttf"
 
 TURKISH = [0xC7, 0xE7, 0x011E, 0x011F, 0x0130, 0x0131, 0xD6, 0xF6, 0x015E, 0x015F, 0xDC, 0xFC]
 PUNCTUATION = [0xA0, 0x2009, 0x200A, 0x202F, 0x2013, 0x2014, 0x2018, 0x2019, 0x201C, 0x201D, 0x2026]
@@ -47,8 +46,6 @@ CUTS = [
     # output file, source, axis limits, glyph set, OpenType features, family, style
     ("text-roman", ROMAN, {"wght": (400, 600), "opsz": 17}, TEXT_UNICODES,
      BASE_FEATURES + FIGURES, "AC Text", "Regular"),
-    ("text-italic", ITALIC, {"wght": 400, "opsz": 17}, TEXT_UNICODES,
-     BASE_FEATURES + FIGURES, "AC Text", "Italic"),
     ("display-roman", ROMAN, {"wght": 400, "opsz": 28}, DISPLAY_UNICODES,
      BASE_FEATURES, "AC Display", "Regular"),
 ]
@@ -93,13 +90,14 @@ def build(out, source, limits, unicodes, features, family, style, sources) -> No
     rename(font, family, style)
     path = ROOT / "fonts" / f"{out}.woff2"
     font.flavor = "woff2"
+    font.recalcTimestamp = False  # keep head.modified from the source: byte-identical rebuilds
     font.save(path)
     print(f"{path.relative_to(ROOT)}: {path.stat().st_size / 1024:.1f} KB")
 
 
 def main() -> None:
     (ROOT / "fonts").mkdir(exist_ok=True)
-    sources = {name: urllib.request.urlopen(BASE + name).read() for name in (ROMAN, ITALIC)}
+    sources = {ROMAN: urllib.request.urlopen(BASE + ROMAN).read()}
     for cut in CUTS:
         build(*cut, sources)
     license_text = urllib.request.urlopen(BASE + "OFL.txt").read()

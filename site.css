@@ -10,14 +10,6 @@
 }
 
 @font-face {
-  font-family: "AC Text";
-  src: url("/fonts/text-italic.woff2") format("woff2");
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
   font-family: "AC Display";
   src: url("/fonts/display-roman.woff2") format("woff2");
   font-weight: 400;
@@ -29,8 +21,8 @@
   --paper: #f6f4ef;
   --ink: #1c1b18;
   --muted: #69655d;
-  --rule: #dcd8ce;
   --accent: #9a3b22;
+  --signal: #c8331e; /* the tenth dot in the Tenth Man Labs mark */
   --serif: "AC Text", Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
   color-scheme: light dark;
 }
@@ -40,8 +32,8 @@
     --paper: #151412;
     --ink: #e8e5de;
     --muted: #9d988e;
-    --rule: #2f2d29;
     --accent: #e08f72;
+    --signal: #e2553d;
   }
 
   body {
@@ -77,20 +69,15 @@ h1,
 h2,
 h3,
 p,
-ul,
-ol {
+ul {
   margin: 0;
   padding: 0;
-}
-
-ul,
-ol {
-  list-style: none;
-}
-
-h1,
-h3 {
   font-size: inherit;
+  font-weight: inherit;
+}
+
+ul {
+  list-style: none;
 }
 
 p {
@@ -102,7 +89,7 @@ a {
   text-decoration-line: underline;
   text-decoration-thickness: 0.06em;
   text-underline-offset: 0.2em;
-  text-decoration-color: color-mix(in srgb, currentColor 32%, transparent);
+  text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
   transition: text-decoration-color 120ms ease-out;
 }
 
@@ -120,157 +107,15 @@ a:focus-visible {
   background: color-mix(in srgb, var(--accent) 24%, transparent);
 }
 
-code {
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
-  font-size: 0.82em;
-}
-
 .nb {
   white-space: nowrap;
 }
 
-/* Layout: one strong left edge (main), dates hang to its left,
-   figures sit in a right-hand column like amounts in a ledger. */
-
-.page {
-  display: grid;
-  column-gap: 2rem;
-  grid-template-columns:
-    [full-start] minmax(0, 1fr)
-    [date-start] 5.75rem
-    [date-end main-start] minmax(0, 34rem)
-    [main-end fig-start] 8.5rem
-    [fig-end] minmax(0, 1fr) [full-end];
-  padding-block: clamp(3rem, 9vh, 6.5rem) clamp(3rem, 8vh, 5rem);
+.print-only {
+  display: none;
 }
 
-.content,
-.ledger,
-.ledger > ul,
-.ledger > ol,
-.entry {
-  grid-column: date-start / fig-end;
-  display: grid;
-  grid-template-columns: subgrid;
-}
-
-.masthead,
-.colophon {
-  grid-column: main-start / fig-end;
-}
-
-/* Masthead */
-
-.masthead h1,
-.masthead .name {
-  font-size: 1.0625rem;
-  font-weight: 600;
-  letter-spacing: 0.005em;
-  color: var(--ink);
-}
-
-.masthead .name a {
-  text-decoration: none;
-}
-
-.masthead p {
-  color: var(--muted);
-}
-
-.intro h1 {
-  font-weight: 400;
-}
-
-/* Intro */
-
-.intro {
-  font-family: "AC Display", var(--serif);
-  grid-column: main-start / fig-end;
-  margin-top: clamp(2.5rem, 7vh, 4.5rem);
-  font-size: clamp(1.375rem, 1.05rem + 1.05vw, 1.6875rem);
-  line-height: 1.36;
-  letter-spacing: -0.006em;
-  max-width: 31em;
-}
-
-.intro > * + * {
-  margin-top: 0.7em;
-  color: var(--muted);
-}
-
-/* Ledger sections */
-
-.ledger {
-  margin-top: clamp(3.5rem, 8vh, 5rem);
-  row-gap: 0;
-}
-
-.ledger > h2 {
-  grid-column: date-start / fig-end;
-  font-size: 0.75rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--muted);
-  padding-top: 0.8rem;
-  margin-bottom: 1.6rem;
-  border-top: 1px solid var(--rule);
-}
-
-.ledger > ul,
-.ledger > ol {
-  row-gap: 1.75rem;
-}
-
-.entry {
-  align-items: baseline;
-}
-
-.entry.line {
-  row-gap: 0;
-}
-
-/* Single-line rows (pull requests, contact). Every cell shares one fixed
-   line box so a two-line label can run into the empty label cell below. */
-.ledger > .lines {
-  row-gap: 0;
-  --row: 1.8rem;
-}
-
-.lines .entry > * {
-  line-height: var(--row);
-}
-
-.lines .date.span {
-  height: var(--row);
-}
-
-.date {
-  grid-column: date;
-  color: var(--muted);
-  font-variant-numeric: lining-nums tabular-nums;
-  font-size: 0.9375rem;
-}
-
-.text {
-  grid-column: main;
-}
-
-.text h3 {
-  font-weight: 600;
-}
-
-.meta {
-  font-style: italic;
-  color: var(--muted);
-}
-
-.meta + p {
-  margin-top: 0.35rem;
-}
-
-/* A repeated row label: read aloud, not shown. */
-.repeat {
+.vh {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -279,65 +124,148 @@ code {
   white-space: nowrap;
 }
 
-.fig {
-  grid-column: fig;
+/* Layout: every line of text starts at one left edge. Section names hang
+   in the left margin; years sit in a narrow column on the right. */
+
+.page {
+  display: grid;
+  column-gap: 2rem;
+  grid-template-columns:
+    [full-start] minmax(0, 1fr)
+    [label-start] 6.5rem
+    [label-end main-start] minmax(0, 33rem)
+    [main-end year-start] 4.5rem
+    [year-end] minmax(0, 1fr) [full-end];
+  padding-block: clamp(3rem, 10vh, 7rem) clamp(3rem, 8vh, 5rem);
+}
+
+.masthead,
+.intro,
+.colophon {
+  grid-column: main-start / year-end;
+}
+
+.content,
+.block {
+  grid-column: label-start / year-end;
+  display: grid;
+  grid-template-columns: subgrid;
+}
+
+.block > ul,
+.entry {
+  grid-column: main-start / year-end;
+  display: grid;
+  grid-template-columns: subgrid;
+}
+
+/* Masthead and intro */
+
+.masthead .name {
+  font-weight: 500;
+}
+
+.masthead .name a {
+  text-decoration: none;
+}
+
+.masthead p:not(.name) {
+  color: var(--muted);
+}
+
+.intro {
+  margin-top: clamp(2.5rem, 7vh, 4.5rem);
+  max-width: 31em;
+  font-family: "AC Display", var(--serif);
+  font-size: clamp(1.375rem, 1.05rem + 1.05vw, 1.6875rem);
+  line-height: 1.36;
+  letter-spacing: -0.006em;
+}
+
+.intro > * + * {
+  margin-top: 0.7em;
+  color: var(--muted);
+}
+
+/* Sections */
+
+.block {
+  margin-top: clamp(3rem, 7vh, 4.25rem);
+  align-items: baseline;
+}
+
+.block > h2 {
+  grid-column: label;
+  grid-row: 1;
+  font-size: 0.9375rem;
+  color: var(--muted);
+}
+
+.block > ul {
+  grid-row: 1;
+  row-gap: 1.4rem;
+}
+
+.block > ul.rows {
+  row-gap: 0.3rem;
+}
+
+.entry {
+  align-items: baseline;
+}
+
+.title {
+  grid-column: main;
+  font-weight: 500;
+}
+
+.rows .title {
+  font-weight: 400;
+}
+
+.title .org {
+  white-space: nowrap;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.year {
+  grid-column: year;
   text-align: right;
+  font-size: 0.9375rem;
+  color: var(--muted);
   font-variant-numeric: lining-nums tabular-nums;
 }
 
-.fig .num {
-  display: block;
-  font-size: 1.3125rem;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-}
-
-.fig .cap {
-  display: block;
+.desc {
+  grid-column: main;
   margin-top: 0.2rem;
-  font-size: 0.8125rem;
-  line-height: 1.35;
-  color: var(--muted);
-  font-variant-numeric: lining-nums proportional-nums;
-}
-
-.line .fig .num {
-  font-size: 0.9375rem;
-  line-height: inherit;
   color: var(--muted);
 }
 
-.ref {
-  position: relative;
-  top: -0.45em;
-  margin-left: 0.15em;
-  font-size: 0.75em;
-  text-decoration: none;
-  color: var(--accent);
+/* Tenth Man Labs: the mark in the margin, the description in ink. */
+
+.lead .mark {
+  grid-column: label;
+  grid-row: 1;
+  align-self: start;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin-top: 0.3rem;
+  fill: currentColor;
 }
 
-/* Notes */
-
-.notes {
-  font-size: 0.875rem;
-  line-height: 1.5;
+.lead .mark .tenth {
+  fill: var(--signal);
 }
 
-.notes .date a {
-  text-decoration: none;
-  color: var(--accent);
+.lead .desc {
+  color: var(--ink);
 }
 
-.notes > ol {
-  row-gap: 0.9rem;
+.lead .desc + .desc {
+  margin-top: 0.6rem;
 }
-
-.notes .entry:target .text {
-  background: color-mix(in srgb, var(--accent) 10%, transparent);
-  box-shadow: 0 0 0 0.35rem color-mix(in srgb, var(--accent) 10%, transparent);
-}
-
-/* Colophon */
 
 .colophon {
   margin-top: clamp(3.5rem, 8vh, 5rem);
@@ -345,45 +273,22 @@ code {
   color: var(--muted);
 }
 
-/* Medium screens: figures drop under their entry. */
+/* Medium screens: same structure, narrower margins. */
 
 @media screen and (max-width: 62rem) {
   .page {
+    column-gap: 1.5rem;
     grid-template-columns:
       [full-start] minmax(1.25rem, 1fr)
-      [date-start] 5.5rem
-      [date-end main-start fig-start] minmax(0, 36rem)
-      [main-end fig-end] minmax(1.25rem, 1fr) [full-end];
-    column-gap: 1.75rem;
-  }
-
-  .fig {
-    text-align: left;
-    margin-top: 0.6rem;
-  }
-
-  .fig .num,
-  .fig .cap {
-    display: inline;
-  }
-
-  .fig .num {
-    font-size: 1rem;
-    line-height: inherit;
-    letter-spacing: 0;
-  }
-
-  .fig .cap {
-    margin-left: 0.35em;
-    font-size: 0.875rem;
-  }
-
-  .line .fig {
-    display: none;
+      [label-start] 5.25rem
+      [label-end main-start] minmax(0, 33rem)
+      [main-end year-start] 3.75rem
+      [year-end] minmax(1.25rem, 1fr) [full-end];
   }
 }
 
-/* Small screens: a single column; dates sit above titles. */
+/* Small screens: one column. Section names sit above their entries and
+   years share the title line. */
 
 @media screen and (max-width: 40rem) {
   body {
@@ -391,62 +296,42 @@ code {
   }
 
   .page {
+    column-gap: 0;
     grid-template-columns:
       [full-start] 1.25rem
-      [date-start main-start fig-start] minmax(0, 1fr)
-      [date-end main-end fig-end] 1.25rem [full-end];
-    column-gap: 0;
+      [label-start main-start] minmax(0, 1fr)
+      [main-end year-start] auto
+      [year-end label-end] 1.25rem [full-end];
   }
 
-  .date {
-    font-size: 0.875rem;
-    margin-bottom: 0.1rem;
+  .block > h2,
+  .lead .mark {
+    margin-bottom: 0.9rem;
   }
 
-  .ledger > .lines {
-    row-gap: 0.55rem;
+  .block > ul {
+    grid-row: auto;
   }
 
-  .lines .date.span {
-    height: auto;
+  .year {
+    padding-left: 1rem;
   }
 
-  .lines .entry > * {
-    line-height: inherit;
-  }
-
-  .contact .entry.line {
-    grid-template-columns: 5rem minmax(0, 1fr);
-    column-gap: 1rem;
-  }
-
-  .contact .date,
-  .contact .text {
-    grid-column: auto;
-  }
-
-  .notes .entry {
-    grid-template-columns: 1.5rem minmax(0, 1fr);
-  }
-
-  .notes .date,
-  .notes .text {
-    grid-column: auto;
+  .desc {
+    grid-column: main-start / year-end;
   }
 }
 
-/* Print: a two-page CV. Chromium cannot fragment the nested subgrids
-   across pages (pushed rows overlap the next section), so sections and
-   lists become blocks and each entry is its own grid with the same
-   named columns. Sizes scale through the root font size. */
+/* Print: a CV. Chromium cannot fragment nested subgrids across pages
+   (pushed rows overlap the next section), so print uses blocks, floats
+   for the margin labels, and a small grid per entry. */
 
 @media print {
   :root {
     --paper: #fff;
     --ink: #000;
     --muted: #555;
-    --rule: #c4c4c4;
-    --accent: #000;
+    --signal: #c8331e;
   }
 
   @page {
@@ -463,54 +348,51 @@ code {
 
   .page,
   .content,
-  .ledger,
-  .ledger > ul,
-  .ledger > ol {
+  .block,
+  .block > ul {
     display: block;
     padding: 0;
   }
 
   .masthead,
   .intro,
-  .colophon {
-    margin-left: 7.75rem;
+  .colophon,
+  .block > ul {
+    margin-left: 8.5rem;
   }
 
   .intro {
-    margin-top: 1.25rem;
+    margin-top: 1.1rem;
     font-size: 1.3rem;
-    max-width: 36em;
+    max-width: 34em;
   }
 
-  .ledger {
-    margin-top: 1.6rem;
+  .block {
+    margin-top: 1.45rem;
   }
 
-  .ledger > h2 {
-    margin-bottom: 0.8rem;
-    break-after: avoid;
+  .block > h2,
+  .lead .mark {
+    float: left;
+    width: 6.5rem;
+  }
+
+  .lead .mark {
+    width: 1.05rem;
   }
 
   .entry {
-    grid-template-columns:
-      [date-start] 5.75rem
-      [date-end main-start] minmax(0, 1fr)
-      [main-end fig-start] 8.5rem
-      [fig-end];
+    grid-template-columns: [main-start] minmax(0, 1fr) [main-end year-start] 4.5rem [year-end];
     column-gap: 2rem;
     break-inside: avoid;
   }
 
   .entry + .entry {
-    margin-top: 0.9rem;
+    margin-top: 0.75rem;
   }
 
-  .line + .line {
-    margin-top: 0;
-  }
-
-  .fig .cap {
-    font-size: 0.875rem;
+  .rows > .entry + .entry {
+    margin-top: 0.15rem;
   }
 
   a {
@@ -520,11 +402,16 @@ code {
   [data-print]::after {
     content: "\2002" attr(data-print);
     font-weight: 400;
-    font-size: 0.875em;
+    font-size: 0.9em;
     color: var(--muted);
   }
 
-  .colophon {
+  .colophon,
+  .contact {
     display: none;
+  }
+
+  .masthead .print-only {
+    display: block;
   }
 }
