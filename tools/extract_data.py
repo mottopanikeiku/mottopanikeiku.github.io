@@ -25,6 +25,8 @@ SOURCES = {
                     "benchmarks/gsm8k-sampling-bootstrap.json"),
     "control-clock": ("control-clock", "ee9c303de8e7698ca25569fc585e173e3e172bb8",
                       "results/summary.json"),
+    "cpu-decode": ("cpu-decode", "d98ba9c9ac792f01a0969c861917e730533c88d0",
+                   "results/summary.json"),
     "eval-power": ("eval-power", "ef7c451d678e7eece94344b0c87567a60e28e330",
                    "results/calibration.csv"),
     "faultline": ("faultline", "d8dcf021e434d64adf06659ff0e1e0d61b70acf0",
@@ -220,11 +222,31 @@ def control_clock(raw: dict) -> dict:
     return {"cohorts": cohorts}
 
 
+def cpu_decode(raw: dict) -> dict:
+    return {
+        "points": [
+            {
+                "threads": r["threads"],
+                "context": r["context"],
+                "engine": r["engine_tps"]["median"],
+                "engine_min": r["engine_tps"]["min"],
+                "engine_max": r["engine_tps"]["max"],
+                "llama": r["llama_tps"]["median"],
+                "eager": r["eager_tps"]["median"],
+                "ceiling": r["bandwidth_ceiling_tps"],
+                "percent_of_ceiling": r["percent_of_ceiling"],
+            }
+            for r in raw["results"]
+        ],
+    }
+
+
 TRANSFORMS = {
     "attention-controls": attention_controls,
     "attention-numerics": attention_numerics,
     "branchpilot": branchpilot,
     "control-clock": control_clock,
+    "cpu-decode": cpu_decode,
     "eval-power": eval_power,
     "faultline": faultline,
     "heliostune": heliostune,

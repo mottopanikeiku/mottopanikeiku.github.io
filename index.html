@@ -90,14 +90,14 @@
           <p class="desc">Seconds from a cold Python process to a policy that passes CartPole or Acrobot on a laptop CPU, with every evaluation on the clock. Search over linear policies passed CartPole in a median 1.1 seconds, nearly four times faster than the fastest PPO; on Acrobot, Stable-Baselines3’s tuned PPO was fastest at 10 seconds.</p>
         </li>
         <li class="entry">
-          <h3 class="title"><a href="/projects/branchpilot/" data-print="github.com/mottopanikeiku/branchpilot">BranchPilot</a></h3>
-          <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">A learned stopping rule for self-consistency sampling: after each answer, a value function decides whether one more sample is worth its cost. On all 1,319 GSM8K test problems it failed a success rule fixed before the run; simpler rules did better.</p>
-        </li>
-        <li class="entry">
           <h3 class="title"><a href="/projects/verge-lab/" data-print="github.com/mottopanikeiku/verge-lab">Verge Lab</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">A rule for choosing preference pairs from multi-aspect judge scores that abstains when the aspects trade off. On 1,200 UltraFeedback pairs it defended 820; for 18.7% of the defended pairs that the dataset’s overall score ranks, that score ranks them the other way.</p>
+        </li>
+        <li class="entry brief">
+          <h3 class="title"><a href="/projects/branchpilot/" data-print="github.com/mottopanikeiku/branchpilot">BranchPilot</a></h3>
+          <p class="year"><time datetime="2026">2026</time></p>
+          <p class="desc">A learned stopping rule for self-consistency sampling: after each answer, a value function decides whether one more sample is worth its cost. On all 1,319 GSM8K test problems it failed a success rule fixed before the run; simpler rules did better.</p>
         </li>
         <li class="entry brief">
           <h3 class="title"><a href="/projects/faultline/" data-print="github.com/mottopanikeiku/faultline">Faultline</a></h3>
@@ -113,12 +113,12 @@
     </section>
 
     <section class="block" aria-labelledby="systems">
-      <h2 id="systems">GPU systems</h2>
+      <h2 id="systems">Systems</h2>
       <ul>
         <li class="entry">
-          <h3 class="title"><a href="/projects/heliostune/" data-print="github.com/mottopanikeiku/heliostune">HeliosTune</a></h3>
+          <h3 class="title"><a href="/projects/cpu-decode/" data-print="github.com/mottopanikeiku/cpu-decode">cpu-decode</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">A Thompson-sampling autotuner for Triton kernels, built to test whether timing data from cheaper GPUs can warm-start tuning on an H100. It can’t, at least on this data: the selected transfer weight was zero, a cold-start tuner did slightly better, and torch.matmul beat both.</p>
+          <p class="desc">A from-scratch C++ int8 decoder for Qwen2.5-0.5B on a laptop CPU. With 2 threads and short context it reaches 69 tokens per second, 83% of the memory-read ceiling and faster than llama.cpp; at 4,096 tokens of context llama.cpp wins, 44 to 32, because my attention is still scalar.</p>
         </li>
         <li class="entry">
           <h3 class="title"><a href="/projects/attention-numerics/" data-print="github.com/mottopanikeiku/attention-numerics">attention-numerics</a></h3>
@@ -129,6 +129,11 @@
           <h3 class="title">Aperture</h3>
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">Time to first token for a 27B model on one <span class="nb">RTX 6000 Ada</span>: under a second at p99 on cold 3,072-token prompts (803&nbsp;ms), and 1.09&nbsp;s at 4,096 tokens, which is where the claim stops.</p>
+        </li>
+        <li class="entry brief">
+          <h3 class="title"><a href="/projects/heliostune/" data-print="github.com/mottopanikeiku/heliostune">HeliosTune</a></h3>
+          <p class="year"><time datetime="2026">2026</time></p>
+          <p class="desc">A Thompson-sampling autotuner for Triton kernels, built to test whether timing data from cheaper GPUs can warm-start tuning on an H100. It can’t, at least on this data: the selected transfer weight was zero, a cold-start tuner did slightly better, and torch.matmul beat both.</p>
         </li>
         <li class="entry">
           <h3 class="title">Open source</h3>

@@ -404,10 +404,56 @@ def control_clock() -> str:
     return s.render()
 
 
+def cpu_decode() -> str:
+    data = load("cpu-decode")
+    contexts = sorted({p["context"] for p in data["points"]})
+    threads = sorted({p["threads"] for p in data["points"]})
+    at = {(p["context"], p["threads"]): p for p in data["points"]}
+    W, L, T, gap, ph = 560, 34, 76, 18, 190
+    pw = (W - L - gap * (len(contexts) - 1) - 4) / len(contexts)
+    H = T + ph + 50
+    y = scale(0, 90, T + ph, T)
+    short, long_ = at[(contexts[0], 2)], at[(contexts[-1], 6)]
+    s = SVG("cpu-decode", W, H, "Decoding speed against thread count at three context lengths",
+            f"With {contexts[0]} tokens of context and 2 threads, the engine decodes "
+            f"{short['engine']:.1f} tokens per second, {short['percent_of_ceiling']:.0f}% of the read "
+            f"ceiling, against {short['llama']:.1f} for llama.cpp. With {contexts[-1]:,} tokens and "
+            f"6 threads, it decodes {long_['engine']:.1f} against {long_['llama']:.1f}. "
+            "Every method slows sharply at 12 threads.")
+    legend = (("this engine", "line em", "em"), ("llama.cpp Q8_0", "line strong", "strong"),
+              ("PyTorch BF16", "line", ""), ("read ceiling", "line dash", ""))
+    lx = L
+    for label, line_cls, text_cls in legend:
+        s.line(lx, 14, lx + 20, 14, line_cls)
+        s.text(lx + 27, 18, label, text_cls)
+        lx += 27 + len(label) * 6.6 + 22
+    s.text(0, 42, "tokens per second")
+    for v in (0, 20, 40, 60, 80):
+        s.line(L, y(v), W - 4, y(v), "grid")
+        s.text(L - 6, y(v) + 4, f"{v}", anchor="end")
+    for i, context in enumerate(contexts):
+        x0 = L + i * (pw + gap)
+        xs = lambda k, x0=x0: x0 + 10 + k * (pw - 20) / (len(threads) - 1)
+        s.text(x0 + pw / 2, T - 10, f"{context:,} tokens of context", "strong", "middle")
+        for key, line_cls, dot_cls in (("ceiling", "line dash", None), ("eager", "line", "dot"),
+                                       ("llama", "line strong", "dot strong"),
+                                       ("engine", "line em", "dot em")):
+            points = [(xs(k), y(at[(context, t)][key])) for k, t in enumerate(threads)]
+            s.path(points, line_cls)
+            if dot_cls:
+                for px, py in points:
+                    s.circle(px, py, 2.4, dot_cls)
+        for k, t in enumerate(threads):
+            s.text(xs(k), T + ph + 18, str(t), anchor="middle")
+    s.text(L + (W - L) / 2, H - 6, "threads", anchor="middle")
+    return s.render()
+
+
 FIGURES = {
     "attention-numerics": attention_numerics,
     "branchpilot": branchpilot,
     "control-clock": control_clock,
+    "cpu-decode": cpu_decode,
     "eval-power": eval_power,
     "faultline": faultline,
     "heliostune": heliostune,

@@ -1,0 +1,175 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/cpu-decode",
+  "commit": "d98ba9c9ac792f01a0969c861917e730533c88d0",
+  "path": "results/summary.json",
+  "url": "https://github.com/mottopanikeiku/cpu-decode/blob/d98ba9c9ac792f01a0969c861917e730533c88d0/results/summary.json"
+ },
+ "points": [
+  {
+   "threads": 1,
+   "context": 128,
+   "engine": 44.817757817492165,
+   "engine_min": 44.776681199964685,
+   "engine_max": 45.45539877634975,
+   "llama": 52.1391,
+   "eager": 11.79812236363029,
+   "ceiling": 78.80140100812135,
+   "percent_of_ceiling": 56.87431599455092
+  },
+  {
+   "threads": 1,
+   "context": 1024,
+   "engine": 31.940018944104335,
+   "engine_min": 31.630299054889626,
+   "engine_max": 31.953935845164327,
+   "llama": 40.2696,
+   "eager": 11.07946400710781,
+   "ceiling": 75.47386889182879,
+   "percent_of_ceiling": 42.319307878441535
+  },
+  {
+   "threads": 1,
+   "context": 4096,
+   "engine": 16.203580554616074,
+   "engine_min": 16.1537954239389,
+   "engine_max": 16.217433488007647,
+   "llama": 24.6699,
+   "eager": 7.134890610670979,
+   "ceiling": 65.92884564652724,
+   "percent_of_ceiling": 24.57737640590646
+  },
+  {
+   "threads": 2,
+   "context": 128,
+   "engine": 69.03274591169418,
+   "engine_min": 68.80971839562538,
+   "engine_max": 69.52407123227766,
+   "llama": 61.7625,
+   "eager": 17.70904515624333,
+   "ceiling": 83.10632109470107,
+   "percent_of_ceiling": 83.06557792761659
+  },
+  {
+   "threads": 2,
+   "context": 1024,
+   "engine": 48.59952554530938,
+   "engine_min": 47.33529142472145,
+   "engine_max": 49.52707355842375,
+   "llama": 51.4715,
+   "eager": 16.4657090340646,
+   "ceiling": 79.59700591791838,
+   "percent_of_ceiling": 61.05697693632589
+  },
+  {
+   "threads": 2,
+   "context": 4096,
+   "engine": 25.57136449050242,
+   "engine_min": 24.957328700308906,
+   "engine_max": 25.725673661494483,
+   "llama": 34.6009,
+   "eager": 9.946021363131395,
+   "ceiling": 69.53053810729324,
+   "percent_of_ceiling": 36.777170415455444
+  },
+  {
+   "threads": 4,
+   "context": 128,
+   "engine": 68.2079759405914,
+   "engine_min": 67.9795630490372,
+   "engine_max": 68.30188173263655,
+   "llama": 68.1245,
+   "eager": 22.486143398987842,
+   "ceiling": 82.06057449630072,
+   "percent_of_ceiling": 83.11905730524249
+  },
+  {
+   "threads": 4,
+   "context": 1024,
+   "engine": 53.63617389839847,
+   "engine_min": 53.31665108637492,
+   "engine_max": 54.34735423968262,
+   "llama": 58.3003,
+   "eager": 20.190321949876708,
+   "ceiling": 78.5954178667921,
+   "percent_of_ceiling": 68.24338537051109
+  },
+  {
+   "threads": 4,
+   "context": 4096,
+   "engine": 30.6743739251963,
+   "engine_min": 30.20951052676167,
+   "engine_max": 32.18972527507956,
+   "llama": 41.9999,
+   "eager": 11.955563138504317,
+   "ceiling": 68.65561881411706,
+   "percent_of_ceiling": 44.67860672590572
+  },
+  {
+   "threads": 6,
+   "context": 128,
+   "engine": 65.55439218360894,
+   "engine_min": 64.16801290489325,
+   "engine_max": 66.18489194658677,
+   "llama": 68.5305,
+   "eager": 19.312202801342682,
+   "ceiling": 84.0263298290778,
+   "percent_of_ceiling": 78.01648878031023
+  },
+  {
+   "threads": 6,
+   "context": 1024,
+   "engine": 51.159190681939194,
+   "engine_min": 48.509360411662556,
+   "engine_max": 52.163827450939685,
+   "llama": 61.0345,
+   "eager": 17.59157492507333,
+   "ceiling": 80.47816561443862,
+   "percent_of_ceiling": 63.569031788121045
+  },
+  {
+   "threads": 6,
+   "context": 4096,
+   "engine": 31.689482430518098,
+   "engine_min": 31.659914203888274,
+   "engine_max": 31.822013432688426,
+   "llama": 44.0632,
+   "eager": 11.814731261472916,
+   "ceiling": 70.3002593694308,
+   "percent_of_ceiling": 45.07733358989266
+  },
+  {
+   "threads": 12,
+   "context": 128,
+   "engine": 25.49147183287796,
+   "engine_min": 24.120071052362604,
+   "engine_max": 28.441945193836375,
+   "llama": 25.6121,
+   "eager": 7.697055339655399,
+   "ceiling": 85.70777343110079,
+   "percent_of_ceiling": 29.742310192400666
+  },
+  {
+   "threads": 12,
+   "context": 1024,
+   "engine": 21.1048404277327,
+   "engine_min": 19.01453326174393,
+   "engine_max": 21.775318114057228,
+   "llama": 20.6145,
+   "eager": 6.018488821734323,
+   "ceiling": 82.08860720995048,
+   "percent_of_ceiling": 25.709828860605214
+  },
+  {
+   "threads": 12,
+   "context": 4096,
+   "engine": 11.935310028845809,
+   "engine_min": 10.87077174750968,
+   "engine_max": 12.360981554611895,
+   "llama": 17.8416,
+   "eager": 4.801023269455252,
+   "ceiling": 71.70703176538974,
+   "percent_of_ceiling": 16.644546197220407
+  }
+ ]
+}

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>cpu-decode · Alp Cetin</title>
+  <meta name="description" content="A from-scratch C++ int8 decoder for Qwen2.5-0.5B on a laptop CPU, measured against its memory-read ceiling and llama.cpp.">
+  <link rel="canonical" href="https://mottopanikeiku.github.io/projects/cpu-decode/">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f4ef">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#151412">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="/fonts/text-roman.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/display-roman.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/site.css?v=0d1abf57f3">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Alp Cetin">
+  <meta property="og:title" content="cpu-decode">
+  <meta property="og:description" content="How close can a hand-written int8 decoder get to a laptop’s memory-read limit?">
+  <meta property="og:url" content="https://mottopanikeiku.github.io/projects/cpu-decode/">
+  <meta property="og:image" content="https://mottopanikeiku.github.io/og/cpu-decode.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <p class="name"><a href="/">Alp Cetin</a></p>
+    <p>San Francisco</p>
+  </header>
+
+  <main class="content">
+
+    <div class="intro">
+      <h1>cpu-decode</h1>
+      <p>How close can a hand-written int8 decoder get to a laptop’s memory-read limit?</p>
+    </div>
+
+    <section class="block" aria-labelledby="question">
+      <h2 id="question">Question</h2>
+      <div class="prose">
+        <p>Generating text one token at a time is usually limited by memory: every new token reads all of the model’s weights. I wanted to know how close a small engine written from scratch could get to that limit on a laptop CPU, and how it would compare with llama.cpp, the standard tool for the job.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="method">
+      <h2 id="method">Method</h2>
+      <div class="prose">
+        <p>The engine is a complete C++ forward pass for Qwen2.5-0.5B-Instruct: memory-mapped weights quantized to int8 with one scale per output row, a 32-bit key-value cache, and matrix-vector kernels in scalar, 256-bit and 512-bit SIMD code. Without quantization it matches Hugging Face Transformers to within 0.00044 on every logit checked, and all 32 greedy tokens agree. The ceiling divides the measured read bandwidth, 39 to 43 GB/s depending on thread count, by the bytes each token has to read: about 500 MB of weights plus the cache. llama.cpp ran at a pinned commit with Q8_0 weights, its closest 8-bit format, at the same thread counts. Each point is the median of three runs of 16 tokens.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="result">
+      <h2 id="result">Result</h2>
+      <div class="prose">
+        <p>At short context the engine gets close to the ceiling. With 2 threads and 128 tokens of context it decodes 69.0 tokens per second, 83% of the ceiling, against 61.8 for llama.cpp. That is its best case: at 4 threads the two are level, and at 1 and 6 threads llama.cpp is faster. Long context is where the engine loses. At 4,096 tokens llama.cpp decodes 44.1 tokens per second and the engine 31.7, because its attention is still scalar code, which takes 17.2 of the 31.6 milliseconds per token.</p>
+        <figure class="figure">
+          <div class="scroll" tabindex="0" role="region" aria-labelledby="cpu-decode-title"><!-- figure:cpu-decode --><svg class="chart" viewBox="0 0 560 316" role="img" aria-labelledby="cpu-decode-title cpu-decode-desc"><title id="cpu-decode-title">Decoding speed against thread count at three context lengths</title><desc id="cpu-decode-desc">With 128 tokens of context and 2 threads, the engine decodes 69.0 tokens per second, 83% of the read ceiling, against 61.8 for llama.cpp. With 4,096 tokens and 6 threads, it decodes 31.7 against 44.1. Every method slows sharply at 12 threads.</desc><line class="line em" x1="34" y1="14" x2="54" y2="14"/><text class="em" x="61" y="18">this engine</text><line class="line strong" x1="155.6" y1="14" x2="175.6" y2="14"/><text class="strong" x="182.6" y="18">llama.cpp Q8_0</text><line class="line" x1="297" y1="14" x2="317" y2="14"/><text x="324" y="18">PyTorch BF16</text><line class="line dash" x1="425.2" y1="14" x2="445.2" y2="14"/><text x="452.2" y="18">read ceiling</text><text x="0" y="42">tokens per second</text><line class="grid" x1="34" y1="266" x2="556" y2="266"/><text text-anchor="end" x="28" y="270">0</text><line class="grid" x1="34" y1="223.8" x2="556" y2="223.8"/><text text-anchor="end" x="28" y="227.8">20</text><line class="grid" x1="34" y1="181.6" x2="556" y2="181.6"/><text text-anchor="end" x="28" y="185.6">40</text><line class="grid" x1="34" y1="139.3" x2="556" y2="139.3"/><text text-anchor="end" x="28" y="143.3">60</text><line class="grid" x1="34" y1="97.1" x2="556" y2="97.1"/><text text-anchor="end" x="28" y="101.1">80</text><text class="strong" text-anchor="middle" x="115" y="66">128 tokens of context</text><path class="line dash" d="M44 99.6 L79.5 90.6 L115 92.8 L150.5 88.6 L186 85.1"/><path class="line" d="M44 241.1 L79.5 228.6 L115 218.5 L150.5 225.2 L186 249.8"/><circle class="dot" cx="44" cy="241.1" r="2.4"/><circle class="dot" cx="79.5" cy="228.6" r="2.4"/><circle class="dot" cx="115" cy="218.5" r="2.4"/><circle class="dot" cx="150.5" cy="225.2" r="2.4"/><circle class="dot" cx="186" cy="249.8" r="2.4"/><path class="line strong" d="M44 155.9 L79.5 135.6 L115 122.2 L150.5 121.3 L186 211.9"/><circle class="dot strong" cx="44" cy="155.9" r="2.4"/><circle class="dot strong" cx="79.5" cy="135.6" r="2.4"/><circle class="dot strong" cx="115" cy="122.2" r="2.4"/><circle class="dot strong" cx="150.5" cy="121.3" r="2.4"/><circle class="dot strong" cx="186" cy="211.9" r="2.4"/><path class="line em" d="M44 171.4 L79.5 120.3 L115 122 L150.5 127.6 L186 212.2"/><circle class="dot em" cx="44" cy="171.4" r="2.4"/><circle class="dot em" cx="79.5" cy="120.3" r="2.4"/><circle class="dot em" cx="115" cy="122" r="2.4"/><circle class="dot em" cx="150.5" cy="127.6" r="2.4"/><circle class="dot em" cx="186" cy="212.2" r="2.4"/><text text-anchor="middle" x="44" y="284">1</text><text text-anchor="middle" x="79.5" y="284">2</text><text text-anchor="middle" x="115" y="284">4</text><text text-anchor="middle" x="150.5" y="284">6</text><text text-anchor="middle" x="186" y="284">12</text><text class="strong" text-anchor="middle" x="295" y="66">1,024 tokens of context</text><path class="line dash" d="M224 106.7 L259.5 98 L295 100.1 L330.5 96.1 L366 92.7"/><path class="line" d="M224 242.6 L259.5 231.2 L295 223.4 L330.5 228.9 L366 253.3"/><circle class="dot" cx="224" cy="242.6" r="2.4"/><circle class="dot" cx="259.5" cy="231.2" r="2.4"/><circle class="dot" cx="295" cy="223.4" r="2.4"/><circle class="dot" cx="330.5" cy="228.9" r="2.4"/><circle class="dot" cx="366" cy="253.3" r="2.4"/><path class="line strong" d="M224 181 L259.5 157.3 L295 142.9 L330.5 137.1 L366 222.5"/><circle class="dot strong" cx="224" cy="181" r="2.4"/><circle class="dot strong" cx="259.5" cy="157.3" r="2.4"/><circle class="dot strong" cx="295" cy="142.9" r="2.4"/><circle class="dot strong" cx="330.5" cy="137.1" r="2.4"/><circle class="dot strong" cx="366" cy="222.5" r="2.4"/><path class="line em" d="M224 198.6 L259.5 163.4 L295 152.8 L330.5 158 L366 221.4"/><circle class="dot em" cx="224" cy="198.6" r="2.4"/><circle class="dot em" cx="259.5" cy="163.4" r="2.4"/><circle class="dot em" cx="295" cy="152.8" r="2.4"/><circle class="dot em" cx="330.5" cy="158" r="2.4"/><circle class="dot em" cx="366" cy="221.4" r="2.4"/><text text-anchor="middle" x="224" y="284">1</text><text text-anchor="middle" x="259.5" y="284">2</text><text text-anchor="middle" x="295" y="284">4</text><text text-anchor="middle" x="330.5" y="284">6</text><text text-anchor="middle" x="366" y="284">12</text><text class="strong" text-anchor="middle" x="475" y="66">4,096 tokens of context</text><path class="line dash" d="M404 126.8 L439.5 119.2 L475 121.1 L510.5 117.6 L546 114.6"/><path class="line" d="M404 250.9 L439.5 245 L475 240.8 L510.5 241.1 L546 255.9"/><circle class="dot" cx="404" cy="250.9" r="2.4"/><circle class="dot" cx="439.5" cy="245" r="2.4"/><circle class="dot" cx="475" cy="240.8" r="2.4"/><circle class="dot" cx="510.5" cy="241.1" r="2.4"/><circle class="dot" cx="546" cy="255.9" r="2.4"/><path class="line strong" d="M404 213.9 L439.5 193 L475 177.3 L510.5 173 L546 228.3"/><circle class="dot strong" cx="404" cy="213.9" r="2.4"/><circle class="dot strong" cx="439.5" cy="193" r="2.4"/><circle class="dot strong" cx="475" cy="177.3" r="2.4"/><circle class="dot strong" cx="510.5" cy="173" r="2.4"/><circle class="dot strong" cx="546" cy="228.3" r="2.4"/><path class="line em" d="M404 231.8 L439.5 212 L475 201.2 L510.5 199.1 L546 240.8"/><circle class="dot em" cx="404" cy="231.8" r="2.4"/><circle class="dot em" cx="439.5" cy="212" r="2.4"/><circle class="dot em" cx="475" cy="201.2" r="2.4"/><circle class="dot em" cx="510.5" cy="199.1" r="2.4"/><circle class="dot em" cx="546" cy="240.8" r="2.4"/><text text-anchor="middle" x="404" y="284">1</text><text text-anchor="middle" x="439.5" y="284">2</text><text text-anchor="middle" x="475" y="284">4</text><text text-anchor="middle" x="510.5" y="284">6</text><text text-anchor="middle" x="546" y="284">12</text><text text-anchor="middle" x="297" y="310">threads</text></svg><!-- /figure:cpu-decode --></div>
+          <figcaption>Median tokens per second over three runs, by thread count, at three context lengths. The read ceiling is measured read bandwidth divided by the bytes each token reads. Data: <a href="https://github.com/mottopanikeiku/cpu-decode/blob/d98ba9c9ac792f01a0969c861917e730533c88d0/results/summary.json">summary.json</a>.</figcaption>
+        </figure>
+        <p>Speed isn’t the whole comparison. The engine’s quantizer reads 5.5% fewer bytes than Q8_0, 8.03 against 8.50 bits per weight, but it distorts the output more: its mean KL divergence from the full-precision model is 0.029 nats against Q8_0’s 0.0097, although it matched the full-precision top token slightly more often, at 57 of 60 positions against 56. llama.cpp also ran with its default 16-bit cache and fused attention, both of which favor it.</p>
+        <p>Most of the speed came from vectorizing. The 256-bit SIMD kernels were 5.2 times faster than scalar code, and going to 512 bits added 10%. Switching from 16-bit to 8-bit weights changed scalar speed by only 1%. Every method slowed sharply at 12 threads, which is twice the laptop’s six physical cores.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="limits">
+      <h2 id="limits">Limits</h2>
+      <div class="prose">
+        <p>One model on one laptop, with clock speeds and temperatures not fixed. The ceiling is an estimate from a read benchmark, not a measured DRAM utilization. Quality was checked on four short prompts; agreement at long context wasn’t tested.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="links">
+      <h2 id="links">Links</h2>
+      <ul class="rows">
+        <li class="entry"><p class="title"><a href="https://github.com/mottopanikeiku/cpu-decode">Code, data and results</a> <span class="org">GitHub</span></p></li>
+        <li class="entry"><p class="title"><a href="https://github.com/ggml-org/llama.cpp">llama.cpp</a> <span class="org">Gerganov et al.</span></p></li>
+        <li class="entry"><p class="title"><a href="https://github.com/karpathy/llama2.c">llama2.c</a> <span class="org">Karpathy, 2023</span></p></li>
+        <li class="entry"><p class="title"><a href="https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct">Qwen2.5-0.5B-Instruct</a> <span class="org">Qwen team, 2024</span></p></li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="colophon">
+    <p><a href="/">All work</a></p>
+  </footer>
+
+</div>
+</body>
+</html>
