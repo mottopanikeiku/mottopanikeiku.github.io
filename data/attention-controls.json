@@ -1,0 +1,226 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/attention-numerics",
+  "commit": "4d477646e7c3a05b42e17659fd52ced31a6910b8",
+  "path": "results/bias-controls.csv",
+  "url": "https://github.com/mottopanikeiku/attention-numerics/blob/4d477646e7c3a05b42e17659fd52ced31a6910b8/results/bias-controls.csv"
+ },
+ "controls": [
+  {
+   "scenario": "additive_bias",
+   "level": 8,
+   "variant": "e4_rotate",
+   "seeds": 3,
+   "median": 0.06947239900291197,
+   "min": 0.06456862401950053,
+   "max": 0.0759050115771818
+  },
+  {
+   "scenario": "additive_bias",
+   "level": 8,
+   "variant": "e4_smooth_rotate",
+   "seeds": 3,
+   "median": 0.05723938659657375,
+   "min": 0.05450040157730774,
+   "max": 0.06074641316196269
+  },
+  {
+   "scenario": "additive_bias",
+   "level": 8,
+   "variant": "e4_smooth_tile",
+   "seeds": 3,
+   "median": 0.0678177256491511,
+   "min": 0.06418849247464511,
+   "max": 0.0704764697003481
+  },
+  {
+   "scenario": "additive_bias",
+   "level": 8,
+   "variant": "e4_tile",
+   "seeds": 3,
+   "median": 0.16051855114066949,
+   "min": 0.15326047665941306,
+   "max": 0.17873708525869617
+  },
+  {
+   "scenario": "additive_bias",
+   "level": 32,
+   "variant": "e4_rotate",
+   "seeds": 3,
+   "median": 0.36758546732626635,
+   "min": 0.1965182590074908,
+   "max": 0.3934902566840246
+  },
+  {
+   "scenario": "additive_bias",
+   "level": 32,
+   "variant": "e4_smooth_rotate",
+   "seeds": 3,
+   "median": 0.09712445229622059,
+   "min": 0.09524334722489318,
+   "max": 0.1113960517098878
+  },
+  {
+   "scenario": "additive_bias",
+   "level": 32,
+   "variant": "e4_smooth_tile",
+   "seeds": 3,
+   "median": 0.18903201562519054,
+   "min": 0.16370215687136208,
+   "max": 0.23598526265247557
+  },
+  {
+   "scenario": "additive_bias",
+   "level": 32,
+   "variant": "e4_tile",
+   "seeds": 3,
+   "median": 0.9051365117916094,
+   "min": 0.6420615131848826,
+   "max": 0.9178133627710853
+  },
+  {
+   "scenario": "constant_channel",
+   "level": 8,
+   "variant": "e4_rotate",
+   "seeds": 3,
+   "median": 0.0692243253009719,
+   "min": 0.06514513567993081,
+   "max": 0.07111158296831054
+  },
+  {
+   "scenario": "constant_channel",
+   "level": 8,
+   "variant": "e4_smooth_rotate",
+   "seeds": 3,
+   "median": 0.057236679551574195,
+   "min": 0.05694413956686697,
+   "max": 0.058753810385210846
+  },
+  {
+   "scenario": "constant_channel",
+   "level": 8,
+   "variant": "e4_smooth_tile",
+   "seeds": 3,
+   "median": 0.04576277862227915,
+   "min": 0.04467215670069998,
+   "max": 0.04677817336603019
+  },
+  {
+   "scenario": "constant_channel",
+   "level": 8,
+   "variant": "e4_tile",
+   "seeds": 3,
+   "median": 0.046464097341821456,
+   "min": 0.044583326928529614,
+   "max": 0.04704033385801421
+  },
+  {
+   "scenario": "constant_channel",
+   "level": 32,
+   "variant": "e4_rotate",
+   "seeds": 3,
+   "median": 0.4076630850188381,
+   "min": 0.3910674390681004,
+   "max": 0.4885250511588948
+  },
+  {
+   "scenario": "constant_channel",
+   "level": 32,
+   "variant": "e4_smooth_rotate",
+   "seeds": 3,
+   "median": 0.14523078289009317,
+   "min": 0.13988664540973997,
+   "max": 0.14559724246990188
+  },
+  {
+   "scenario": "constant_channel",
+   "level": 32,
+   "variant": "e4_smooth_tile",
+   "seeds": 3,
+   "median": 0.04576334899786969,
+   "min": 0.04467225261091927,
+   "max": 0.046778607316430555
+  },
+  {
+   "scenario": "constant_channel",
+   "level": 32,
+   "variant": "e4_tile",
+   "seeds": 3,
+   "median": 0.04646560275751624,
+   "min": 0.04458459445452105,
+   "max": 0.04704008750055251
+  },
+  {
+   "scenario": "multiplicative_outlier",
+   "level": 8,
+   "variant": "e4_rotate",
+   "seeds": 3,
+   "median": 0.04133456434501803,
+   "min": 0.04007329520391258,
+   "max": 0.0502603105340243
+  },
+  {
+   "scenario": "multiplicative_outlier",
+   "level": 8,
+   "variant": "e4_smooth_rotate",
+   "seeds": 3,
+   "median": 0.0425106584102601,
+   "min": 0.0422209999346171,
+   "max": 0.05412348852158899
+  },
+  {
+   "scenario": "multiplicative_outlier",
+   "level": 8,
+   "variant": "e4_smooth_tile",
+   "seeds": 3,
+   "median": 0.12165251516071617,
+   "min": 0.11685428367054751,
+   "max": 0.1530719724349089
+  },
+  {
+   "scenario": "multiplicative_outlier",
+   "level": 8,
+   "variant": "e4_tile",
+   "seeds": 3,
+   "median": 0.1619002002168927,
+   "min": 0.11155164417984605,
+   "max": 0.16230175468357055
+  },
+  {
+   "scenario": "multiplicative_outlier",
+   "level": 32,
+   "variant": "e4_rotate",
+   "seeds": 3,
+   "median": 0.043129036509751265,
+   "min": 0.042998672463103786,
+   "max": 0.043130501799495756
+  },
+  {
+   "scenario": "multiplicative_outlier",
+   "level": 32,
+   "variant": "e4_smooth_rotate",
+   "seeds": 3,
+   "median": 0.0458850433685184,
+   "min": 0.04229649590817825,
+   "max": 0.046212203100589676
+  },
+  {
+   "scenario": "multiplicative_outlier",
+   "level": 32,
+   "variant": "e4_smooth_tile",
+   "seeds": 3,
+   "median": 0.3000552986775843,
+   "min": 0.09653598817484818,
+   "max": 0.3735561790693183
+  },
+  {
+   "scenario": "multiplicative_outlier",
+   "level": 32,
+   "variant": "e4_tile",
+   "seeds": 3,
+   "median": 0.43005936851744486,
+   "min": 0.1555902169237063,
+   "max": 0.5807096468494672
+  }
+ ]
+}

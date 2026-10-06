@@ -10,12 +10,17 @@ import csv
 import io
 import json
 import pathlib
+import statistics
 import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 OWNER = "mottopanikeiku"
 
 SOURCES = {
+    "attention-controls": ("attention-numerics", "4d477646e7c3a05b42e17659fd52ced31a6910b8",
+                           "results/bias-controls.csv"),
+    "attention-numerics": ("attention-numerics", "4d477646e7c3a05b42e17659fd52ced31a6910b8",
+                           "results/diagnosis.csv"),
     "branchpilot": ("branchpilot", "6f2ff8654aec07e806c3fcfea4f5e2514c36928d",
                     "benchmarks/gsm8k-sampling-bootstrap.json"),
     "eval-power": ("eval-power", "ef7c451d678e7eece94344b0c87567a60e28e330",
@@ -155,7 +160,48 @@ def eval_power(rows: list[dict]) -> dict:
     }
 
 
+def attention_numerics(rows: list[dict]) -> dict:
+    return {
+        "model": rows[0]["model"],
+        "tokens": int(rows[0]["n"]),
+        "heads": [
+            {
+                "layer": int(row["layer"]),
+                "head": int(row["head"]),
+                "variant": row["variant"],
+                "relative_error": float(row["relative_frobenius"]),
+                "k_mean_energy_fraction": float(row["k_mean_energy_fraction"]),
+                "tv_max": float(row["tv_max"]),
+            }
+            for row in rows
+        ],
+    }
+
+
+def attention_controls(rows: list[dict]) -> dict:
+    groups: dict[tuple[str, int, str], list[float]] = {}
+    for row in rows:
+        key = (row["scenario"], int(row["level"]), row["variant"])
+        groups.setdefault(key, []).append(float(row["relative_frobenius"]))
+    return {
+        "controls": [
+            {
+                "scenario": scenario,
+                "level": level,
+                "variant": variant,
+                "seeds": len(values),
+                "median": statistics.median(values),
+                "min": min(values),
+                "max": max(values),
+            }
+            for (scenario, level, variant), values in sorted(groups.items())
+        ],
+    }
+
+
 TRANSFORMS = {
+    "attention-controls": attention_controls,
+    "attention-numerics": attention_numerics,
     "branchpilot": branchpilot,
     "eval-power": eval_power,
     "faultline": faultline,

@@ -1,0 +1,172 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/attention-numerics",
+  "commit": "4d477646e7c3a05b42e17659fd52ced31a6910b8",
+  "path": "results/diagnosis.csv",
+  "url": "https://github.com/mottopanikeiku/attention-numerics/blob/4d477646e7c3a05b42e17659fd52ced31a6910b8/results/diagnosis.csv"
+ },
+ "model": "Qwen/Qwen2.5-0.5B-Instruct",
+ "tokens": 1024,
+ "heads": [
+  {
+   "layer": 0,
+   "head": 0,
+   "variant": "e4_tensor",
+   "relative_error": 0.2358768929318482,
+   "k_mean_energy_fraction": 0.9747101820972083,
+   "tv_max": 0.3636928690917537
+  },
+  {
+   "layer": 0,
+   "head": 0,
+   "variant": "e4_tile",
+   "relative_error": 0.2365207957884664,
+   "k_mean_energy_fraction": 0.9747101820972083,
+   "tv_max": 0.34821138065963314
+  },
+  {
+   "layer": 0,
+   "head": 0,
+   "variant": "e4_rotate",
+   "relative_error": 1.1706633085706304,
+   "k_mean_energy_fraction": 0.9747101820972083,
+   "tv_max": 0.9987456739315288
+  },
+  {
+   "layer": 0,
+   "head": 0,
+   "variant": "e4_smooth_tile",
+   "relative_error": 0.054868851132607546,
+   "k_mean_energy_fraction": 0.9747101820972083,
+   "tv_max": 0.08366809862152524
+  },
+  {
+   "layer": 0,
+   "head": 0,
+   "variant": "e4_smooth_rotate",
+   "relative_error": 0.4488140467437088,
+   "k_mean_energy_fraction": 0.9747101820972083,
+   "tv_max": 0.6761557563330889
+  },
+  {
+   "layer": 0,
+   "head": 7,
+   "variant": "e4_tensor",
+   "relative_error": 0.20189618889501798,
+   "k_mean_energy_fraction": 0.9480673937163933,
+   "tv_max": 0.6686307721874073
+  },
+  {
+   "layer": 0,
+   "head": 7,
+   "variant": "e4_tile",
+   "relative_error": 0.21167526493441405,
+   "k_mean_energy_fraction": 0.9480673937163933,
+   "tv_max": 0.5621153903699976
+  },
+  {
+   "layer": 0,
+   "head": 7,
+   "variant": "e4_rotate",
+   "relative_error": 0.7325442609733608,
+   "k_mean_energy_fraction": 0.9480673937163933,
+   "tv_max": 0.9981591303921176
+  },
+  {
+   "layer": 0,
+   "head": 7,
+   "variant": "e4_smooth_tile",
+   "relative_error": 0.11961185818835117,
+   "k_mean_energy_fraction": 0.9480673937163933,
+   "tv_max": 0.36815365107062353
+  },
+  {
+   "layer": 0,
+   "head": 7,
+   "variant": "e4_smooth_rotate",
+   "relative_error": 0.2732030257959553,
+   "k_mean_energy_fraction": 0.9480673937163933,
+   "tv_max": 0.8141817948160754
+  },
+  {
+   "layer": 12,
+   "head": 0,
+   "variant": "e4_tensor",
+   "relative_error": 0.07221952940628296,
+   "k_mean_energy_fraction": 0.5941697826514258,
+   "tv_max": 0.29977857657227075
+  },
+  {
+   "layer": 12,
+   "head": 0,
+   "variant": "e4_tile",
+   "relative_error": 0.049084643215692364,
+   "k_mean_energy_fraction": 0.5941697826514258,
+   "tv_max": 0.23293058175121484
+  },
+  {
+   "layer": 12,
+   "head": 0,
+   "variant": "e4_rotate",
+   "relative_error": 0.039777958430733985,
+   "k_mean_energy_fraction": 0.5941697826514258,
+   "tv_max": 0.12437293006384527
+  },
+  {
+   "layer": 12,
+   "head": 0,
+   "variant": "e4_smooth_tile",
+   "relative_error": 0.054241530867297195,
+   "k_mean_energy_fraction": 0.5941697826514258,
+   "tv_max": 0.2299520385415184
+  },
+  {
+   "layer": 12,
+   "head": 0,
+   "variant": "e4_smooth_rotate",
+   "relative_error": 0.035843757790257384,
+   "k_mean_energy_fraction": 0.5941697826514258,
+   "tv_max": 0.10766642782154884
+  },
+  {
+   "layer": 12,
+   "head": 7,
+   "variant": "e4_tensor",
+   "relative_error": 0.10593201752819098,
+   "k_mean_energy_fraction": 0.5071883888273916,
+   "tv_max": 0.1657193740500647
+  },
+  {
+   "layer": 12,
+   "head": 7,
+   "variant": "e4_tile",
+   "relative_error": 0.10156826453952027,
+   "k_mean_energy_fraction": 0.5071883888273916,
+   "tv_max": 0.15272160996036344
+  },
+  {
+   "layer": 12,
+   "head": 7,
+   "variant": "e4_rotate",
+   "relative_error": 0.08039921971501357,
+   "k_mean_energy_fraction": 0.5071883888273916,
+   "tv_max": 0.13054560969308854
+  },
+  {
+   "layer": 12,
+   "head": 7,
+   "variant": "e4_smooth_tile",
+   "relative_error": 0.06781225332928922,
+   "k_mean_energy_fraction": 0.5071883888273916,
+   "tv_max": 0.11197073996171741
+  },
+  {
+   "layer": 12,
+   "head": 7,
+   "variant": "e4_smooth_rotate",
+   "relative_error": 0.07150297872586998,
+   "k_mean_energy_fraction": 0.5071883888273916,
+   "tv_max": 0.09737932326447041
+  }
+ ]
+}

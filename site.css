@@ -335,6 +335,8 @@ code {
 .chart .dot.strong { fill: var(--ink); }
 .chart .dot.em { fill: var(--accent); }
 .chart .dot.hollow { fill: var(--paper); stroke: var(--muted); stroke-width: 1; }
+.chart .dot.hollow.em { stroke: var(--accent); stroke-width: 1.5; }
+.chart .dot.hollow.strong { stroke: var(--ink); stroke-width: 1.5; }
 .chart .ci { stroke: var(--muted); stroke-width: 1; opacity: 0.7; }
 .chart .ci.strong { stroke: var(--ink); }
 .chart .ci.em { stroke: var(--accent); }
@@ -454,7 +456,7 @@ code {
   }
 
   @page {
-    margin: 13mm 15mm;
+    margin: 11mm 15mm;
   }
 
   html {
@@ -462,7 +464,7 @@ code {
   }
 
   body {
-    line-height: 1.45;
+    line-height: 1.4;
   }
 
   .page,
@@ -481,13 +483,13 @@ code {
   }
 
   .intro {
-    margin-top: 1.1rem;
-    font-size: 1.3rem;
+    margin-top: 0.8rem;
+    font-size: 1.2rem;
     max-width: 34em;
   }
 
   .block {
-    margin-top: 1.45rem;
+    margin-top: 1rem;
   }
 
   .block > h2,
@@ -507,7 +509,7 @@ code {
   }
 
   .entry + .entry {
-    margin-top: 0.75rem;
+    margin-top: 0.4rem;
   }
 
   .rows > .entry + .entry {
@@ -526,7 +528,8 @@ code {
   }
 
   .colophon,
-  .contact {
+  .contact,
+  .screen-only {
     display: none;
   }
 
