@@ -1,0 +1,101 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/eval-power",
+  "commit": "ef7c451d678e7eece94344b0c87567a60e28e330",
+  "path": "results/calibration.csv",
+  "url": "https://github.com/mottopanikeiku/eval-power/blob/ef7c451d678e7eece94344b0c87567a60e28e330/results/calibration.csv"
+ },
+ "target_power": 0.8,
+ "benchmarks": [
+  {
+   "key": "arc",
+   "name": "ARC-Challenge",
+   "pilot_items": 128,
+   "median": 0.671,
+   "q25": 0.358,
+   "q75": 0.9444999999999999,
+   "below_target": 0.5654450261780105
+  },
+  {
+   "key": "arc",
+   "name": "ARC-Challenge",
+   "pilot_items": 256,
+   "median": 0.657,
+   "q25": 0.413,
+   "q75": 0.934,
+   "below_target": 0.5939086294416244
+  },
+  {
+   "key": "gsm8k",
+   "name": "GSM8K",
+   "pilot_items": 128,
+   "median": 0.493,
+   "q25": 0.1745,
+   "q75": 0.772,
+   "below_target": 0.75
+  },
+  {
+   "key": "gsm8k",
+   "name": "GSM8K",
+   "pilot_items": 256,
+   "median": 0.53,
+   "q25": 0.243,
+   "q75": 0.721,
+   "below_target": 0.817258883248731
+  },
+  {
+   "key": "winogrande",
+   "name": "WinoGrande",
+   "pilot_items": 128,
+   "median": 0.5035000000000001,
+   "q25": 0.204,
+   "q75": 0.9552499999999999,
+   "below_target": 0.601063829787234
+  },
+  {
+   "key": "winogrande",
+   "name": "WinoGrande",
+   "pilot_items": 256,
+   "median": 0.808,
+   "q25": 0.40775,
+   "q75": 0.99775,
+   "below_target": 0.4744897959183674
+  },
+  {
+   "key": "hellaswag",
+   "name": "HellaSwag",
+   "pilot_items": 128,
+   "median": 0.514,
+   "q25": 0.27,
+   "q75": 0.885,
+   "below_target": 0.6594594594594595
+  },
+  {
+   "key": "hellaswag",
+   "name": "HellaSwag",
+   "pilot_items": 256,
+   "median": 0.624,
+   "q25": 0.3225,
+   "q75": 0.908,
+   "below_target": 0.6231155778894473
+  },
+  {
+   "key": "mmlu",
+   "name": "MMLU",
+   "pilot_items": 128,
+   "median": 0.786,
+   "q25": 0.5105,
+   "q75": 0.9432499999999999,
+   "below_target": 0.4846938775510204
+  },
+  {
+   "key": "mmlu",
+   "name": "MMLU",
+   "pilot_items": 256,
+   "median": 0.671,
+   "q25": 0.465,
+   "q75": 0.832,
+   "below_target": 0.6751269035532995
+  }
+ ]
+}

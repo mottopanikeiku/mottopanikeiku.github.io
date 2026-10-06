@@ -247,8 +247,51 @@ def verge_lab() -> str:
     return s.render()
 
 
+def eval_power() -> str:
+    data = load("eval-power")
+    target = data["target_power"]
+    names = []
+    for b in data["benchmarks"]:
+        if b["name"] not in names:
+            names.append(b["name"])
+    rows = {(b["name"], b["pilot_items"]): b for b in data["benchmarks"]}
+    W, L, R, T = 560, 112, 24, 70
+    band = 46
+    H = T + band * len(names) + 52
+    x = scale(0, 1, L, W - R)
+    s = SVG("eval-power", W, H,
+            "Detection rate delivered by pilot-based plans that target 80% power",
+            "For each benchmark, plans sized from the gap seen in a 128-item or 256-item pilot "
+            "were checked on held-out items. Median detection ranged from 49% to 81%, mostly "
+            "below the 80% target, with wide spread between model pairs.")
+    s.circle(L + 4, 14, 3.2, "dot em")
+    s.text(L + 14, 18, "pilot of 128 items", "em")
+    s.circle(L + 164, 14, 3.2, "dot strong")
+    s.text(L + 174, 18, "pilot of 256 items", "strong")
+    s.text(L, 38, "dots: median over model pairs; bars: middle half")
+    bottom = T + band * len(names)
+    for v in (0, 0.2, 0.4, 0.6, 0.8, 1.0):
+        s.line(x(v), T - 6, x(v), bottom, "grid")
+        s.text(x(v), bottom + 18, f"{v * 100:.0f}%", anchor="middle")
+    s.line(x(target), T - 12, x(target), bottom, "axis")
+    s.text(x(target), T - 16, "80% target", "strong", "middle")
+    s.text((L + W - R) / 2, H - 6, "detection rate on held-out items", anchor="middle")
+    for i, name in enumerate(names):
+        y0 = T + i * band + 6
+        s.text(L - 12, y0 + 14, name, anchor="end")
+        for j, (size, cls) in enumerate(((128, "em"), (256, "strong"))):
+            b = rows.get((name, size))
+            if b is None:
+                continue
+            yy = y0 + 6 + j * 16
+            s.line(x(b["q25"]), yy, x(b["q75"]), yy, f"ci {cls}")
+            s.circle(x(b["median"]), yy, 3.4, f"dot {cls}")
+    return s.render()
+
+
 FIGURES = {
     "branchpilot": branchpilot,
+    "eval-power": eval_power,
     "faultline": faultline,
     "heliostune": heliostune,
     "verge-lab": verge_lab,

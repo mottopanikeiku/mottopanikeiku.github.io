@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>eval-power · Alp Cetin</title>
+  <meta name="description" content="How many benchmark items it takes to tell two language models apart, and how often a small pilot gets that number wrong.">
+  <link rel="canonical" href="https://mottopanikeiku.github.io/projects/eval-power/">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f4ef">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#151412">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="/fonts/text-roman.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/display-roman.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/site.css?v=2a39602304">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Alp Cetin">
+  <meta property="og:title" content="eval-power">
+  <meta property="og:description" content="How many benchmark items does it take to tell two language models apart?">
+  <meta property="og:url" content="https://mottopanikeiku.github.io/projects/eval-power/">
+  <meta property="og:image" content="https://mottopanikeiku.github.io/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <p class="name"><a href="/">Alp Cetin</a></p>
+    <p>San Francisco</p>
+  </header>
+
+  <main class="content">
+
+    <div class="intro">
+      <h1>eval-power</h1>
+      <p>How many benchmark items does it take to tell two language models apart?</p>
+    </div>
+
+    <section class="block" aria-labelledby="question">
+      <h2 id="question">Question</h2>
+      <div class="prose">
+        <p>Leaderboards rank models by accuracy differences that are often a point or less. Two questions follow. How many test items does a comparison need before a gap that small is real? And if you plan that number from a small pilot, as people do, how often does the plan deliver the power it promised?</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="method">
+      <h2 id="method">Method</h2>
+      <div class="prose">
+        <p>The data are per-question right and wrong answers for 395 models from the 2024 Open LLM Leaderboard on five benchmarks, about 28,000 items in all. Because both models answer the same questions, the comparison can be paired, which removes the difficulty the two models share. To test pilot planning, I split items into a small pilot and a held-out pool, sized a full study from the gap seen in the pilot, and checked how often that study detected the difference on held-out items.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="result">
+      <h2 id="result">Result</h2>
+      <div class="prose">
+        <p>Most leaderboard gaps are noise. Even without correcting for multiple comparisons, only 1 to 12 of the 394 neighboring pairs in each benchmark’s ranking differ significantly. Detecting a one-point gap at 80% power takes roughly 6,000 to 17,000 items per model when the comparison is paired, and 22,000 to 38,000 when it isn’t; most of these benchmarks have far fewer items than that.</p>
+        <figure class="figure">
+          <div class="scroll"><!-- figure:eval-power --><svg class="chart" viewBox="0 0 560 352" role="img" aria-labelledby="eval-power-title eval-power-desc"><title id="eval-power-title">Detection rate delivered by pilot-based plans that target 80% power</title><desc id="eval-power-desc">For each benchmark, plans sized from the gap seen in a 128-item or 256-item pilot were checked on held-out items. Median detection ranged from 49% to 81%, mostly below the 80% target, with wide spread between model pairs.</desc><circle class="dot em" cx="116" cy="14" r="3.2"/><text class="em" x="126" y="18">pilot of 128 items</text><circle class="dot strong" cx="276" cy="14" r="3.2"/><text class="strong" x="286" y="18">pilot of 256 items</text><text x="112" y="38">dots: median over model pairs; bars: middle half</text><line class="grid" x1="112" y1="64" x2="112" y2="300"/><text text-anchor="middle" x="112" y="318">0%</text><line class="grid" x1="196.8" y1="64" x2="196.8" y2="300"/><text text-anchor="middle" x="196.8" y="318">20%</text><line class="grid" x1="281.6" y1="64" x2="281.6" y2="300"/><text text-anchor="middle" x="281.6" y="318">40%</text><line class="grid" x1="366.4" y1="64" x2="366.4" y2="300"/><text text-anchor="middle" x="366.4" y="318">60%</text><line class="grid" x1="451.2" y1="64" x2="451.2" y2="300"/><text text-anchor="middle" x="451.2" y="318">80%</text><line class="grid" x1="536" y1="64" x2="536" y2="300"/><text text-anchor="middle" x="536" y="318">100%</text><line class="axis" x1="451.2" y1="58" x2="451.2" y2="300"/><text class="strong" text-anchor="middle" x="451.2" y="54">80% target</text><text text-anchor="middle" x="324" y="346">detection rate on held-out items</text><text text-anchor="end" x="100" y="90">ARC-Challenge</text><line class="ci em" x1="263.8" y1="82" x2="512.5" y2="82"/><circle class="dot em" cx="396.5" cy="82" r="3.4"/><line class="ci strong" x1="287.1" y1="98" x2="508" y2="98"/><circle class="dot strong" cx="390.6" cy="98" r="3.4"/><text text-anchor="end" x="100" y="136">GSM8K</text><line class="ci em" x1="186" y1="128" x2="439.3" y2="128"/><circle class="dot em" cx="321" cy="128" r="3.4"/><line class="ci strong" x1="215" y1="144" x2="417.7" y2="144"/><circle class="dot strong" cx="336.7" cy="144" r="3.4"/><text text-anchor="end" x="100" y="182">WinoGrande</text><line class="ci em" x1="198.5" y1="174" x2="517" y2="174"/><circle class="dot em" cx="325.5" cy="174" r="3.4"/><line class="ci strong" x1="284.9" y1="190" x2="535" y2="190"/><circle class="dot strong" cx="454.6" cy="190" r="3.4"/><text text-anchor="end" x="100" y="228">HellaSwag</text><line class="ci em" x1="226.5" y1="220" x2="487.2" y2="220"/><circle class="dot em" cx="329.9" cy="220" r="3.4"/><line class="ci strong" x1="248.7" y1="236" x2="497" y2="236"/><circle class="dot strong" cx="376.6" cy="236" r="3.4"/><text text-anchor="end" x="100" y="274">MMLU</text><line class="ci em" x1="328.5" y1="266" x2="511.9" y2="266"/><circle class="dot em" cx="445.3" cy="266" r="3.4"/><line class="ci strong" x1="309.2" y1="282" x2="464.8" y2="282"/><circle class="dot strong" cx="396.5" cy="282" r="3.4"/></svg><!-- /figure:eval-power --></div>
+          <figcaption>How often a study planned from a pilot’s observed gap actually detected the difference on held-out items, for 40 model pairs per benchmark. Dots are medians, bars the middle half of pairs. Data: <a href="https://github.com/mottopanikeiku/eval-power/blob/ef7c451d678e7eece94344b0c87567a60e28e330/results/calibration.csv">calibration.csv</a>.</figcaption>
+        </figure>
+        <p>Pilots are a poor guide. Studies sized from a 128-item pilot to have 80% power detected the difference only 49% to 79% of the time, depending on the benchmark, and a larger pilot didn’t reliably help. The gap a small pilot sees is itself noisy, so planning around it overshoots and undershoots by wide margins. This is a known problem in statistics; the safer plan is to fix the smallest difference that matters before collecting any data.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="limits">
+      <h2 id="limits">Limits</h2>
+      <div class="prose">
+        <p>These are older open models, many of them fine-tunes or merges of each other, not current frontier models. Each answer was recorded once, so variation from sampling isn’t measured, and resampling held-out answers is not the same as answering new questions.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="links">
+      <h2 id="links">Links</h2>
+      <ul class="rows">
+        <li class="entry"><p class="title"><a href="https://github.com/mottopanikeiku/eval-power">Code, data and results</a> <span class="org">GitHub</span></p></li>
+        <li class="entry"><p class="title"><a href="https://arxiv.org/abs/2411.00640">Adding error bars to evals</a> <span class="org">Miller, 2024</span></p></li>
+        <li class="entry"><p class="title"><a href="https://arxiv.org/abs/2605.30315">Resolution diagnostics for paired LLM evaluation</a> <span class="org">Kotawala, 2026</span></p></li>
+        <li class="entry"><p class="title"><a href="https://doi.org/10.1016/j.jesp.2017.09.004">When power analyses based on pilot data are biased</a> <span class="org">Albers and Lakens, 2018</span></p></li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="colophon">
+    <p><a href="/">All work</a></p>
+  </footer>
+
+</div>
+</body>
+</html>

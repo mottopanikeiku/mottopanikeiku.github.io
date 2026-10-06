@@ -6,6 +6,8 @@ Each file in data/ records the repository, commit and path it came from.
 Change a commit below to update a figure, then run tools/figures.py.
 """
 
+import csv
+import io
 import json
 import pathlib
 import urllib.request
@@ -16,6 +18,8 @@ OWNER = "mottopanikeiku"
 SOURCES = {
     "branchpilot": ("branchpilot", "6f2ff8654aec07e806c3fcfea4f5e2514c36928d",
                     "benchmarks/gsm8k-sampling-bootstrap.json"),
+    "eval-power": ("eval-power", "ef7c451d678e7eece94344b0c87567a60e28e330",
+                   "results/calibration.csv"),
     "faultline": ("faultline", "d8dcf021e434d64adf06659ff0e1e0d61b70acf0",
                   "artifacts/results/small-kill-v1-analysis.json"),
     "heliostune": ("heliostune", "d1f5ab6fb6ff8b1862baf635dc8abd9241052809",
@@ -25,10 +29,13 @@ SOURCES = {
 }
 
 
-def fetch(repo: str, commit: str, path: str) -> dict:
+def fetch(repo: str, commit: str, path: str):
     url = f"https://raw.githubusercontent.com/{OWNER}/{repo}/{commit}/{path}"
     with urllib.request.urlopen(url, timeout=60) as response:
-        return json.load(response)
+        body = response.read().decode()
+    if path.endswith(".csv"):
+        return list(csv.DictReader(io.StringIO(body)))
+    return json.loads(body)
 
 
 def source(repo: str, commit: str, path: str) -> dict:
@@ -128,8 +135,29 @@ def verge_lab(raw: dict) -> dict:
     }
 
 
+def eval_power(rows: list[dict]) -> dict:
+    names = {"arc": "ARC-Challenge", "gsm8k": "GSM8K", "winogrande": "WinoGrande",
+             "hellaswag": "HellaSwag", "mmlu": "MMLU"}
+    return {
+        "target_power": 0.8,
+        "benchmarks": [
+            {
+                "key": row["benchmark"],
+                "name": names.get(row["benchmark"], row["benchmark"]),
+                "pilot_items": int(row["pilot_n"]),
+                "median": float(row["iid_power_median"]),
+                "q25": float(row["iid_power_q25"]),
+                "q75": float(row["iid_power_q75"]),
+                "below_target": float(row["iid_below_target_95mc_fraction"]),
+            }
+            for row in rows
+        ],
+    }
+
+
 TRANSFORMS = {
     "branchpilot": branchpilot,
+    "eval-power": eval_power,
     "faultline": faultline,
     "heliostune": heliostune,
     "verge-lab": verge_lab,
