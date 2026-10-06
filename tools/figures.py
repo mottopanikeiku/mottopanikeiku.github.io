@@ -361,7 +361,8 @@ FIGURES = {
 
 
 def main() -> None:
-    pages = [ROOT / "index.html", *sorted((ROOT / "projects").glob("*/index.html"))]
+    pages = [ROOT / "index.html", *sorted((ROOT / "projects").glob("*/index.html")),
+             ROOT / "tools" / "cards.html"]
     for page in pages:
         if not page.exists():
             continue
