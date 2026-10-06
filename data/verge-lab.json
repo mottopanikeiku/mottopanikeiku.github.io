@@ -1,0 +1,31 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/verge-lab",
+  "commit": "0e42e8ca557e38e91863cc8b64ba8dd64be6009a",
+  "path": "results/public-preferences/summary.json",
+  "url": "https://github.com/mottopanikeiku/verge-lab/blob/0e42e8ca557e38e91863cc8b64ba8dd64be6009a/results/public-preferences/summary.json"
+ },
+ "prompts": 200,
+ "responses": 800,
+ "pairs": 1200,
+ "defended": 820,
+ "abstained": 380,
+ "abstention_reasons": {
+  "cross-objective tradeoff": 283,
+  "equivalent within epsilon": 79,
+  "missing scores: honesty": 18
+ },
+ "defended_vs_overall": {
+  "agree": 574,
+  "disagree": 132,
+  "overall_missing": 0,
+  "overall_tie": 114
+ },
+ "disagreement_fraction": 0.18696883852691218,
+ "stricter": {
+  "assumed_confidence": 0.9,
+  "uncertainty_scale": 0.05,
+  "defended": 343,
+  "abstained": 857
+ }
+}

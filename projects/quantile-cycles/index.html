@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quantile cycles · Alp Cetin</title>
+  <meta name="description" content="A counterexample in distributional reinforcement learning: greedy control with quantile-projected Bellman updates can cycle forever with no fixed point.">
+  <link rel="canonical" href="https://mottopanikeiku.github.io/projects/quantile-cycles/">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f4ef">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#151412">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="/fonts/text-roman.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/display-roman.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/site.css?v=2a39602304">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Alp Cetin">
+  <meta property="og:title" content="Quantile cycles">
+  <meta property="og:description" content="A counterexample in distributional reinforcement learning, checked in exact arithmetic.">
+  <meta property="og:url" content="https://mottopanikeiku.github.io/projects/quantile-cycles/">
+  <meta property="og:image" content="https://mottopanikeiku.github.io/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <p class="name"><a href="/">Alp Cetin</a></p>
+    <p>San Francisco</p>
+  </header>
+
+  <main class="content">
+
+    <div class="intro">
+      <h1>Quantile cycles</h1>
+      <p>A counterexample in distributional reinforcement learning.</p>
+    </div>
+
+    <section class="block" aria-labelledby="question">
+      <h2 id="question">Question</h2>
+      <div class="prose">
+        <p>Quantile-based distributional RL, as in QR-DQN, represents each action’s return distribution by a few quantiles and acts greedily on their mean. For evaluating a fixed policy, the quantile-projected Bellman update is known to converge. Does it converge for control, when the greedy action can change from one update to the next?</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="result">
+      <h2 id="result">Result</h2>
+      <div class="prose">
+        <p>No. For every number of quantiles K ≥ 2 there is a one-state, two-action problem where the update has no fixed point. From any starting point it falls into a two-step cycle that alternates between the optimal action and a worse one, forever. The optimal policy is unique and the cycle needs no ties, so this is not an artifact of tie-breaking.</p>
+        <p>The smallest case uses two quantiles and discount 1/4. Action A always pays 91/128. Action B pays 0, 1/2 or 1 with probabilities 3/16, 1/2 and 5/16. A is better by 19/128 in expected reward, and always choosing B loses 19/96 in discounted value. But the projected means make A look better by 3/128 in one phase and B look better by 3/128 in the next, so the greedy choice flips back and forth. The repository has a <a href="https://github.com/mottopanikeiku/quantile-cycles/blob/main/docs/two-phase-cycle.svg">diagram of both phases</a> with every exact value.</p>
+        <p>A second family keeps the discount fixed at 0.9 and stretches the cycle across more states:</p>
+        <table class="table">
+          <thead>
+            <tr><th>Quantiles K</th><th class="num">States</th><th class="num">Cycle length</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>2</td><td class="num">14</td><td class="num">28</td></tr>
+            <tr><td>3</td><td class="num">18</td><td class="num">36</td></tr>
+            <tr><td>8</td><td class="num">27</td><td class="num">54</td></tr>
+            <tr><td>16</td><td class="num">33</td><td class="num">66</td></tr>
+            <tr><td>32</td><td class="num">40</td><td class="num">80</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="checks">
+      <h2 id="checks">Checks</h2>
+      <div class="prose">
+        <p>The proof is written out in the repository. Separately, every finite instance is checked in exact rational arithmetic: 18 one-state instances (K from 2 to 16, then 32, 64 and 128), the five fixed-discount instances above, and 18 trajectories started from zero. One command, <code>python -B verify.py</code>, reproduces all of them in seconds using only the standard library. The general proof has not been checked in a proof assistant.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="prior">
+      <h2 id="prior">Prior work</h2>
+      <div class="prose">
+        <p>Rowland et al. (2019, appendix B.4) showed that quantile means can strictly prefer a worse action for any K, in a one-step setting. Bellemare, Dabney and Munos (2017) and the Distributional RL book (example 7.11) showed that distributional control can cycle, using a chosen rule for breaking ties between equally good actions. What is new here is the combination: a recurring strict cycle, a unique optimal action and no fixed point, for every K.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="links">
+      <h2 id="links">Links</h2>
+      <ul class="rows">
+        <li class="entry"><p class="title"><a href="https://github.com/mottopanikeiku/quantile-cycles">Proof, checker and certificates</a> <span class="org">GitHub</span></p></li>
+        <li class="entry"><p class="title"><a href="https://proceedings.mlr.press/v97/rowland19a.html">Statistics and samples in distributional RL</a> <span class="org">Rowland et al., 2019</span></p></li>
+        <li class="entry"><p class="title"><a href="https://www.distributional-rl.org/contents/chapter7">Distributional Reinforcement Learning, chapter 7</a> <span class="org">Bellemare, Dabney and Rowland, 2023</span></p></li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="colophon">
+    <p><a href="/">All work</a></p>
+  </footer>
+
+</div>
+</body>
+</html>

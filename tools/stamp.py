@@ -15,10 +15,14 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 LINK = re.compile(r'href="/site\.css(\?v=[0-9a-f]+)?"')
 
 
+def pages() -> list[pathlib.Path]:
+    return [ROOT / "index.html", ROOT / "404.html", *sorted((ROOT / "projects").glob("*/index.html"))]
+
+
 def main() -> None:
     digest = hashlib.sha256((ROOT / "site.css").read_bytes()).hexdigest()[:10]
-    for name in ("index.html", "404.html"):
-        path = ROOT / name
+    for path in pages():
+        name = path.relative_to(ROOT)
         html, count = LINK.subn(f'href="/site.css?v={digest}"', path.read_text())
         if count != 1:
             raise SystemExit(f"{name}: expected one stylesheet link, found {count}")

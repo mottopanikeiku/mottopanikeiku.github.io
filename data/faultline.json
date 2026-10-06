@@ -1,0 +1,78 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/faultline",
+  "commit": "d8dcf021e434d64adf06659ff0e1e0d61b70acf0",
+  "path": "artifacts/results/small-kill-v1-analysis.json",
+  "url": "https://github.com/mottopanikeiku/faultline/blob/d8dcf021e434d64adf06659ff0e1e0d61b70acf0/artifacts/results/small-kill-v1-analysis.json"
+ },
+ "arms": {
+  "difficulty": {
+   "mean": 0.90234375,
+   "ci": [
+    0.7099609375,
+    1.0
+   ],
+   "seeds": {
+    "100": 1.0,
+    "101": 1.0,
+    "102": 1.0,
+    "103": 0.23046875,
+    "104": 0.98828125,
+    "105": 1.0,
+    "106": 1.0,
+    "107": 1.0
+   }
+  },
+  "epistemic": {
+   "mean": 0.951171875,
+   "ci": [
+    0.8623046875,
+    1.0
+   ],
+   "seeds": {
+    "100": 1.0,
+    "101": 0.64453125,
+    "102": 0.96484375,
+    "103": 1.0,
+    "104": 1.0,
+    "105": 1.0,
+    "106": 1.0,
+    "107": 1.0
+   }
+  },
+  "random": {
+   "mean": 0.807373046875,
+   "ci": [
+    0.557373046875,
+    0.994873046875
+   ],
+   "seeds": {
+    "100": 0.5,
+    "101": 1.0,
+    "102": 0.0,
+    "103": 0.982421875,
+    "104": 1.0,
+    "105": 0.9765625,
+    "106": 1.0,
+    "107": 1.0
+   }
+  }
+ },
+ "paired": {
+  "epistemic-difficulty": {
+   "estimate": 0.048828125,
+   "ci": [
+    -0.13330078125,
+    0.28564453125
+   ]
+  },
+  "epistemic-random": {
+   "estimate": 0.143798828125,
+   "ci": [
+    -0.083740234375,
+    0.43017578125
+   ]
+  }
+ },
+ "decision": "no_preregistered_curriculum_effect"
+}

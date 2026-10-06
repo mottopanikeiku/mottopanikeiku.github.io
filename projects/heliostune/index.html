@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HeliosTune · Alp Cetin</title>
+  <meta name="description" content="Testing whether Triton tuning data from other GPUs speeds up kernel tuning on an H100. It didn't, and torch.matmul beat every curated configuration.">
+  <link rel="canonical" href="https://mottopanikeiku.github.io/projects/heliostune/">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f4ef">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#151412">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="/fonts/text-roman.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/display-roman.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/site.css?v=2a39602304">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Alp Cetin">
+  <meta property="og:title" content="HeliosTune">
+  <meta property="og:description" content="Does tuning data from other GPUs make kernel tuning faster on a new one?">
+  <meta property="og:url" content="https://mottopanikeiku.github.io/projects/heliostune/">
+  <meta property="og:image" content="https://mottopanikeiku.github.io/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <p class="name"><a href="/">Alp Cetin</a></p>
+    <p>San Francisco</p>
+  </header>
+
+  <main class="content">
+
+    <div class="intro">
+      <h1>HeliosTune</h1>
+      <p>Does tuning data from other GPUs make kernel tuning faster on a new one?</p>
+    </div>
+
+    <section class="block" aria-labelledby="question">
+      <h2 id="question">Question</h2>
+      <div class="prose">
+        <p>Autotuning a Triton matrix-multiply kernel means timing many configurations on the target GPU. If timings from other GPUs predict which configurations are good, a new GPU should need fewer of them. HeliosTune tests that on an H100, using timings from L4, A10 and T4 GPUs.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="method">
+      <h2 id="method">Method</h2>
+      <div class="prose">
+        <p>For each new matrix shape, a retrieval step finds the most similar shapes measured on the other GPUs, and a Bayesian linear Thompson sampler decides which configuration to time next on the H100. The combined policy, which I called Parhelion, spends its first probe on the retrieved recommendation and adapts from there. The study covers 96 shapes from four model families, 36 curated Triton configurations and 41,472 timing measurements across the four GPUs. Test shapes and their model families were held out of the retrieval archive.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="result">
+      <h2 id="result">Result</h2>
+      <div class="prose">
+        <p>Transfer didn’t help. The selected transfer weight was zero, and plain cold-start Thompson sampling did slightly better over the first eight probes, with a mean score of 0.958 against 0.950.</p>
+        <figure class="figure">
+          <div class="scroll"><!-- figure:heliostune --><svg class="chart" viewBox="0 0 560 330" role="img" aria-labelledby="heliostune-title heliostune-desc"><title id="heliostune-title">H100 tuning quality against the number of configurations timed</title><desc id="heliostune-desc">Score is the best Triton configuration found divided by the best of the 36 curated configurations. Cold-start Thompson sampling and Parhelion both reach 0.997 by eight probes; reuse and retrieval baselines stay lower. torch.matmul scores 1.61 on the same scale, off the top of the chart.</desc><line class="line strong" x1="50" y1="14" x2="72" y2="14"/><text class="strong" x="80" y="18">cold-start Thompson sampling</text><line class="line em" x1="300" y1="14" x2="322" y2="14"/><text class="em" x="330" y="18">Parhelion (retrieval first)</text><line class="line dash" x1="50" y1="34" x2="72" y2="34"/><text x="80" y="38">reuse the nearest measured shape</text><line class="line" x1="300" y1="34" x2="322" y2="34"/><text x="330" y="38">retrieval only</text><text class="strong" text-anchor="end" x="544" y="70">torch.matmul: 1.61 ↑</text><text x="42" y="84">score against the best of 36 Triton configurations</text><line class="grid" x1="50" y1="255.1" x2="544" y2="255.1"/><text text-anchor="end" x="42" y="259.1">0.80</text><line class="grid" x1="50" y1="218.9" x2="544" y2="218.9"/><text text-anchor="end" x="42" y="222.9">0.85</text><line class="grid" x1="50" y1="182.8" x2="544" y2="182.8"/><text text-anchor="end" x="42" y="186.8">0.90</text><line class="grid" x1="50" y1="146.6" x2="544" y2="146.6"/><text text-anchor="end" x="42" y="150.6">0.95</text><line class="grid" x1="50" y1="110.5" x2="544" y2="110.5"/><text text-anchor="end" x="42" y="114.5">1.00</text><line class="axis" x1="50" y1="284" x2="544" y2="284"/><line class="axis" x1="50" y1="284" x2="50" y2="288"/><text text-anchor="middle" x="50" y="302">1</text><line class="axis" x1="120.6" y1="284" x2="120.6" y2="288"/><text text-anchor="middle" x="120.6" y="302">2</text><line class="axis" x1="191.1" y1="284" x2="191.1" y2="288"/><text text-anchor="middle" x="191.1" y="302">3</text><line class="axis" x1="261.7" y1="284" x2="261.7" y2="288"/><text text-anchor="middle" x="261.7" y="302">4</text><line class="axis" x1="332.3" y1="284" x2="332.3" y2="288"/><text text-anchor="middle" x="332.3" y="302">5</text><line class="axis" x1="402.9" y1="284" x2="402.9" y2="288"/><text text-anchor="middle" x="402.9" y="302">6</text><line class="axis" x1="473.4" y1="284" x2="473.4" y2="288"/><text text-anchor="middle" x="473.4" y="302">7</text><line class="axis" x1="544" y1="284" x2="544" y2="288"/><text text-anchor="middle" x="544" y="302">8</text><text text-anchor="middle" x="297" y="324">configurations timed on the H100</text><path class="line strong" d="M50 258.3 L120.6 155.5 L191.1 129.8 L261.7 121.6 L332.3 117.4 L402.9 115.1 L473.4 113.7 L544 112.8"/><circle class="dot strong" cx="50" cy="258.3" r="2.4"/><circle class="dot strong" cx="120.6" cy="155.5" r="2.4"/><circle class="dot strong" cx="191.1" cy="129.8" r="2.4"/><circle class="dot strong" cx="261.7" cy="121.6" r="2.4"/><circle class="dot strong" cx="332.3" cy="117.4" r="2.4"/><circle class="dot strong" cx="402.9" cy="115.1" r="2.4"/><circle class="dot strong" cx="473.4" cy="113.7" r="2.4"/><circle class="dot strong" cx="544" cy="112.8" r="2.4"/><path class="line em" d="M50 238.6 L120.6 191.2 L191.1 147.8 L261.7 129.6 L332.3 120.7 L402.9 116.4 L473.4 114.2 L544 113"/><circle class="dot em" cx="50" cy="238.6" r="2.4"/><circle class="dot em" cx="120.6" cy="191.2" r="2.4"/><circle class="dot em" cx="191.1" cy="147.8" r="2.4"/><circle class="dot em" cx="261.7" cy="129.6" r="2.4"/><circle class="dot em" cx="332.3" cy="120.7" r="2.4"/><circle class="dot em" cx="402.9" cy="116.4" r="2.4"/><circle class="dot em" cx="473.4" cy="114.2" r="2.4"/><circle class="dot em" cx="544" cy="113" r="2.4"/><path class="line dash" d="M50 269 L120.6 236.1 L191.1 205.1 L261.7 176 L332.3 143.4 L402.9 140.3 L473.4 137.6 L544 134.3"/><circle class="dot " cx="50" cy="269" r="2.4"/><circle class="dot " cx="120.6" cy="236.1" r="2.4"/><circle class="dot " cx="191.1" cy="205.1" r="2.4"/><circle class="dot " cx="261.7" cy="176" r="2.4"/><circle class="dot " cx="332.3" cy="143.4" r="2.4"/><circle class="dot " cx="402.9" cy="140.3" r="2.4"/><circle class="dot " cx="473.4" cy="137.6" r="2.4"/><circle class="dot " cx="544" cy="134.3" r="2.4"/><path class="line" d="M50 238.6 L120.6 212.1 L191.1 176 L261.7 172.8 L332.3 168 L402.9 164.1 L473.4 158.7 L544 153.3"/><circle class="dot " cx="50" cy="238.6" r="2.4"/><circle class="dot " cx="120.6" cy="212.1" r="2.4"/><circle class="dot " cx="191.1" cy="176" r="2.4"/><circle class="dot " cx="261.7" cy="172.8" r="2.4"/><circle class="dot " cx="332.3" cy="168" r="2.4"/><circle class="dot " cx="402.9" cy="164.1" r="2.4"/><circle class="dot " cx="473.4" cy="158.7" r="2.4"/><circle class="dot " cx="544" cy="153.3" r="2.4"/></svg><!-- /figure:heliostune --></div>
+          <figcaption>Best configuration found after each number of probes, relative to the best of the 36 curated configurations, averaged over held-out shapes and 30 policy seeds. Data: <a href="https://github.com/mottopanikeiku/heliostune/blob/9f29906220f7c5e4d7662f60738fd483fcbe5fdc/benchmarks/results/parhelion-h100-final.json">parhelion-h100-final.json</a>.</figcaption>
+        </figure>
+        <p>Retrieval gave Parhelion a better first probe, but cold-start search overtook it on the second.</p>
+        <p>The bigger finding is the reference itself. torch.matmul, which is outside the 36 configurations, scored 1.61 on the same scale, 61% faster than the best curated Triton kernel. The search policy wasn’t the bottleneck; the set of kernels it searched was.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="limits">
+      <h2 id="limits">Limits</h2>
+      <div class="prose">
+        <p>One fixed set of shapes and timing runs; the intervals cover policy seeds, not repeated hardware runs. A later engineering run on an H200 used different rules and isn’t pooled with these numbers.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="links">
+      <h2 id="links">Links</h2>
+      <ul class="rows">
+        <li class="entry"><p class="title"><a href="https://github.com/mottopanikeiku/heliostune">Code and timing data</a> <span class="org">GitHub</span></p></li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="colophon">
+    <p><a href="/">All work</a></p>
+  </footer>
+
+</div>
+</body>
+</html>

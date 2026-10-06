@@ -25,6 +25,7 @@
   --ink: #1c1b18;
   --muted: #69655d;
   --accent: #9a3b22;
+  --rule: #dcd8ce;
   --signal: #c8331e; /* the tenth dot in the Tenth Man Labs mark */
   --serif: "AC Text", Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
   color-scheme: light dark;
@@ -36,6 +37,7 @@
     --ink: #e8e5de;
     --muted: #9d988e;
     --accent: #e08f72;
+    --rule: #2f2d29;
     --signal: #e2553d;
   }
 
@@ -270,6 +272,106 @@ a:focus-visible {
   margin-top: 0.6rem;
 }
 
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.82em;
+}
+
+/* Project pages: prose in the main column, section names in the margin. */
+
+.block > .prose {
+  grid-column: main;
+  grid-row: 1;
+}
+
+.prose > * + * {
+  margin-top: 0.9em;
+}
+
+.prose .figure {
+  margin: 1.5rem 0 1.6rem;
+}
+
+.figure .scroll {
+  overflow-x: auto;
+}
+
+.figure figcaption {
+  margin-top: 0.6rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* Figures are drawn by tools/figures.py; colors follow the theme. */
+
+.chart {
+  display: block;
+  width: 100%;
+  min-width: 440px;
+  height: auto;
+  overflow: visible;
+}
+
+.chart text {
+  font-family: var(--serif);
+  font-size: 13px;
+  fill: var(--muted);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.chart text.strong { fill: var(--ink); }
+.chart text.em { fill: var(--accent); }
+.chart text.on-dark { fill: var(--paper); }
+.chart .grid { stroke: var(--rule); stroke-width: 1; }
+.chart .axis { stroke: var(--muted); stroke-width: 1; }
+.chart .line { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+.chart .line.strong { stroke: var(--ink); }
+.chart .line.em { stroke: var(--accent); }
+.chart .line.dash { stroke-dasharray: 5 4; }
+.chart .line.faint { stroke-width: 1; opacity: 0.45; }
+.chart .mean { stroke: var(--ink); stroke-width: 2.5; }
+.chart .dot { fill: var(--muted); }
+.chart .dot.strong { fill: var(--ink); }
+.chart .dot.em { fill: var(--accent); }
+.chart .dot.hollow { fill: var(--paper); stroke: var(--muted); stroke-width: 1; }
+.chart .ci { stroke: var(--muted); stroke-width: 1; opacity: 0.7; }
+.chart .ci.strong { stroke: var(--ink); }
+.chart .ci.em { stroke: var(--accent); }
+.chart .seg.ink { fill: var(--ink); }
+.chart .seg.em { fill: var(--accent); }
+.chart .seg.muted { fill: var(--muted); }
+.chart .seg.light { fill: var(--rule); }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.table th {
+  text-align: left;
+  font-weight: 400;
+  color: var(--muted);
+  padding: 0 0.75rem 0.4rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.table td {
+  padding: 0.4rem 0.75rem 0.4rem 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: baseline;
+}
+
+.table .num {
+  text-align: right;
+}
+
+.table tr > :last-child {
+  padding-right: 0;
+}
+
 .colophon {
   margin-top: clamp(3.5rem, 8vh, 5rem);
   font-size: 0.875rem;
@@ -316,12 +418,26 @@ a:focus-visible {
     grid-row: auto;
   }
 
+  .block > .prose {
+    grid-row: auto;
+    grid-column: main-start / year-end;
+  }
+
   .year {
     padding-left: 1rem;
   }
 
   .desc {
     grid-column: main-start / year-end;
+  }
+
+  .figure .scroll {
+    margin-inline: -1.25rem;
+    padding-inline: 1.25rem;
+  }
+
+  .chart {
+    min-width: 480px;
   }
 }
 

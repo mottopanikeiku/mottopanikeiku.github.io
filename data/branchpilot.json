@@ -1,0 +1,465 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/branchpilot",
+  "commit": "6f2ff8654aec07e806c3fcfea4f5e2514c36928d",
+  "path": "benchmarks/gsm8k-sampling-bootstrap.json",
+  "url": "https://github.com/mottopanikeiku/branchpilot/blob/6f2ff8654aec07e806c3fcfea4f5e2514c36928d/benchmarks/gsm8k-sampling-bootstrap.json"
+ },
+ "prompts": 1319,
+ "rows": [
+  {
+   "policy": "BranchPilot λ=0.01",
+   "family": "learned",
+   "accuracy": 0.7626990144048522,
+   "accuracy_ci": [
+    0.7384382107657316,
+    0.7854624715693704
+   ],
+   "samples": 3.388931008339651,
+   "samples_ci": [
+    3.274450341167551,
+    3.506444275966641
+   ]
+  },
+  {
+   "policy": "fixed-1",
+   "family": "fixed",
+   "accuracy": 0.6876421531463229,
+   "accuracy_ci": [
+    0.6618650492797574,
+    0.7126611068991661
+   ],
+   "samples": 1.0,
+   "samples_ci": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "policy": "fixed-2",
+   "family": "fixed",
+   "accuracy": 0.7194844579226687,
+   "accuracy_ci": [
+    0.6944655041698257,
+    0.7445034116755117
+   ],
+   "samples": 2.0,
+   "samples_ci": [
+    2.0,
+    2.0
+   ]
+  },
+  {
+   "policy": "fixed-3",
+   "family": "fixed",
+   "accuracy": 0.7452615617892343,
+   "accuracy_ci": [
+    0.7210007581501138,
+    0.7687642153146323
+   ],
+   "samples": 3.0,
+   "samples_ci": [
+    3.0,
+    3.0
+   ]
+  },
+  {
+   "policy": "fixed-4",
+   "family": "fixed",
+   "accuracy": 0.7581501137225171,
+   "accuracy_ci": [
+    0.734647460197119,
+    0.7816527672479151
+   ],
+   "samples": 4.0,
+   "samples_ci": [
+    4.0,
+    4.0
+   ]
+  },
+  {
+   "policy": "fixed-5",
+   "family": "fixed",
+   "accuracy": 0.778620166793025,
+   "accuracy_ci": [
+    0.7558756633813495,
+    0.8013646702047005
+   ],
+   "samples": 5.0,
+   "samples_ci": [
+    5.0,
+    5.0
+   ]
+  },
+  {
+   "policy": "fixed-6",
+   "family": "fixed",
+   "accuracy": 0.7869598180439727,
+   "accuracy_ci": [
+    0.7649734647460197,
+    0.8089461713419257
+   ],
+   "samples": 6.0,
+   "samples_ci": [
+    6.0,
+    6.0
+   ]
+  },
+  {
+   "policy": "fixed-7",
+   "family": "fixed",
+   "accuracy": 0.7907505686125853,
+   "accuracy_ci": [
+    0.7687642153146323,
+    0.8127369219105383
+   ],
+   "samples": 7.0,
+   "samples_ci": [
+    7.0,
+    7.0
+   ]
+  },
+  {
+   "policy": "fixed-8",
+   "family": "fixed",
+   "accuracy": 0.800606520090978,
+   "accuracy_ci": [
+    0.7793783169067475,
+    0.8218347232752085
+   ],
+   "samples": 8.0,
+   "samples_ci": [
+    8.0,
+    8.0
+   ]
+  },
+  {
+   "policy": "confidence-0.5",
+   "family": "confidence",
+   "accuracy": 0.7194844579226687,
+   "accuracy_ci": [
+    0.6944655041698257,
+    0.7445034116755117
+   ],
+   "samples": 2.0,
+   "samples_ci": [
+    2.0,
+    2.0
+   ]
+  },
+  {
+   "policy": "confidence-0.55",
+   "family": "confidence",
+   "accuracy": 0.7877179681576952,
+   "accuracy_ci": [
+    0.7649734647460197,
+    0.8097043214556482
+   ],
+   "samples": 3.161485974222896,
+   "samples_ci": [
+    3.0492797573919637,
+    3.2797573919636087
+   ]
+  },
+  {
+   "policy": "confidence-0.6",
+   "family": "confidence",
+   "accuracy": 0.7877179681576952,
+   "accuracy_ci": [
+    0.7649734647460197,
+    0.8097043214556482
+   ],
+   "samples": 3.1728582259287337,
+   "samples_ci": [
+    3.058377558756634,
+    3.2926459438968916
+   ]
+  },
+  {
+   "policy": "confidence-0.65",
+   "family": "confidence",
+   "accuracy": 0.7884761182714177,
+   "accuracy_ci": [
+    0.7657316148597423,
+    0.8104624715693708
+   ],
+   "samples": 3.224412433661865,
+   "samples_ci": [
+    3.1061410159211524,
+    3.3464746019711904
+   ]
+  },
+  {
+   "policy": "confidence-0.67",
+   "family": "confidence",
+   "accuracy": 0.7952994692949203,
+   "accuracy_ci": [
+    0.7733131159969674,
+    0.8172858225928734
+   ],
+   "samples": 3.7702805155420775,
+   "samples_ci": [
+    3.6330553449583016,
+    3.9135898407884757
+   ]
+  },
+  {
+   "policy": "confidence-0.7",
+   "family": "confidence",
+   "accuracy": 0.7952994692949203,
+   "accuracy_ci": [
+    0.7733131159969674,
+    0.8172858225928734
+   ],
+   "samples": 3.7702805155420775,
+   "samples_ci": [
+    3.6330553449583016,
+    3.9135898407884757
+   ]
+  },
+  {
+   "policy": "confidence-0.75",
+   "family": "confidence",
+   "accuracy": 0.7952994692949203,
+   "accuracy_ci": [
+    0.7733131159969674,
+    0.8172858225928734
+   ],
+   "samples": 3.8059135708870357,
+   "samples_ci": [
+    3.6664139499620925,
+    3.9499620924943137
+   ]
+  },
+  {
+   "policy": "confidence-0.8",
+   "family": "confidence",
+   "accuracy": 0.7968157695223654,
+   "accuracy_ci": [
+    0.7748294162244125,
+    0.8188021228203184
+   ],
+   "samples": 3.9742228961334343,
+   "samples_ci": [
+    3.828658074298711,
+    4.124336618650493
+   ]
+  },
+  {
+   "policy": "confidence-0.85",
+   "family": "confidence",
+   "accuracy": 0.7975739196360879,
+   "accuracy_ci": [
+    0.775587566338135,
+    0.8188021228203184
+   ],
+   "samples": 4.1099317664897645,
+   "samples_ci": [
+    3.9583017437452614,
+    4.265352539802881
+   ]
+  },
+  {
+   "policy": "confidence-0.9",
+   "family": "confidence",
+   "accuracy": 0.7975739196360879,
+   "accuracy_ci": [
+    0.775587566338135,
+    0.8188021228203184
+   ],
+   "samples": 4.151630022744503,
+   "samples_ci": [
+    3.99696739954511,
+    4.310841546626232
+   ]
+  },
+  {
+   "policy": "confidence-0.95",
+   "family": "confidence",
+   "accuracy": 0.7975739196360879,
+   "accuracy_ci": [
+    0.775587566338135,
+    0.8188021228203184
+   ],
+   "samples": 4.151630022744503,
+   "samples_ci": [
+    3.99696739954511,
+    4.310841546626232
+   ]
+  },
+  {
+   "policy": "confidence-1",
+   "family": "confidence",
+   "accuracy": 0.7975739196360879,
+   "accuracy_ci": [
+    0.775587566338135,
+    0.8188021228203184
+   ],
+   "samples": 4.151630022744503,
+   "samples_ci": [
+    3.99696739954511,
+    4.310841546626232
+   ]
+  },
+  {
+   "policy": "agreement-2",
+   "family": "agreement",
+   "accuracy": 0.7884761182714177,
+   "accuracy_ci": [
+    0.7657316148597423,
+    0.8104624715693708
+   ],
+   "samples": 3.227445034116755,
+   "samples_ci": [
+    3.1182714177407127,
+    3.3411675511751326
+   ]
+  },
+  {
+   "policy": "agreement-3",
+   "family": "agreement",
+   "accuracy": 0.7983320697498104,
+   "accuracy_ci": [
+    0.7763457164518575,
+    0.819560272934041
+   ],
+   "samples": 4.750568612585292,
+   "samples_ci": [
+    4.631539044730856,
+    4.871114480667172
+   ]
+  },
+  {
+   "policy": "BranchPilot λ=0.025",
+   "family": "learned",
+   "accuracy": 0.7619408642911296,
+   "accuracy_ci": [
+    0.7384382107657316,
+    0.7846853677028052
+   ],
+   "samples": 2.9802880970432146,
+   "samples_ci": [
+    2.8711144806671722,
+    3.0932524639878696
+   ]
+  },
+  {
+   "policy": "BranchPilot λ=0.05",
+   "family": "learned",
+   "accuracy": 0.7513267626990144,
+   "accuracy_ci": [
+    0.7278051554207734,
+    0.7748294162244125
+   ],
+   "samples": 2.491281273692191,
+   "samples_ci": [
+    2.3919636087945415,
+    2.595147839272176
+   ]
+  },
+  {
+   "policy": "BranchPilot λ=0.075",
+   "family": "learned",
+   "accuracy": 0.7437452615617892,
+   "accuracy_ci": [
+    0.7194844579226687,
+    0.7672479150871873
+   ],
+   "samples": 2.1144806671721,
+   "samples_ci": [
+    2.0227445034116753,
+    2.2115238817285823
+   ]
+  },
+  {
+   "policy": "BranchPilot λ=0.1",
+   "family": "learned",
+   "accuracy": 0.7384382107657316,
+   "accuracy_ci": [
+    0.714177407126611,
+    0.7619408642911296
+   ],
+   "samples": 1.8589840788476117,
+   "samples_ci": [
+    1.7755875663381349,
+    1.9469484457922666
+   ]
+  },
+  {
+   "policy": "BranchPilot λ=0.15",
+   "family": "learned",
+   "accuracy": 0.7247915087187263,
+   "accuracy_ci": [
+    0.6997725549658832,
+    0.7490523123578469
+   ],
+   "samples": 1.5246398786959818,
+   "samples_ci": [
+    1.4609552691432903,
+    1.5951478392721758
+   ]
+  }
+ ],
+ "paired": [
+  {
+   "cost": 0.01,
+   "learned": "BranchPilot λ=0.01",
+   "baseline": "agreement-2",
+   "utility_delta": -0.02739196360879454,
+   "utility_delta_ci": [
+    -0.04109249431387423,
+    -0.013570887035633129
+   ]
+  },
+  {
+   "cost": 0.025,
+   "learned": "BranchPilot λ=0.025",
+   "baseline": "agreement-2",
+   "utility_delta": -0.02035633055344958,
+   "utility_delta_ci": [
+    -0.034666413949962074,
+    -0.006102634571645193
+   ]
+  },
+  {
+   "cost": 0.05,
+   "learned": "BranchPilot λ=0.05",
+   "baseline": "agreement-2",
+   "utility_delta": -0.0003411675511751297,
+   "utility_delta_ci": [
+    -0.015163002274450265,
+    0.014671152388172846
+   ]
+  },
+  {
+   "cost": 0.075,
+   "learned": "BranchPilot λ=0.075",
+   "baseline": "fixed-1",
+   "utility_delta": -0.02748294162244124,
+   "utility_delta_ci": [
+    -0.04221000758150115,
+    -0.013134476876421483
+   ]
+  },
+  {
+   "cost": 0.1,
+   "learned": "BranchPilot λ=0.1",
+   "baseline": "fixed-1",
+   "utility_delta": -0.03510235026535255,
+   "utility_delta_ci": [
+    -0.049130022744503475,
+    -0.021379833206975007
+   ]
+  },
+  {
+   "cost": 0.15,
+   "learned": "BranchPilot λ=0.15",
+   "baseline": "fixed-1",
+   "utility_delta": -0.041546626231993934,
+   "utility_delta_ci": [
+    -0.05489101592115238,
+    -0.028960386656557993
+   ]
+  }
+ ]
+}

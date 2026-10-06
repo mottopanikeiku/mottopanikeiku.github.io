@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BranchPilot · Alp Cetin</title>
+  <meta name="description" content="A learned rule for when to stop sampling a language model, tested on GSM8K against simple rules. Stopping after two matching answers won.">
+  <link rel="canonical" href="https://mottopanikeiku.github.io/projects/branchpilot/">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f4ef">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#151412">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="/fonts/text-roman.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/display-roman.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/site.css?v=2a39602304">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Alp Cetin">
+  <meta property="og:title" content="BranchPilot">
+  <meta property="og:description" content="When has a language model sampled enough answers? A learned stopping rule against simple ones on GSM8K.">
+  <meta property="og:url" content="https://mottopanikeiku.github.io/projects/branchpilot/">
+  <meta property="og:image" content="https://mottopanikeiku.github.io/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <p class="name"><a href="/">Alp Cetin</a></p>
+    <p>San Francisco</p>
+  </header>
+
+  <main class="content">
+
+    <div class="intro">
+      <h1>BranchPilot</h1>
+      <p>When has a language model sampled enough answers?</p>
+    </div>
+
+    <section class="block" aria-labelledby="question">
+      <h2 id="question">Question</h2>
+      <div class="prose">
+        <p>Self-consistency asks a model the same question several times and keeps the majority answer. Each extra sample costs time and money, and most problems don’t need all of them. BranchPilot decides after every answer whether to ask again or stop. I wanted to know whether a learned stopping rule beats simple ones.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="method">
+      <h2 id="method">Method</h2>
+      <div class="prose">
+        <p>After each sample, a strategy sees what it has observed so far, such as the vote counts and whether the latest answers agree, and returns stop or continue. I compared fixed sample counts, vote-share thresholds, stopping after two or three matching answers in a row, and a learned rule: a small network trained on 1,600 logged GSM8K problems to predict whether one more sample is worth its price, at six different prices per sample.</p>
+        <p>The answers came from Qwen2.5-1.5B-Instruct on an NVIDIA L4, eight samples for each of 1,600 training, 400 validation and all 1,319 test problems. Every rule’s settings were chosen on validation before the test run, and the success criterion was written down before it.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="result">
+      <h2 id="result">Result</h2>
+      <div class="prose">
+        <p>The learned rule failed the success criterion. Against the simple rule chosen on validation at each price, it did measurably worse at five of the six prices and tied at the sixth.</p>
+        <figure class="figure">
+          <div class="scroll"><!-- figure:branchpilot --><svg class="chart" viewBox="0 0 560 368" role="img" aria-labelledby="branchpilot-title branchpilot-desc"><title id="branchpilot-title">GSM8K test accuracy against average samples per problem</title><desc id="branchpilot-desc">Fixed sample counts from one to eight rise from 68.8% to 80.1%. Stopping after two matching answers in a row reaches 78.8% at 3.2 samples. The learned stopping rule lies between, from 72.5% at 1.5 samples to 76.3% at 3.4 samples, below the agreement rule.</desc><line class="line em" x1="50" y1="14" x2="70" y2="14"/><circle class="dot em" cx="60" cy="14" r="3"/><text class="em" x="78" y="18">learned stopping rule</text><circle class="dot strong" cx="310" cy="14" r="3"/><text class="strong" x="328" y="18">stop at 2 or 3 matching answers</text><line class="line" x1="50" y1="36" x2="70" y2="36"/><circle class="dot" cx="60" cy="36" r="3"/><text x="78" y="40">fixed number of samples</text><circle class="dot hollow" cx="310" cy="36" r="3"/><text x="328" y="40">vote-share thresholds</text><line class="grid" x1="50" y1="291.7" x2="544" y2="291.7"/><text text-anchor="end" x="42" y="295.7">68%</text><line class="grid" x1="50" y1="231.3" x2="544" y2="231.3"/><text text-anchor="end" x="42" y="235.3">72%</text><line class="grid" x1="50" y1="170.7" x2="544" y2="170.7"/><text text-anchor="end" x="42" y="174.7">76%</text><line class="grid" x1="50" y1="110.2" x2="544" y2="110.2"/><text text-anchor="end" x="42" y="114.2">80%</text><text x="42" y="66">test accuracy, 1,319 problems</text><line class="axis" x1="50" y1="322" x2="544" y2="322"/><line class="axis" x1="50" y1="322" x2="50" y2="326"/><text text-anchor="middle" x="50" y="340">1</text><line class="axis" x1="120.6" y1="322" x2="120.6" y2="326"/><text text-anchor="middle" x="120.6" y="340">2</text><line class="axis" x1="191.1" y1="322" x2="191.1" y2="326"/><text text-anchor="middle" x="191.1" y="340">3</text><line class="axis" x1="261.7" y1="322" x2="261.7" y2="326"/><text text-anchor="middle" x="261.7" y="340">4</text><line class="axis" x1="332.3" y1="322" x2="332.3" y2="326"/><text text-anchor="middle" x="332.3" y="340">5</text><line class="axis" x1="402.9" y1="322" x2="402.9" y2="326"/><text text-anchor="middle" x="402.9" y="340">6</text><line class="axis" x1="473.4" y1="322" x2="473.4" y2="326"/><text text-anchor="middle" x="473.4" y="340">7</text><line class="axis" x1="544" y1="322" x2="544" y2="326"/><text text-anchor="middle" x="544" y="340">8</text><text text-anchor="middle" x="297" y="362">average samples per problem</text><path class="line" d="M50 280.2 L120.6 232 L191.1 193 L261.7 173.5 L332.3 142.6 L402.9 130 L473.4 124.2 L544 109.3"/><circle class="dot" cx="50" cy="280.2" r="2.6"/><circle class="dot" cx="120.6" cy="232" r="2.6"/><circle class="dot" cx="191.1" cy="193" r="2.6"/><circle class="dot" cx="261.7" cy="173.5" r="2.6"/><circle class="dot" cx="332.3" cy="142.6" r="2.6"/><circle class="dot" cx="402.9" cy="130" r="2.6"/><circle class="dot" cx="473.4" cy="124.2" r="2.6"/><circle class="dot" cx="544" cy="109.3" r="2.6"/><circle class="dot hollow" cx="120.6" cy="232" r="2.6"/><circle class="dot hollow" cx="202.5" cy="128.8" r="2.6"/><circle class="dot hollow" cx="203.3" cy="128.8" r="2.6"/><circle class="dot hollow" cx="207" cy="127.7" r="2.6"/><circle class="dot hollow" cx="245.5" cy="117.4" r="2.6"/><circle class="dot hollow" cx="245.5" cy="117.4" r="2.6"/><circle class="dot hollow" cx="248" cy="117.4" r="2.6"/><circle class="dot hollow" cx="259.9" cy="115.1" r="2.6"/><circle class="dot hollow" cx="269.5" cy="113.9" r="2.6"/><circle class="dot hollow" cx="272.4" cy="113.9" r="2.6"/><circle class="dot hollow" cx="272.4" cy="113.9" r="2.6"/><circle class="dot hollow" cx="272.4" cy="113.9" r="2.6"/><line class="ci em" x1="87" y1="261.8" x2="87" y2="187.3"/><line class="ci em" x1="82.5" y1="224" x2="92" y2="224"/><line class="ci em" x1="110.6" y1="240.1" x2="110.6" y2="167.8"/><line class="ci em" x1="104.7" y1="203.4" x2="116.8" y2="203.4"/><line class="ci em" x1="128.7" y1="232" x2="128.7" y2="159.8"/><line class="ci em" x1="122.2" y1="195.3" x2="135.5" y2="195.3"/><line class="ci em" x1="155.2" y1="219.4" x2="155.2" y2="148.3"/><line class="ci em" x1="148.2" y1="183.9" x2="162.6" y2="183.9"/><line class="ci em" x1="189.8" y1="203.4" x2="189.8" y2="133.4"/><line class="ci em" x1="182" y1="167.8" x2="197.7" y2="167.8"/><line class="ci em" x1="218.6" y1="203.4" x2="218.6" y2="132.2"/><line class="ci em" x1="210.5" y1="166.7" x2="226.9" y2="166.7"/><line class="ci strong" x1="207.2" y1="162.1" x2="207.2" y2="94.4"/><line class="ci strong" x1="199.5" y1="127.7" x2="215.2" y2="127.7"/><line class="ci strong" x1="314.7" y1="146" x2="314.7" y2="80.7"/><line class="ci strong" x1="306.3" y1="112.8" x2="323.2" y2="112.8"/><path class="line em" d="M87 224 L110.6 203.4 L128.7 195.3 L155.2 183.9 L189.8 167.8 L218.6 166.7"/><circle class="dot em" cx="87" cy="224" r="3.2"/><circle class="dot em" cx="110.6" cy="203.4" r="3.2"/><circle class="dot em" cx="128.7" cy="195.3" r="3.2"/><circle class="dot em" cx="155.2" cy="183.9" r="3.2"/><circle class="dot em" cx="189.8" cy="167.8" r="3.2"/><circle class="dot em" cx="218.6" cy="166.7" r="3.2"/><circle class="dot strong" cx="207.2" cy="127.7" r="3.2"/><circle class="dot strong" cx="314.7" cy="112.8" r="3.2"/><text class="strong" text-anchor="end" x="193.5" y="131.7">2 in a row</text><text class="strong" x="329.2" y="116.8">3 in a row</text></svg><!-- /figure:branchpilot --></div>
+          <figcaption>Accuracy on the 1,319 GSM8K test problems against the average number of samples drawn per problem. Bars are 95% bootstrap intervals over problems; hollow points are vote-share thresholds. Data: <a href="https://github.com/mottopanikeiku/branchpilot/blob/6f2ff8654aec07e806c3fcfea4f5e2514c36928d/benchmarks/gsm8k-sampling-bootstrap.json">gsm8k-sampling-bootstrap.json</a>.</figcaption>
+        </figure>
+        <p>It did beat fixed sample counts at small budgets: 72.5% accuracy with 1.5 samples per problem, against 72.0% for always drawing two. But stopping after two matching answers reached 78.8% with 3.2 samples, and the learned rule never caught up.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="limits">
+      <h2 id="limits">Limits</h2>
+      <div class="prose">
+        <p>One model, one task and one sampling seed, with at most eight samples per problem. Sample counts stand in for cost; I didn’t measure latency or dollars. The learned rule’s training targets are computed from logged answers, which makes them exact for those answers and nothing more.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="links">
+      <h2 id="links">Links</h2>
+      <ul class="rows">
+        <li class="entry"><p class="title"><a href="https://github.com/mottopanikeiku/branchpilot">Code and results</a> <span class="org">GitHub</span></p></li>
+        <li class="entry"><p class="title"><a href="https://arxiv.org/abs/2305.11860">Adaptive-Consistency</a> <span class="org">Aggarwal et al., 2023</span></p></li>
+        <li class="entry"><p class="title"><a href="https://arxiv.org/abs/2401.10480">Early-Stopping Self-Consistency</a> <span class="org">Li et al., 2024</span></p></li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="colophon">
+    <p><a href="/">All work</a></p>
+  </footer>
+
+</div>
+</body>
+</html>
