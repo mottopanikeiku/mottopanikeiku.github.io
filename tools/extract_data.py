@@ -18,7 +18,7 @@ SOURCES = {
                     "benchmarks/gsm8k-sampling-bootstrap.json"),
     "faultline": ("faultline", "d8dcf021e434d64adf06659ff0e1e0d61b70acf0",
                   "artifacts/results/small-kill-v1-analysis.json"),
-    "heliostune": ("heliostune", "9f29906220f7c5e4d7662f60738fd483fcbe5fdc",
+    "heliostune": ("heliostune", "d1f5ab6fb6ff8b1862baf635dc8abd9241052809",
                    "benchmarks/results/parhelion-h100-final.json"),
     "verge-lab": ("verge-lab", "0e42e8ca557e38e91863cc8b64ba8dd64be6009a",
                   "results/public-preferences/summary.json"),
