@@ -13,7 +13,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/fonts/text-roman.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/display-roman.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/site.css?v=8c169d6e67">
+  <link rel="stylesheet" href="/site.css?v=0d1abf57f3">
   <meta property="og:type" content="profile">
   <meta property="og:site_name" content="Alp Cetin">
   <meta property="og:title" content="Alp Cetin">
@@ -85,6 +85,11 @@
           <p class="desc">How many benchmark items it takes to tell two language models apart. Across 395 models on five benchmarks, almost no neighboring leaderboard gaps were significant, and studies planned from small pilots detected the difference only 49–79% of the time instead of 80%.</p>
         </li>
         <li class="entry">
+          <h3 class="title"><a href="/projects/control-clock/" data-print="github.com/mottopanikeiku/control-clock">control-clock</a></h3>
+          <p class="year"><time datetime="2026">2026</time></p>
+          <p class="desc">Seconds from a cold Python process to a policy that passes CartPole or Acrobot on a laptop CPU, with every evaluation on the clock. Search over linear policies passed CartPole in a median 1.1 seconds, nearly four times faster than the fastest PPO; on Acrobot, Stable-Baselines3’s tuned PPO was fastest at 10 seconds.</p>
+        </li>
+        <li class="entry">
           <h3 class="title"><a href="/projects/branchpilot/" data-print="github.com/mottopanikeiku/branchpilot">BranchPilot</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">A learned stopping rule for self-consistency sampling: after each answer, a value function decides whether one more sample is worth its cost. On all 1,319 GSM8K test problems it failed a success rule fixed before the run; simpler rules did better.</p>
@@ -94,12 +99,12 @@
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">A rule for choosing preference pairs from multi-aspect judge scores that abstains when the aspects trade off. On 1,200 UltraFeedback pairs it defended 820; for 18.7% of the defended pairs that the dataset’s overall score ranks, that score ranks them the other way.</p>
         </li>
-        <li class="entry">
+        <li class="entry brief">
           <h3 class="title"><a href="/projects/faultline/" data-print="github.com/mottopanikeiku/faultline">Faultline</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">A factory simulator where two hidden faults look the same until a cheap test tells them apart, used to train recurrent PPO agents to test before they repair. Training only on ambiguous cases scored highest, but across eight seeds its edge over simpler curricula wasn’t reliable.</p>
         </li>
-        <li class="entry">
+        <li class="entry brief">
           <h3 class="title"><a href="/projects/quantile-cycles/" data-print="github.com/mottopanikeiku/quantile-cycles">Quantile cycles</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">A counterexample in distributional RL: small decision problems where greedy control with quantile-projected Bellman updates alternates forever between a good action and a worse one, with no fixed point. The examples are checked in exact rational arithmetic.</p>

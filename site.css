@@ -534,7 +534,8 @@ code {
 
   .colophon,
   .contact,
-  .screen-only {
+  .screen-only,
+  .brief .desc {
     display: none;
   }
 

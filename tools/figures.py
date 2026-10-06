@@ -350,9 +350,64 @@ def attention_numerics() -> str:
     return s.render()
 
 
+def control_clock() -> str:
+    data = load("control-clock")
+    names = {"ars": "ARS, linear policy", "cem": "CEM, linear policy",
+             "ppo-cpu": "batched PPO (this repo)", "sb3-zoo": "SB3 PPO, Zoo settings",
+             "cleanrl": "CleanRL PPO"}
+    short = {"ars": "ARS", "cem": "CEM", "ppo-cpu": "batched PPO",
+             "sb3-zoo": "Stable-Baselines3 PPO", "cleanrl": "CleanRL PPO"}
+    tasks = (("CartPole-v1", "CartPole-v1, pass at mean return 475"),
+             ("Acrobot-v1", "Acrobot-v1, pass at mean return −100"))
+    groups = []
+    for task, heading in tasks:
+        rows = sorted((c for c in data["cohorts"] if c["task"] == task), key=lambda c: c["median"])
+        groups.append((task, heading, rows))
+    W, L, R, band = 560, 168, 52, 22
+    lo, hi = math.log10(0.3), math.log10(120)
+    x = lambda sec: L + (math.log10(sec) - lo) / (hi - lo) * (W - R - L)
+    top = 44
+    bottom = top + sum(24 + band * len(rows) + 8 for _, _, rows in groups)
+    H = bottom + 40
+    passed = sum(c["successes"] for c in data["cohorts"])
+    runs = sum(c["seeds"] for c in data["cohorts"])
+    desc = " ".join(
+        f"{task}: " + "; ".join(f"{short[c['method']]} {c['median']:.2f} s" for c in rows) + "."
+        for task, _, rows in groups
+    ) + f" {passed} of {runs} runs passed."
+    s = SVG("control-clock", W, H, "Seconds from process start to a passing policy, per seed",
+            "Median seconds by method. " + desc)
+    s.text(L, 16, "one dot per seed; the bar is the median")
+    s.text(W, 16, "passed", anchor="end")
+    ticks = (0.5, 1, 2, 5, 10, 20, 50, 100)
+    y = top
+    for _, heading, rows in groups:
+        s.text(0, y, heading, "strong")
+        y += 24
+        span = band * len(rows)
+        for v in ticks:
+            s.line(x(v), y - 14, x(v), y + span - 12, "grid")
+        for c in rows:
+            cls = "em" if c["method"] == "ppo-cpu" else ""
+            s.text(L - 12, y, names[c["method"]], cls, "end")
+            for r in c["records"]:
+                yy = y - 4 + ((r["seed"] % 5) - 2) * 1.8
+                dot = f"dot {cls}" if r["solved"] else f"dot hollow {cls}"
+                s.circle(x(r["seconds"]), yy, 2.3, dot.strip())
+            s.line(x(c["median"]), y - 12, x(c["median"]), y + 4, "mean")
+            s.text(W, y, f"{c['successes']}/{c['seeds']}", anchor="end")
+            y += band
+        y += 8
+    for v in ticks:
+        s.text(x(v), bottom + 6, f"{v:g}", anchor="middle")
+    s.text((L + W - R) / 2, H - 6, "seconds from process start, log scale", anchor="middle")
+    return s.render()
+
+
 FIGURES = {
     "attention-numerics": attention_numerics,
     "branchpilot": branchpilot,
+    "control-clock": control_clock,
     "eval-power": eval_power,
     "faultline": faultline,
     "heliostune": heliostune,

@@ -23,6 +23,8 @@ SOURCES = {
                            "results/diagnosis.csv"),
     "branchpilot": ("branchpilot", "6f2ff8654aec07e806c3fcfea4f5e2514c36928d",
                     "benchmarks/gsm8k-sampling-bootstrap.json"),
+    "control-clock": ("control-clock", "ee9c303de8e7698ca25569fc585e173e3e172bb8",
+                      "results/summary.json"),
     "eval-power": ("eval-power", "ef7c451d678e7eece94344b0c87567a60e28e330",
                    "results/calibration.csv"),
     "faultline": ("faultline", "d8dcf021e434d64adf06659ff0e1e0d61b70acf0",
@@ -199,10 +201,30 @@ def attention_controls(rows: list[dict]) -> dict:
     }
 
 
+def control_clock(raw: dict) -> dict:
+    cohorts = []
+    for key, cohort in raw.items():
+        task, method, variant = key.split("/")
+        cohorts.append({
+            "task": task,
+            "method": method,
+            "variant": variant,
+            "seeds": cohort["seeds"],
+            "successes": cohort["successes"],
+            "median": cohort["conditional_median_seconds"],
+            "q25": cohort["conditional_q25_seconds"],
+            "q75": cohort["conditional_q75_seconds"],
+            "limit": max(cohort["limit_seconds"]),
+            "records": cohort["records"],
+        })
+    return {"cohorts": cohorts}
+
+
 TRANSFORMS = {
     "attention-controls": attention_controls,
     "attention-numerics": attention_numerics,
     "branchpilot": branchpilot,
+    "control-clock": control_clock,
     "eval-power": eval_power,
     "faultline": faultline,
     "heliostune": heliostune,
