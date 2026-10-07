@@ -1,9 +1,9 @@
 {
  "source": {
   "repo": "mottopanikeiku/verge-lab",
-  "commit": "0e42e8ca557e38e91863cc8b64ba8dd64be6009a",
+  "commit": "efa08d133f22501b2dedcb7a7aa636bf37bbc826",
   "path": "results/public-preferences/summary.json",
-  "url": "https://github.com/mottopanikeiku/verge-lab/blob/0e42e8ca557e38e91863cc8b64ba8dd64be6009a/results/public-preferences/summary.json"
+  "url": "https://github.com/mottopanikeiku/verge-lab/blob/efa08d133f22501b2dedcb7a7aa636bf37bbc826/results/public-preferences/summary.json"
  },
  "prompts": 200,
  "responses": 800,

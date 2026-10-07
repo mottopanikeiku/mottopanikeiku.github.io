@@ -427,6 +427,56 @@ def cpu_decode() -> str:
     return s.render()
 
 
+def seed_power() -> str:
+    data = load("seed-power")
+    s = SVG("seed-power", 560, 250,
+            "Detection rates of fresh-seed RL studies planned for 80% power",
+            "All executable plans detected 67 of 119 differences, 56.3%. CartPole detected "
+            "30 of 60, 50.0%; Acrobot detected 37 of 59, 62.7%. Bars are Wilson 95% intervals. "
+            "The dashed line is the 80% planning target.")
+    x = scale(0, 1, 160, 544)
+    for value in (0, 0.2, 0.4, 0.6, 0.8, 1):
+        s.line(x(value), 42, x(value), 188, "grid")
+        s.text(x(value), 211, f"{value * 100:.0f}%", anchor="middle")
+    s.line(x(data["target_power"]), 40, x(data["target_power"]), 188, "line dash")
+    s.text(x(data["target_power"]), 22, "80% target", "strong", "middle")
+    for index, row in enumerate(data["rows"]):
+        y = 65 + index * 52
+        cls = "em" if index == 0 else "strong"
+        s.text(148, y + 4, row["name"], anchor="end")
+        s.line(x(row["ci"][0]), y, x(row["ci"][1]), y, f"ci {cls}")
+        s.circle(x(row["rate"]), y, 4, f"dot {cls}")
+        s.text(x(row["rate"]), y + 22,
+               f'{row["detections"]}/{row["plans"]} ({row["rate"] * 100:.1f}%)',
+               cls, "middle")
+    s.text(352, 243, "detection rate; Wilson 95% intervals", anchor="middle")
+    return s.render()
+
+
+def verge_human() -> str:
+    data = load("verge-human")
+    s = SVG("verge-human", 560, 220,
+            "Agreement with strict human preferences at matched yield",
+            "At 310 selected pairs each, Pareto selection agreed with 281 of 286 strict "
+            "preferences, 98.25%, and the overall-score-gap baseline with 277 of 282, 98.23%. "
+            "Wilson 95% intervals overlap. Human ties are excluded from agreement.")
+    x = scale(0.95, 1, 170, 544)
+    for value in (0.95, 0.96, 0.97, 0.98, 0.99, 1):
+        s.line(x(value), 40, x(value), 158, "grid")
+        s.text(x(value), 183, f"{value * 100:.0f}%", anchor="middle")
+    for index, row in enumerate(data["rows"]):
+        y = 65 + index * 65
+        cls = "em" if index == 0 else "strong"
+        s.text(158, y + 4, row["name"], anchor="end")
+        s.line(x(row["ci"][0]), y, x(row["ci"][1]), y, f"ci {cls}")
+        s.circle(x(row["rate"]), y, 4, f"dot {cls}")
+        s.text(x(row["rate"]), y + 22,
+               f'{row["agree"]}/{row["strict_pairs"]} ({row["rate"] * 100:.2f}%)',
+               cls, "middle")
+    s.text(357, 212, "strict agreement; Wilson 95% intervals", anchor="middle")
+    return s.render()
+
+
 FIGURES = {
     "attention-numerics": attention_numerics,
     "branchpilot": branchpilot,
@@ -436,6 +486,8 @@ FIGURES = {
     "faultline": faultline,
     "heliostune": heliostune,
     "verge-lab": verge_lab,
+    "seed-power": seed_power,
+    "verge-human": verge_human,
 }
 
 

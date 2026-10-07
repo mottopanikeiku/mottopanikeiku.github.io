@@ -1,0 +1,129 @@
+{
+  "axe": [
+    {
+      "page": "index.html",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "page": "index.html",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "page": "404.html",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "page": "404.html",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "page": "projects/attention-numerics/index.html",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "page": "projects/attention-numerics/index.html",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "page": "projects/branchpilot/index.html",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "page": "projects/branchpilot/index.html",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "page": "projects/control-clock/index.html",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "page": "projects/control-clock/index.html",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "page": "projects/cpu-decode/index.html",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "page": "projects/cpu-decode/index.html",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "page": "projects/eval-power/index.html",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "page": "projects/eval-power/index.html",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "page": "projects/faultline/index.html",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "page": "projects/faultline/index.html",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "page": "projects/heliostune/index.html",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "page": "projects/heliostune/index.html",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "page": "projects/quantile-cycles/index.html",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "page": "projects/quantile-cycles/index.html",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "page": "projects/seed-power/index.html",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "page": "projects/seed-power/index.html",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "page": "projects/verge-lab/index.html",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "page": "projects/verge-lab/index.html",
+      "theme": "dark",
+      "violations": []
+    }
+  ],
+  "print": {
+    "pages": 1,
+    "width_points": 595.91998,
+    "height_points": 842.88
+  }
+}

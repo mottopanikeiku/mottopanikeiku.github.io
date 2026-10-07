@@ -1,0 +1,33 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/verge-lab",
+  "commit": "efa08d133f22501b2dedcb7a7aa636bf37bbc826",
+  "path": "results/human-preferences/summary.json",
+  "url": "https://github.com/mottopanikeiku/verge-lab/blob/efa08d133f22501b2dedcb7a7aa636bf37bbc826/results/human-preferences/summary.json"
+ },
+ "yield": 310,
+ "rows": [
+  {
+   "name": "Pareto selection",
+   "agree": 281,
+   "strict_pairs": 286,
+   "human_ties": 24,
+   "rate": 0.9825174825174825,
+   "ci": [
+    0.9597347447408923,
+    0.9925099794023956
+   ]
+  },
+  {
+   "name": "Overall-score gap",
+   "agree": 277,
+   "strict_pairs": 282,
+   "human_ties": 28,
+   "rate": 0.9822695035460993,
+   "ci": [
+    0.9591730361408778,
+    0.9924034115941697
+   ]
+  }
+ ]
+}
