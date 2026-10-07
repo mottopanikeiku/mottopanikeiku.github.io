@@ -1,0 +1,66 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/verge-lab",
+  "commit": "c70f5cf9731957b912d0c6c1e3399aa85377648a",
+  "path": "results/day-dpo/summary.json",
+  "url": "https://github.com/mottopanikeiku/verge-lab/blob/c70f5cf9731957b912d0c6c1e3399aa85377648a/results/day-dpo/summary.json"
+ },
+ "prompts": 192,
+ "training_seeds": [
+  1701,
+  1702,
+  1703
+ ],
+ "reward_measure": {
+  "model": "OpenAssistant/reward-model-deberta-v3-large-v2",
+  "model_card": "https://huggingface.co/OpenAssistant/reward-model-deberta-v3-large-v2",
+  "revision": "c355404efa9ad2ad069f3a197cae0523c14244fc",
+  "tokenization": "Question + answer pair, max_length=512, longest_first",
+  "units": "Raw single logit, not a probability or human preference label"
+ },
+ "bootstrap": {
+  "draws": 10000,
+  "interval": "95% percentile; linear interpolation of sorted draws",
+  "method": "Crossed paired bootstrap of prompts and matched seed IDs",
+  "random_seed": 20261007
+ },
+ "primary": {
+  "ci95": [
+   -0.2567360822823427,
+   0.031770176391119544
+  ],
+  "conclusion": "inconclusive",
+  "mean": -0.11165175386213377,
+  "per_seed": [
+   {
+    "mean": -0.027171047372879304,
+    "seed": 1701
+   },
+   {
+    "mean": -0.11790505394583306,
+    "seed": 1702
+   },
+   {
+    "mean": -0.18987916026768895,
+    "seed": 1703
+   }
+  ]
+ },
+ "conditions": [
+  {
+   "name": "Pareto",
+   "mean_reward": 0.6197554350785341,
+   "wins_vs_start": 0.4982638888888889
+  },
+  {
+   "name": "Score gap",
+   "mean_reward": 0.7314071889406679,
+   "wins_vs_start": 0.5486111111111112
+  },
+  {
+   "name": "Human",
+   "mean_reward": 0.6512409123170073,
+   "wins_vs_start": 0.5
+  }
+ ]
+}

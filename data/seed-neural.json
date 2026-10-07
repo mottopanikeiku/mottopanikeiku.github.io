@@ -1,0 +1,44 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/seed-power",
+  "commit": "06fe936715ccba056e1e5e44971e52e051df901c",
+  "path": "results/neural/summary.json",
+  "url": "https://github.com/mottopanikeiku/seed-power/blob/06fe936715ccba056e1e5e44971e52e051df901c/results/neural/summary.json"
+ },
+ "target_power": 0.8,
+ "fresh_seeds": 65744,
+ "attempted_plans": 400,
+ "over_budget": 93,
+ "rows": [
+  {
+   "name": "All executable plans",
+   "plans": 307,
+   "detections": 139,
+   "rate": 0.4527687296416938,
+   "ci": [
+    0.39801404506332716,
+    0.5086908066317345
+   ]
+  },
+  {
+   "name": "CartPole",
+   "plans": 175,
+   "detections": 109,
+   "rate": 0.6228571428571429,
+   "ci": [
+    0.5491360438821392,
+    0.6913003755227801
+   ]
+  },
+  {
+   "name": "Acrobot",
+   "plans": 132,
+   "detections": 30,
+   "rate": 0.22727272727272727,
+   "ci": [
+    0.1640920693359151,
+    0.30587828709968956
+   ]
+  }
+ ]
+}

@@ -1,9 +1,9 @@
 {
  "source": {
   "repo": "mottopanikeiku/seed-power",
-  "commit": "71ce487eac1eafc9481eec7427ea83340e23569a",
+  "commit": "06fe936715ccba056e1e5e44971e52e051df901c",
   "path": "results/summary.json",
-  "url": "https://github.com/mottopanikeiku/seed-power/blob/71ce487eac1eafc9481eec7427ea83340e23569a/results/summary.json"
+  "url": "https://github.com/mottopanikeiku/seed-power/blob/06fe936715ccba056e1e5e44971e52e051df901c/results/summary.json"
  },
  "target_power": 0.8,
  "fresh_seeds": 11440,

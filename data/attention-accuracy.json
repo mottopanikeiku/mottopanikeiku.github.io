@@ -1,0 +1,175 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/attention-numerics",
+  "commit": "11281b844d8b0cd55e93bdfaff486e0fed20f3ab",
+  "path": "results/accuracy/summary.json",
+  "url": "https://github.com/mottopanikeiku/attention-numerics/blob/11281b844d8b0cd55e93bdfaff486e0fed20f3ab/results/accuracy/summary.json"
+ },
+ "interval_method": "paired item percentile bootstrap via exact multinomial categories",
+ "harm_rule": {
+  "minimum_drop": 0.02,
+  "interval_upper_below": 0,
+  "definition": "variant accuracy minus BF16 <= -0.02 and the upper endpoint of its paired 95% interval < 0"
+ },
+ "models": 8,
+ "comparisons": 96,
+ "harm_flags": 16,
+ "centered_comparisons": 48,
+ "centered_harm_flags": 0,
+ "model": "Qwen2.5-7B",
+ "tasks": [
+  {
+   "key": "hellaswag",
+   "name": "HellaSwag",
+   "items": 2000,
+   "rows": [
+    {
+     "variant": "tile",
+     "baseline_accuracy": 0.809,
+     "accuracy": 0.637,
+     "delta": -0.172,
+     "ci95": [
+      -0.1925,
+      -0.152
+     ],
+     "harm_flag": true
+    },
+    {
+     "variant": "rotate",
+     "baseline_accuracy": 0.809,
+     "accuracy": 0.455,
+     "delta": -0.354,
+     "ci95": [
+      -0.379,
+      -0.329
+     ],
+     "harm_flag": true
+    },
+    {
+     "variant": "smooth_k",
+     "baseline_accuracy": 0.809,
+     "accuracy": 0.8085,
+     "delta": -0.0005,
+     "ci95": [
+      -0.005,
+      0.004
+     ],
+     "harm_flag": false
+    },
+    {
+     "variant": "rotate_smooth_k",
+     "baseline_accuracy": 0.809,
+     "accuracy": 0.8105,
+     "delta": 0.0015,
+     "ci95": [
+      -0.002,
+      0.0055
+     ],
+     "harm_flag": false
+    }
+   ]
+  },
+  {
+   "key": "arc_challenge",
+   "name": "ARC-Challenge",
+   "items": 1172,
+   "rows": [
+    {
+     "variant": "tile",
+     "baseline_accuracy": 0.5520477815699659,
+     "accuracy": 0.4197952218430034,
+     "delta": -0.13225255972696245,
+     "ci95": [
+      -0.1621160409556314,
+      -0.10238907849829351
+     ],
+     "harm_flag": true
+    },
+    {
+     "variant": "rotate",
+     "baseline_accuracy": 0.5520477815699659,
+     "accuracy": 0.4061433447098976,
+     "delta": -0.14590443686006827,
+     "ci95": [
+      -0.17832764505119453,
+      -0.11348122866894197
+     ],
+     "harm_flag": true
+    },
+    {
+     "variant": "smooth_k",
+     "baseline_accuracy": 0.5520477815699659,
+     "accuracy": 0.5588737201365188,
+     "delta": 0.006825938566552901,
+     "ci95": [
+      -0.005972696245733789,
+      0.01962457337883959
+     ],
+     "harm_flag": false
+    },
+    {
+     "variant": "rotate_smooth_k",
+     "baseline_accuracy": 0.5520477815699659,
+     "accuracy": 0.5537542662116041,
+     "delta": 0.0017064846416382253,
+     "ci95": [
+      -0.008532423208191127,
+      0.011945392491467578
+     ],
+     "harm_flag": false
+    }
+   ]
+  },
+  {
+   "key": "mmlu",
+   "name": "MMLU",
+   "items": 2000,
+   "rows": [
+    {
+     "variant": "tile",
+     "baseline_accuracy": 0.716,
+     "accuracy": 0.572,
+     "delta": -0.144,
+     "ci95": [
+      -0.1655,
+      -0.1225
+     ],
+     "harm_flag": true
+    },
+    {
+     "variant": "rotate",
+     "baseline_accuracy": 0.716,
+     "accuracy": 0.623,
+     "delta": -0.093,
+     "ci95": [
+      -0.112,
+      -0.074
+     ],
+     "harm_flag": true
+    },
+    {
+     "variant": "smooth_k",
+     "baseline_accuracy": 0.716,
+     "accuracy": 0.7155,
+     "delta": -0.0005,
+     "ci95": [
+      -0.0075,
+      0.0065
+     ],
+     "harm_flag": false
+    },
+    {
+     "variant": "rotate_smooth_k",
+     "baseline_accuracy": 0.716,
+     "accuracy": 0.7125,
+     "delta": -0.0035,
+     "ci95": [
+      -0.0085,
+      0.0015
+     ],
+     "harm_flag": false
+    }
+   ]
+  }
+ ]
+}
