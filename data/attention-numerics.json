@@ -1,172 +1,88 @@
 {
  "source": {
   "repo": "mottopanikeiku/attention-numerics",
-  "commit": "4d477646e7c3a05b42e17659fd52ced31a6910b8",
-  "path": "results/diagnosis.csv",
-  "url": "https://github.com/mottopanikeiku/attention-numerics/blob/4d477646e7c3a05b42e17659fd52ced31a6910b8/results/diagnosis.csv"
+  "commit": "54fd549b3d8d7f0b0fb1a82032143952e8b4d72c",
+  "path": "results/v2/summary.json",
+  "url": "https://github.com/mottopanikeiku/attention-numerics/blob/54fd549b3d8d7f0b0fb1a82032143952e8b4d72c/results/v2/summary.json"
  },
- "model": "Qwen/Qwen2.5-0.5B-Instruct",
- "tokens": 1024,
- "heads": [
+ "models": [
   {
-   "layer": 0,
-   "head": 0,
-   "variant": "e4_tensor",
-   "relative_error": 0.2358768929318482,
-   "k_mean_energy_fraction": 0.9747101820972083,
-   "tv_max": 0.3636928690917537
+   "key": "olmo1",
+   "name": "OLMo-2-1B",
+   "tokens": 3072,
+   "perplexity_increase": {
+    "bf16": 0.0,
+    "rotate": 0.001575290949660651,
+    "rotate_smooth_k": 0.0008394148055937117,
+    "smooth_k": 0.006439444195113131,
+    "smooth_kq": 0.0009802778024659766,
+    "tile": 0.0371056344760414
+   }
   },
   {
-   "layer": 0,
-   "head": 0,
-   "variant": "e4_tile",
-   "relative_error": 0.2365207957884664,
-   "k_mean_energy_fraction": 0.9747101820972083,
-   "tv_max": 0.34821138065963314
+   "key": "qwen05",
+   "name": "Qwen2.5-0.5B",
+   "tokens": 3072,
+   "perplexity_increase": {
+    "bf16": 0.0,
+    "rotate": 0.9091571793511051,
+    "rotate_smooth_k": 0.06065491811836416,
+    "smooth_k": 0.017982131921211276,
+    "smooth_kq": 0.003337620252802599,
+    "tile": 0.06905469724636917
+   }
   },
   {
-   "layer": 0,
-   "head": 0,
-   "variant": "e4_rotate",
-   "relative_error": 1.1706633085706304,
-   "k_mean_energy_fraction": 0.9747101820972083,
-   "tv_max": 0.9987456739315288
+   "key": "qwen15",
+   "name": "Qwen2.5-1.5B",
+   "tokens": 3072,
+   "perplexity_increase": {
+    "bf16": 0.0,
+    "rotate": 6.259891913876559,
+    "rotate_smooth_k": 0.0035078012900849566,
+    "smooth_k": 0.01537345437830654,
+    "smooth_kq": 0.004373187698974077,
+    "tile": 4.7217971822059175
+   }
   },
   {
-   "layer": 0,
-   "head": 0,
-   "variant": "e4_smooth_tile",
-   "relative_error": 0.054868851132607546,
-   "k_mean_energy_fraction": 0.9747101820972083,
-   "tv_max": 0.08366809862152524
+   "key": "smol036",
+   "name": "SmolLM2-360M",
+   "tokens": 3072,
+   "perplexity_increase": {
+    "bf16": 0.0,
+    "rotate": 0.0030388088690103776,
+    "rotate_smooth_k": 0.003230227363963749,
+    "smooth_k": 0.00904737920544337,
+    "smooth_kq": 0.0009470962889092027,
+    "tile": 0.010390003539112942
+   }
   },
   {
-   "layer": 0,
-   "head": 0,
-   "variant": "e4_smooth_rotate",
-   "relative_error": 0.4488140467437088,
-   "k_mean_energy_fraction": 0.9747101820972083,
-   "tv_max": 0.6761557563330889
+   "key": "smol17",
+   "name": "SmolLM2-1.7B",
+   "tokens": 3072,
+   "perplexity_increase": {
+    "bf16": 0.0,
+    "rotate": 0.01243315362066847,
+    "rotate_smooth_k": 0.014172271415083613,
+    "smooth_k": 0.015441850008039501,
+    "smooth_kq": 0.01056406413301622,
+    "tile": 0.02632724752108991
+   }
   },
   {
-   "layer": 0,
-   "head": 7,
-   "variant": "e4_tensor",
-   "relative_error": 0.20189618889501798,
-   "k_mean_energy_fraction": 0.9480673937163933,
-   "tv_max": 0.6686307721874073
-  },
-  {
-   "layer": 0,
-   "head": 7,
-   "variant": "e4_tile",
-   "relative_error": 0.21167526493441405,
-   "k_mean_energy_fraction": 0.9480673937163933,
-   "tv_max": 0.5621153903699976
-  },
-  {
-   "layer": 0,
-   "head": 7,
-   "variant": "e4_rotate",
-   "relative_error": 0.7325442609733608,
-   "k_mean_energy_fraction": 0.9480673937163933,
-   "tv_max": 0.9981591303921176
-  },
-  {
-   "layer": 0,
-   "head": 7,
-   "variant": "e4_smooth_tile",
-   "relative_error": 0.11961185818835117,
-   "k_mean_energy_fraction": 0.9480673937163933,
-   "tv_max": 0.36815365107062353
-  },
-  {
-   "layer": 0,
-   "head": 7,
-   "variant": "e4_smooth_rotate",
-   "relative_error": 0.2732030257959553,
-   "k_mean_energy_fraction": 0.9480673937163933,
-   "tv_max": 0.8141817948160754
-  },
-  {
-   "layer": 12,
-   "head": 0,
-   "variant": "e4_tensor",
-   "relative_error": 0.07221952940628296,
-   "k_mean_energy_fraction": 0.5941697826514258,
-   "tv_max": 0.29977857657227075
-  },
-  {
-   "layer": 12,
-   "head": 0,
-   "variant": "e4_tile",
-   "relative_error": 0.049084643215692364,
-   "k_mean_energy_fraction": 0.5941697826514258,
-   "tv_max": 0.23293058175121484
-  },
-  {
-   "layer": 12,
-   "head": 0,
-   "variant": "e4_rotate",
-   "relative_error": 0.039777958430733985,
-   "k_mean_energy_fraction": 0.5941697826514258,
-   "tv_max": 0.12437293006384527
-  },
-  {
-   "layer": 12,
-   "head": 0,
-   "variant": "e4_smooth_tile",
-   "relative_error": 0.054241530867297195,
-   "k_mean_energy_fraction": 0.5941697826514258,
-   "tv_max": 0.2299520385415184
-  },
-  {
-   "layer": 12,
-   "head": 0,
-   "variant": "e4_smooth_rotate",
-   "relative_error": 0.035843757790257384,
-   "k_mean_energy_fraction": 0.5941697826514258,
-   "tv_max": 0.10766642782154884
-  },
-  {
-   "layer": 12,
-   "head": 7,
-   "variant": "e4_tensor",
-   "relative_error": 0.10593201752819098,
-   "k_mean_energy_fraction": 0.5071883888273916,
-   "tv_max": 0.1657193740500647
-  },
-  {
-   "layer": 12,
-   "head": 7,
-   "variant": "e4_tile",
-   "relative_error": 0.10156826453952027,
-   "k_mean_energy_fraction": 0.5071883888273916,
-   "tv_max": 0.15272160996036344
-  },
-  {
-   "layer": 12,
-   "head": 7,
-   "variant": "e4_rotate",
-   "relative_error": 0.08039921971501357,
-   "k_mean_energy_fraction": 0.5071883888273916,
-   "tv_max": 0.13054560969308854
-  },
-  {
-   "layer": 12,
-   "head": 7,
-   "variant": "e4_smooth_tile",
-   "relative_error": 0.06781225332928922,
-   "k_mean_energy_fraction": 0.5071883888273916,
-   "tv_max": 0.11197073996171741
-  },
-  {
-   "layer": 12,
-   "head": 7,
-   "variant": "e4_smooth_rotate",
-   "relative_error": 0.07150297872586998,
-   "k_mean_energy_fraction": 0.5071883888273916,
-   "tv_max": 0.09737932326447041
+   "key": "tiny11",
+   "name": "TinyLlama-1.1B",
+   "tokens": 3072,
+   "perplexity_increase": {
+    "bf16": 0.0,
+    "rotate": 0.0024855218805872963,
+    "rotate_smooth_k": 0.0009413554055449166,
+    "smooth_k": 0.012924588438989958,
+    "smooth_kq": 0.0020657589730546204,
+    "tile": 0.012694049778955116
+   }
   }
  ]
 }

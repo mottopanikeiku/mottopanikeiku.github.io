@@ -10,17 +10,14 @@ import csv
 import io
 import json
 import pathlib
-import statistics
 import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 OWNER = "mottopanikeiku"
 
 SOURCES = {
-    "attention-controls": ("attention-numerics", "4d477646e7c3a05b42e17659fd52ced31a6910b8",
-                           "results/bias-controls.csv"),
-    "attention-numerics": ("attention-numerics", "4d477646e7c3a05b42e17659fd52ced31a6910b8",
-                           "results/diagnosis.csv"),
+    "attention-numerics": ("attention-numerics", "54fd549b3d8d7f0b0fb1a82032143952e8b4d72c",
+                           "results/v2/summary.json"),
     "branchpilot": ("branchpilot", "6f2ff8654aec07e806c3fcfea4f5e2514c36928d",
                     "benchmarks/gsm8k-sampling-bootstrap.json"),
     "control-clock": ("control-clock", "ee9c303de8e7698ca25569fc585e173e3e172bb8",
@@ -164,41 +161,21 @@ def eval_power(rows: list[dict]) -> dict:
     }
 
 
-def attention_numerics(rows: list[dict]) -> dict:
+def attention_numerics(raw: dict) -> dict:
+    names = {"qwen05": "Qwen2.5-0.5B", "qwen15": "Qwen2.5-1.5B", "smol036": "SmolLM2-360M",
+             "smol17": "SmolLM2-1.7B", "tiny11": "TinyLlama-1.1B", "olmo1": "OLMo-2-1B"}
     return {
-        "model": rows[0]["model"],
-        "tokens": int(rows[0]["n"]),
-        "heads": [
+        "models": [
             {
-                "layer": int(row["layer"]),
-                "head": int(row["head"]),
-                "variant": row["variant"],
-                "relative_error": float(row["relative_frobenius"]),
-                "k_mean_energy_fraction": float(row["k_mean_energy_fraction"]),
-                "tv_max": float(row["tv_max"]),
+                "key": key,
+                "name": names.get(key, key),
+                "tokens": model["variants"]["bf16"]["tokens"],
+                "perplexity_increase": {
+                    variant: values["exp_ce_relative_change_from_bf16"]
+                    for variant, values in model["variants"].items()
+                },
             }
-            for row in rows
-        ],
-    }
-
-
-def attention_controls(rows: list[dict]) -> dict:
-    groups: dict[tuple[str, int, str], list[float]] = {}
-    for row in rows:
-        key = (row["scenario"], int(row["level"]), row["variant"])
-        groups.setdefault(key, []).append(float(row["relative_frobenius"]))
-    return {
-        "controls": [
-            {
-                "scenario": scenario,
-                "level": level,
-                "variant": variant,
-                "seeds": len(values),
-                "median": statistics.median(values),
-                "min": min(values),
-                "max": max(values),
-            }
-            for (scenario, level, variant), values in sorted(groups.items())
+            for key, model in raw["downstream"].items()
         ],
     }
 
@@ -242,7 +219,6 @@ def cpu_decode(raw: dict) -> dict:
 
 
 TRANSFORMS = {
-    "attention-controls": attention_controls,
     "attention-numerics": attention_numerics,
     "branchpilot": branchpilot,
     "control-clock": control_clock,

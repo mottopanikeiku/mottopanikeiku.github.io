@@ -291,62 +291,40 @@ def eval_power() -> str:
 
 
 def attention_numerics() -> str:
-    heads = load("attention-numerics")
-    controls = load("attention-controls")
-    variants = ("e4_tile", "e4_rotate", "e4_smooth_tile", "e4_smooth_rotate")
-    err = {(h["layer"], h["head"], h["variant"]): h["relative_error"] for h in heads["heads"]}
-    ctl = {(c["scenario"], c["variant"]): c["median"] for c in controls["controls"] if c["level"] == 32}
-    groups = [
-        (f"Qwen2.5-0.5B, {heads['tokens']:,} real tokens", [
-            (f"layer {layer}, head {head}", {v: err[(layer, head, v)] for v in variants})
-            for layer, head in ((0, 0), (0, 7), (12, 0), (12, 7))
-        ]),
-        ("Synthetic, one channel set to 32", [
-            (label, {v: ctl[(scenario, v)] for v in variants})
-            for label, scenario in (("constant channel", "constant_channel"),
-                                    ("varying channel", "multiplicative_outlier"))
-        ]),
-    ]
-    W, L, R, band = 560, 132, 24, 36
-    lo, hi = math.log10(2), math.log10(200)
-    x = lambda pct: L + (math.log10(pct) - lo) / (hi - lo) * (W - R - L)
-    top = 66
-    bottom = top + sum(22 + band * len(rows) + 8 for _, rows in groups)
-    H = bottom + 44
+    data = load("attention-numerics")
+    models = sorted(data["models"], key=lambda m: -m["perplexity_increase"]["rotate"])
+    marks = (("tile", "FP8 per tile", "dot hollow strong"),
+             ("rotate", "with rotation", "dot em"),
+             ("rotate_smooth_k", "keys centered, then rotated", "dot strong"))
+    W, L, R, band, top = 560, 116, 20, 34, 58
+    floor, ceiling = 0.05, 1000
+    lo, hi = math.log10(floor), math.log10(ceiling)
+    x = lambda pct: L + (math.log10(max(pct, floor)) - lo) / (hi - lo) * (W - R - L)
+    bottom = top + band * len(models)
+    H = bottom + 48
+    pct = lambda m, v: 100 * m["perplexity_increase"][v]
+    desc = "; ".join(
+        f"{m['name']}: per tile {pct(m, 'tile'):.1f}%, rotated {pct(m, 'rotate'):.1f}%, "
+        f"centered then rotated {pct(m, 'rotate_smooth_k'):.2f}%" for m in models)
     s = SVG("attention-numerics", W, H,
-            "FP8 attention error with and without rotation",
-            "Relative output error of emulated FP8 attention, on a log scale, before and after "
-            "rotating queries and keys. In layer 0, where keys share a large common component, "
-            "rotation raised error from 24% to 117% and from 21% to 73%; centering the keys first "
-            "reduced but did not remove the increase. In layer 12 rotation lowered error slightly. "
-            "A synthetic constant channel reproduces the increase; a varying channel shows the opposite.")
-    s.circle(L + 4, 14, 3.4, "dot em")
-    s.text(L + 14, 18, "FP8, per-tile scale", "em")
-    s.circle(L + 164, 14, 3.4, "dot strong")
-    s.text(L + 174, 18, "keys mean-centered first", "strong")
-    s.text(L, 40, "hollow: not rotated; filled: rotated")
-    ticks = (2, 5, 10, 20, 50, 100, 200)
-    y = top
-    for heading, rows in groups:
-        s.text(0, y, heading, "strong")
-        y += 22
-        span = band * len(rows)
-        for v in ticks:
-            s.line(x(v), y - 12, x(v), y + span - 12, "grid")
-        for label, values in rows:
-            s.text(L - 12, y + 3, label, anchor="end")
-            for j, (plain, rotated, cls) in enumerate((("e4_tile", "e4_rotate", "em"),
-                                                       ("e4_smooth_tile", "e4_smooth_rotate", "strong"))):
-                yy = y - 4 + j * 13
-                a, b = x(values[plain] * 100), x(values[rotated] * 100)
-                s.line(a, yy, b, yy, f"ci {cls}")
-                s.circle(a, yy, 3.6, f"dot hollow {cls}")
-                s.circle(b, yy, 3.6, f"dot {cls}")
-            y += band
-        y += 8
-    for v in ticks:
-        s.text(x(v), bottom + 6, f"{v}%", anchor="middle")
-    s.text((L + W - R) / 2, H - 8, "relative output error, log scale", anchor="middle")
+            "Whole-model perplexity increase with emulated FP8 attention in every layer",
+            "Increase over BF16 attention, log scale. " + desc + ".")
+    lx = L
+    for _, label, cls in marks:
+        s.circle(lx + 4, 14, 3.6, cls)
+        s.text(lx + 13, 18, label, "em" if "em" in cls else "strong")
+        lx += 22 + len(label) * 6.4
+    for v in (0.1, 1, 10, 100, 1000):
+        s.line(x(v), top - 18, x(v), bottom - 10, "grid")
+        s.text(x(v), bottom + 8, f"{v:g}%", anchor="middle")
+    for i, m in enumerate(models):
+        y = top + i * band
+        s.text(L - 12, y + 4, m["name"], anchor="end")
+        s.line(x(pct(m, "tile")), y, x(pct(m, "rotate")), y, "ci em")
+        for variant, _, cls in marks:
+            s.circle(x(pct(m, variant)), y, 4, cls)
+    s.text((L + W - R) / 2, H - 6, "increase in perplexity over BF16 attention, log scale",
+           anchor="middle")
     return s.render()
 
 

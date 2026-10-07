@@ -123,7 +123,7 @@
         <li class="entry">
           <h3 class="title"><a href="/projects/attention-numerics/" data-print="github.com/mottopanikeiku/attention-numerics">attention-numerics</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">How much rounding error BF16 and FP8 attention kernels add, emulated on a CPU against a float64 reference. On real Qwen2.5-0.5B heads, rotating the inputs before FP8 rounding raised error from 24% to 117% where the keys share a large common component.</p>
+          <p class="desc">When FlashAttention-3’s trick of rotating queries and keys before FP8 rounding makes attention worse. Across six open models it hurt 250 of 2,880 heads; a rounding-noise model committed in advance found the harmed heads in three unseen models with AUC 0.98. In Qwen2.5-0.5B, rotation raised perplexity 91% under emulated FP8 attention.</p>
         </li>
         <li class="entry">
           <h3 class="title">Aperture</h3>
