@@ -85,9 +85,14 @@
           <p class="desc">A rule that chooses preference pairs only when quality aspects agree. On HelpSteer2 human preferences, it agreed with 281 of 286 strict preferences (98.25%), against 277 of 282 (98.23%) for an overall-score-gap baseline at matched yield. I found no clear advantage.</p>
         </li>
         <li class="entry brief">
+          <h3 class="title"><a href="/projects/alignmenttax/" data-print="github.com/mottopanikeiku/alignmenttax">AlignmentTax</a></h3>
+          <p class="year"><time datetime="2026">2026</time></p>
+          <p class="desc">I compared seven matched base/instruct pairs on 790 binary TruthfulQA questions. Four gained accuracy and worsened calibration; two lost accuracy and worsened calibration. The smallest Qwen lost accuracy with an uncertain calibration change—not a consistent trade for better answers.</p>
+        </li>
+        <li class="entry brief">
           <h3 class="title"><a href="/projects/branchpilot/" data-print="github.com/mottopanikeiku/branchpilot">BranchPilot</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">A learned stopping rule for self-consistency sampling: after each answer, a value function decides whether one more sample is worth its cost. On all 1,319 GSM8K test problems it failed a success rule fixed before the run; simpler rules did better.</p>
+          <p class="desc">I learned a stopping rule for self-consistency sampling: decide after each answer whether another sample is worth its penalty. It failed the fixed success rule on GSM8K and on an internal 200-problem MATH-500 holdout; simple rules did better.</p>
         </li>
         <li class="entry brief">
           <h3 class="title"><a href="/projects/faultline/" data-print="github.com/mottopanikeiku/faultline">Faultline</a></h3>
@@ -97,7 +102,7 @@
         <li class="entry brief">
           <h3 class="title"><a href="/projects/quantile-cycles/" data-print="github.com/mottopanikeiku/quantile-cycles">Quantile cycles</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">A counterexample in distributional RL: small decision problems where greedy control with quantile-projected Bellman updates alternates forever between a good action and a worse one, with no fixed point. The examples are checked in exact rational arithmetic.</p>
+          <p class="desc">I constructed an exact quantile-control operator that alternates forever between the optimal and a worse action, with no fixed point. Lean checks its smallest rational cycle. A separate 32-seed sampled test did not find the specified Huber failure; the hard-operator result is not a QR-DQN training failure.</p>
         </li>
       </ul>
     </section>
@@ -113,7 +118,7 @@
         <li class="entry">
           <h3 class="title"><a href="/projects/attention-numerics/" data-print="github.com/mottopanikeiku/attention-numerics">attention-numerics</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">When FlashAttention-3’s trick of rotating queries and keys before FP8 rounding makes attention worse. Across six open models it hurt 250 of 2,880 heads; a rounding-noise model committed in advance found the harmed heads in three unseen models with AUC 0.98. In Qwen2.5-0.5B, rotation raised perplexity 91% under emulated FP8 attention.</p>
+          <p class="desc">I ran real FlashAttention-3 FP8 attention in every layer on an H100. Rotation raised Qwen2.5-1.5B’s batch exp-CE ratio to 12.56× versus native BF16; centering keys first brought it to 1.004×. The locked predictor transferred to FA3, but produced 118 false alarms for five harmed SageAttention heads.</p>
         </li>
         <li class="entry">
           <h3 class="title">Aperture</h3>
@@ -123,7 +128,7 @@
         <li class="entry brief">
           <h3 class="title"><a href="/projects/heliostune/" data-print="github.com/mottopanikeiku/heliostune">HeliosTune</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">A Thompson-sampling autotuner for Triton kernels, built to test whether timing data from cheaper GPUs can warm-start tuning on an H100. It can’t, at least on this data: the selected transfer weight was zero, a cold-start tuner did slightly better, and torch.matmul beat both.</p>
+          <p class="desc">I reanalyzed stored measurements: torch.matmul had lower median latency on all 96 H100 workloads (84 shapes), with a 1.61× geometric-mean reference/torch ratio. It beat even the fastest of 36 Triton configurations on the scoring bank. The action set, not better search, limits the tuner here; L4 and A10 were mixed.</p>
         </li>
         <li class="entry">
           <h3 class="title">Open source</h3>

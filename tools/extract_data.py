@@ -16,8 +16,8 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 OWNER = "mottopanikeiku"
 
 SOURCES = {
-    "attention-numerics": ("attention-numerics", "54fd549b3d8d7f0b0fb1a82032143952e8b4d72c",
-                           "results/v2/summary.json"),
+    "attention-numerics": ("attention-numerics", "911d642a5aab42f7ced2bcc7c9f13995cdeb8eb0",
+                           "results/hardware/summary.json"),
     "branchpilot": ("branchpilot", "6f2ff8654aec07e806c3fcfea4f5e2514c36928d",
                     "benchmarks/gsm8k-sampling-bootstrap.json"),
     "control-clock": ("control-clock", "ee9c303de8e7698ca25569fc585e173e3e172bb8",
@@ -40,6 +40,14 @@ SOURCES = {
                           "results/gpu/summary.json"),
     "control-clock-cost": ("control-clock", "b090dad8a3b53f937782676c6033ba3557cedfa1",
                            "results/gpu/cost.json"),
+    "quantile-sampled": ("quantile-cycles", "bc0fbc5218be69f0e88acf6ff200d199cdfb4aab",
+                         "results/sampled-summary.json"),
+    "branchpilot-math": ("branchpilot", "1dfa8dea2c5e201b171102aadd9bf3e8883136c5",
+                         "benchmarks/math500/result.json"),
+    "alignmenttax": ("alignmenttax", "e8d788bc9da81833739868b407dd138e769eeff9",
+                     "results/cross_family/analysis/summary.json"),
+    "helios-audit": ("heliostune", "75f18ed8ee2d93e2d58935e3d5599ae95a32a46d",
+                    "results/action-set-audit.json"),
 }
 
 
@@ -170,20 +178,16 @@ def eval_power(rows: list[dict]) -> dict:
 
 
 def attention_numerics(raw: dict) -> dict:
-    names = {"qwen05": "Qwen2.5-0.5B", "qwen15": "Qwen2.5-1.5B", "smol036": "SmolLM2-360M",
-             "smol17": "SmolLM2-1.7B", "tiny11": "TinyLlama-1.1B", "olmo1": "OLMo-2-1B"}
+    names = {"qwen15": "Qwen2.5-1.5B", "qwen05": "Qwen2.5-0.5B"}
     return {
+        "definition": raw["definitions"]["downstream"],
         "models": [
-            {
-                "key": key,
-                "name": names.get(key, key),
-                "tokens": model["variants"]["bf16"]["tokens"],
-                "perplexity_increase": {
-                    variant: values["exp_ce_relative_change_from_bf16"]
-                    for variant, values in model["variants"].items()
-                },
-            }
-            for key, model in raw["downstream"].items()
+            {"key": key, "name": name,
+             "tokens": raw["downstream_fa3"][key]["bf16"]["tokens"],
+             "bf16_ce": raw["downstream_fa3"][key]["bf16"]["next_token_ce"],
+             "ratios": {variant: values["exp_ce_ratio"]
+                        for variant, values in raw["downstream_fa3"][key].items()}}
+            for key, name in names.items()
         ],
     }
 
@@ -272,6 +276,101 @@ def control_clock_cost(raw: dict) -> dict:
     return {key: raw[key] for key in ("hardware", "total_all_in_cost_estimate_usd", "method")}
 
 
+def quantile_sampled(raw: dict) -> dict:
+    gate = raw["network_gate"]
+    return {
+        "endpoint": raw["endpoint"],
+        "bootstrap": raw["bootstrap"],
+        "material_failure_found": gate["pass"],
+        "minimum_excess_regret": gate["rule"]["minimum_normalized_excess_regret"],
+        "comparisons": [
+            {"case": row["case"], "schedule": row["schedule"],
+             "excess": row["sampled_normalized_excess"],
+             "ci": row["sampled_excess_ci95"], "pass": row["pass"]}
+            for row in gate["cells"]
+        ],
+        "rows": [
+            {"case": row["case"], "method": row["method"], "schedule": row["schedule"],
+             "seeds": row["seeds"], "regret": row["normalized_regret_mean"],
+             "ci": row["normalized_regret_ci95"]}
+            for row in raw["sampled_cells"]
+            if row["case"] in ("family-8", "family-32")
+            and row["method"] in ("huber", "scalar")
+        ],
+    }
+
+
+def branchpilot_math(raw: dict) -> dict:
+    test = raw["test"]
+    costs = sorted(float(cost) for cost in raw["decision"]["utility_interval_lower_bounds"])
+    return {
+        "prompts": test["records"],
+        "max_samples": test["max_samples"],
+        "success": raw["decision"]["success"],
+        "comparisons": [
+            {"cost": row["scoring_cost"], "baseline": row["baseline_policy"],
+             "utility_delta": row["utility_delta"],
+             "ci": interval(row["utility_delta_interval"])}
+            for row in test["comparisons"] if row["scoring_cost"] in costs
+        ],
+        "illustration_cost": costs[0],
+        "rows": [
+            {"policy": row["policy"], "accuracy": row["accuracy"],
+             "samples": row["average_samples"]}
+            for row in test["rows"] if row["scoring_cost"] == costs[0]
+            and (row["family"] == "offline-rl"
+                 or row["policy"] in ("fixed-1", "fixed-8", "agreement-2"))
+        ],
+    }
+
+
+def alignmenttax(raw: dict) -> dict:
+    names = {
+        "qwen2_5_0_5b": "Qwen2.5-0.5B",
+        "qwen2_5_1_5b": "Qwen2.5-1.5B",
+        "qwen2_5_7b": "Qwen2.5-7B",
+        "olmo2_0425_1b": "OLMo-2 1B (0425)",
+        "olmo2_1124_7b": "OLMo-2 7B (1124)",
+        "smollm2_1_7b": "SmolLM2-1.7B",
+        "mistral_7b_v0_3": "Mistral-7B-v0.3",
+    }
+    by_id = {pair["pair_id"]: pair for pair in raw["pairs"]}
+    rows = []
+    for key, name in names.items():
+        primary = by_id[key]["protocols"]["shared_plain_ab_label"]
+        metrics = primary["deltas"]["metrics"]
+        rows.append({
+            "key": key, "name": name,
+            "classification": primary["classification"]["outcome"],
+            **{metric: {"delta": metrics[metric]["point"],
+                        "ci": [metrics[metric]["ci_low"], metrics[metric]["ci_high"]]}
+               for metric in ("accuracy", "ece")},
+        })
+    return {"questions": raw["question_count"], "pairs": raw["pair_count"],
+            "resamples": raw["iterations"], "ece": raw["ece"],
+            "protocol": "shared_plain_ab_label", "rows": rows}
+
+
+def helios_audit(raw: dict) -> dict:
+    return {
+        "kind": raw["analysis_kind"], "configs": raw["configs"],
+        "overall": raw["overall"],
+        "by_m": [
+            {"m": row["m"], "workloads": row["workloads"],
+             "torch_wins": row["torch_wins_reference"],
+             "ratio": row["reference_over_torch_geomean"],
+             "saved_us": row["torch_saved_us_median"]}
+            for row in raw["by_m"]
+        ],
+        "by_gpu": [
+            {"gpu": row["gpu"], "workloads": row["workloads"],
+             "torch_wins": row["torch_wins_reference"],
+             "ratio": row["reference_over_torch_geomean"]}
+            for row in raw["by_gpu"]
+        ],
+    }
+
+
 TRANSFORMS = {
     "attention-numerics": attention_numerics,
     "branchpilot": branchpilot,
@@ -285,6 +384,10 @@ TRANSFORMS = {
     "verge-human": verge_human,
     "control-clock-gpu": control_clock_gpu,
     "control-clock-cost": control_clock_cost,
+    "quantile-sampled": quantile_sampled,
+    "branchpilot-math": branchpilot_math,
+    "alignmenttax": alignmenttax,
+    "helios-audit": helios_audit,
 }
 
 

@@ -1,0 +1,149 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/quantile-cycles",
+  "commit": "bc0fbc5218be69f0e88acf6ff200d199cdfb4aab",
+  "path": "results/sampled-summary.json",
+  "url": "https://github.com/mottopanikeiku/quantile-cycles/blob/bc0fbc5218be69f0e88acf6ff200d199cdfb4aab/results/sampled-summary.json"
+ },
+ "endpoint": "Stationary-policy regret averaged over post-update policies at t=80001..100000, normalized by the always-B loss",
+ "bootstrap": {
+  "replicates": 10000,
+  "seed": 20261007,
+  "unit": "paired seed",
+  "interval": "percentile 95%"
+ },
+ "material_failure_found": false,
+ "minimum_excess_regret": 0.25,
+ "comparisons": [
+  {
+   "case": "family-8",
+   "schedule": "constant",
+   "excess": 0.0,
+   "ci": [
+    0.0,
+    0.0
+   ],
+   "pass": false
+  },
+  {
+   "case": "family-8",
+   "schedule": "decaying",
+   "excess": 0.0,
+   "ci": [
+    0.0,
+    0.0
+   ],
+   "pass": false
+  },
+  {
+   "case": "family-32",
+   "schedule": "constant",
+   "excess": -0.07396406250000001,
+   "ci": [
+    -0.07662210937500001,
+    -0.0712655859375
+   ],
+   "pass": false
+  },
+  {
+   "case": "family-32",
+   "schedule": "decaying",
+   "excess": -0.0022859374999999998,
+   "ci": [
+    -0.0029000390625,
+    -0.0017078125000000001
+   ],
+   "pass": false
+  }
+ ],
+ "rows": [
+  {
+   "case": "family-32",
+   "method": "huber",
+   "schedule": "constant",
+   "seeds": 32,
+   "regret": 0.0042921875,
+   "ci": [
+    0.0035812500000000002,
+    0.0050265625
+   ]
+  },
+  {
+   "case": "family-32",
+   "method": "huber",
+   "schedule": "decaying",
+   "seeds": 32,
+   "regret": 0.0,
+   "ci": [
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "case": "family-32",
+   "method": "scalar",
+   "schedule": "constant",
+   "seeds": 32,
+   "regret": 0.07825625,
+   "ci": [
+    0.075185859375,
+    0.0812562890625
+   ]
+  },
+  {
+   "case": "family-32",
+   "method": "scalar",
+   "schedule": "decaying",
+   "seeds": 32,
+   "regret": 0.0022859374999999998,
+   "ci": [
+    0.0017078125000000001,
+    0.0029000390624999996
+   ]
+  },
+  {
+   "case": "family-8",
+   "method": "huber",
+   "schedule": "constant",
+   "seeds": 32,
+   "regret": 0.0,
+   "ci": [
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "case": "family-8",
+   "method": "huber",
+   "schedule": "decaying",
+   "seeds": 32,
+   "regret": 0.0,
+   "ci": [
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "case": "family-8",
+   "method": "scalar",
+   "schedule": "constant",
+   "seeds": 32,
+   "regret": 0.0,
+   "ci": [
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "case": "family-8",
+   "method": "scalar",
+   "schedule": "decaying",
+   "seeds": 32,
+   "regret": 0.0,
+   "ci": [
+    0.0,
+    0.0
+   ]
+  }
+ ]
+}

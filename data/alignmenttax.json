@@ -1,0 +1,153 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/alignmenttax",
+  "commit": "e8d788bc9da81833739868b407dd138e769eeff9",
+  "path": "results/cross_family/analysis/summary.json",
+  "url": "https://github.com/mottopanikeiku/alignmenttax/blob/e8d788bc9da81833739868b407dd138e769eeff9/results/cross_family/analysis/summary.json"
+ },
+ "questions": 790,
+ "pairs": 7,
+ "resamples": 10000,
+ "ece": {
+  "binning": "equal_frequency",
+  "bins": 10,
+  "recomputed_per_resample": true,
+  "tie_order": "stable sampled order"
+ },
+ "protocol": "shared_plain_ab_label",
+ "rows": [
+  {
+   "key": "qwen2_5_0_5b",
+   "name": "Qwen2.5-0.5B",
+   "classification": "uncertain",
+   "accuracy": {
+    "delta": -0.0405063291139241,
+    "ci": [
+     -0.06712025316455701,
+     -0.013924050632911411
+    ]
+   },
+   "ece": {
+    "delta": -0.0293186779817666,
+    "ci": [
+     -0.049783507260425686,
+     0.004219947794696303
+    ]
+   }
+  },
+  {
+   "key": "qwen2_5_1_5b",
+   "name": "Qwen2.5-1.5B",
+   "classification": "supports_tradeoff",
+   "accuracy": {
+    "delta": 0.048101265822784844,
+    "ci": [
+     0.015189873417721489,
+     0.08227848101265822
+    ]
+   },
+   "ece": {
+    "delta": 0.07956250382728594,
+    "ci": [
+     0.047464294520407596,
+     0.1101878157904158
+    ]
+   }
+  },
+  {
+   "key": "qwen2_5_7b",
+   "name": "Qwen2.5-7B",
+   "classification": "supports_tradeoff",
+   "accuracy": {
+    "delta": 0.08354430379746836,
+    "ci": [
+     0.05696202531645567,
+     0.11012658227848104
+    ]
+   },
+   "ece": {
+    "delta": 0.07074014019452642,
+    "ci": [
+     0.039695684386732925,
+     0.09650357027796908
+    ]
+   }
+  },
+  {
+   "key": "olmo2_0425_1b",
+   "name": "OLMo-2 1B (0425)",
+   "classification": "accuracy_and_calibration_worsened",
+   "accuracy": {
+    "delta": -0.03924050632911391,
+    "ci": [
+     -0.07721518987341769,
+     -0.0025316455696202667
+    ]
+   },
+   "ece": {
+    "delta": 0.1283782112647948,
+    "ci": [
+     0.08601688618855469,
+     0.15617886889683644
+    ]
+   }
+  },
+  {
+   "key": "olmo2_1124_7b",
+   "name": "OLMo-2 7B (1124)",
+   "classification": "supports_tradeoff",
+   "accuracy": {
+    "delta": 0.05316455696202527,
+    "ci": [
+     0.025316455696202445,
+     0.08227848101265822
+    ]
+   },
+   "ece": {
+    "delta": 0.10659703757884192,
+    "ci": [
+     0.07489636728583224,
+     0.1310156025699612
+    ]
+   }
+  },
+  {
+   "key": "smollm2_1_7b",
+   "name": "SmolLM2-1.7B",
+   "classification": "accuracy_and_calibration_worsened",
+   "accuracy": {
+    "delta": -0.15822784810126583,
+    "ci": [
+     -0.1962025316455696,
+     -0.120253164556962
+    ]
+   },
+   "ece": {
+    "delta": 0.3250002748773107,
+    "ci": [
+     0.28364160761979057,
+     0.3579930130130693
+    ]
+   }
+  },
+  {
+   "key": "mistral_7b_v0_3",
+   "name": "Mistral-7B-v0.3",
+   "classification": "supports_tradeoff",
+   "accuracy": {
+    "delta": 0.09240506329113929,
+    "ci": [
+     0.06075949367088607,
+     0.1240506329113924
+    ]
+   },
+   "ece": {
+    "delta": 0.08717803809618972,
+    "ci": [
+     0.04304136613153591,
+     0.12629388520059898
+    ]
+   }
+  }
+ ]
+}

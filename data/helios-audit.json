@@ -1,0 +1,101 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/heliostune",
+  "commit": "75f18ed8ee2d93e2d58935e3d5599ae95a32a46d",
+  "path": "results/action-set-audit.json",
+  "url": "https://github.com/mottopanikeiku/heliostune/blob/75f18ed8ee2d93e2d58935e3d5599ae95a32a46d/results/action-set-audit.json"
+ },
+ "kind": "descriptive audit of committed measurements; no new timing or policy replay",
+ "configs": 36,
+ "overall": {
+  "workloads": 96,
+  "unique_shapes": 84,
+  "torch_wins_reference": 96,
+  "triton_wins_reference": 0,
+  "ties_reference": 0,
+  "reference_over_torch_geomean": 1.610015689933939,
+  "reference_over_torch_median": 1.5942424588306356,
+  "reference_over_torch_min": 1.0015625119371183,
+  "reference_over_torch_max": 2.3297764352683514,
+  "torch_saved_us_median": 18.303999677300453,
+  "torch_saved_us_min": 0.09600073099136353,
+  "torch_saved_us_max": 91.64799749851227,
+  "torch_wins_best_bank2": 96,
+  "triton_wins_best_bank2": 0,
+  "ties_best_bank2": 0,
+  "best_bank2_over_torch_geomean": 1.6087160838936678,
+  "spread_comparisons_available": 0,
+  "torch_p80_below_reference_p20": 0,
+  "reference_over_torch_equal_fold_mean": 1.6102594324032378
+ },
+ "by_m": [
+  {
+   "m": 1,
+   "workloads": 16,
+   "torch_wins": 16,
+   "ratio": 1.6449963084687262,
+   "saved_us": 17.120000906288624
+  },
+  {
+   "m": 7,
+   "workloads": 16,
+   "torch_wins": 16,
+   "ratio": 1.65206197892394,
+   "saved_us": 17.407999373972416
+  },
+  {
+   "m": 31,
+   "workloads": 16,
+   "torch_wins": 16,
+   "ratio": 1.6783623878857308,
+   "saved_us": 17.391999252140522
+  },
+  {
+   "m": 96,
+   "workloads": 16,
+   "torch_wins": 16,
+   "ratio": 1.6798756703890698,
+   "saved_us": 18.35200097411871
+  },
+  {
+   "m": 257,
+   "workloads": 16,
+   "torch_wins": 16,
+   "ratio": 1.6186259147287976,
+   "saved_us": 18.432000651955605
+  },
+  {
+   "m": 1024,
+   "workloads": 16,
+   "torch_wins": 16,
+   "ratio": 1.404365067059693,
+   "saved_us": 40.856001898646355
+  }
+ ],
+ "by_gpu": [
+  {
+   "gpu": "A10",
+   "workloads": 96,
+   "torch_wins": 31,
+   "ratio": 1.021201087316981
+  },
+  {
+   "gpu": "H100",
+   "workloads": 96,
+   "torch_wins": 96,
+   "ratio": 1.610015689933939
+  },
+  {
+   "gpu": "L4",
+   "workloads": 96,
+   "torch_wins": 31,
+   "ratio": 0.986192652997886
+  },
+  {
+   "gpu": "T4",
+   "workloads": 96,
+   "torch_wins": 94,
+   "ratio": 3.840388066367962
+  }
+ ]
+}
