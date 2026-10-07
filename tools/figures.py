@@ -128,32 +128,30 @@ def branchpilot() -> str:
 
 def faultline() -> str:
     data = load("faultline")
-    arms = data["arms"]
-    cols = [("random", "50/50 mix"), ("difficulty", "difficulty-adaptive"), ("epistemic", "all ambiguous")]
-    W, H, L, R, T, B = 560, 316, 50, 20, 46, 44
-    xs = [L + 70, (L + W - R) / 2 + 10, W - R - 90]
-    y = scale(0, 1, H - B, T)
-    s = SVG("faultline", W, H,
-            "Diagnostic success of each training seed under three curricula",
-            "Eight paired seeds per curriculum. Means: 50/50 mix 0.81, difficulty-adaptive 0.90, "
-            "all ambiguous 0.95. Most seeds reach 100% under every curriculum; the means differ "
-            "because of a few poor seeds.")
-    for v in (0, 0.25, 0.5, 0.75, 1.0):
-        s.line(L, y(v), W - R, y(v), "grid")
-        s.text(L - 8, y(v) + 4, f"{v * 100:.0f}%", anchor="end")
-    s.text(L - 8, T - 14, "diagnostic success on held-out tasks, one line per seed")
-    seeds = sorted(arms["random"]["seeds"], key=int)
-    jitter = {seed: (i - (len(seeds) - 1) / 2) * 2.4 for i, seed in enumerate(seeds)}
-    for seed in seeds:
-        pts = [(xs[i] + jitter[seed], y(arms[key]["seeds"][seed])) for i, (key, _) in enumerate(cols)]
-        s.path(pts, "line faint")
-        for px, py in pts:
-            s.circle(px, py, 2.6, "dot")
-    for i, (key, label) in enumerate(cols):
-        mean = arms[key]["mean"]
-        s.line(xs[i] - 16, y(mean), xs[i] + 16, y(mean), "mean")
-        s.text(xs[i] + 22, y(mean) + 4, f"mean {mean:.2f}", "strong")
-        s.text(xs[i], H - B + 20, label, anchor="middle")
+    rows = (("random", "Random (50/50 mix)"), ("difficulty", "Difficulty-adaptive"),
+            ("epistemic", "All ambiguous"))
+    desc = "; ".join(f'{label}: {data["arms"][key]["mean"] * 100:.1f}%'
+                     for key, label in rows)
+    s = SVG("faultline", 560, 258,
+            f'Diagnostic success in the independent {data["seed_count"]}-seed confirmation',
+            f'{data["seed_count"]} matched training seeds per curriculum. Means: {desc}. '
+            "Bars are separate 95% bootstrap intervals over training seeds. Ambiguous-only "
+            "training beats random sampling but loses to difficulty-adaptive sampling.")
+    L, R, top, bottom = 174, 16, 52, 200
+    x = scale(0, 1, L, 560 - R)
+    s.text(0, 18, f'{data["seed_count"]} matched seeds; 95% seed-bootstrap intervals')
+    for value in (0, 0.25, 0.5, 0.75, 1):
+        s.line(x(value), top, x(value), bottom, "grid")
+        s.text(x(value), bottom + 21, f"{value * 100:.0f}%", anchor="middle")
+    for index, (key, label) in enumerate(rows):
+        row = data["arms"][key]
+        y = 68 + index * 50
+        cls = "em" if key == "epistemic" else "strong"
+        s.text(L - 12, y + 4, label, anchor="end")
+        s.line(x(row["ci"][0]), y, x(row["ci"][1]), y, f"ci {cls}")
+        s.circle(x(row["mean"]), y, 4, f"dot {cls}")
+        s.text(x(row["mean"]), y + 21, f'{row["mean"] * 100:.1f}%', cls, "middle")
+    s.text((L + 560 - R) / 2, 252, "diagnostic success on validation pairs", anchor="middle")
     return s.render()
 
 
@@ -583,6 +581,33 @@ def helios_audit() -> str:
     return s.render()
 
 
+def eval_prospective() -> str:
+    data = load("eval-prospective")
+    s = SVG("eval-prospective", 560, 250,
+            "Decoding-noise share differs sharply between GSM8K and direct-choice ARC",
+            "Estimated decoding contribution to paired item-mean variance with five stochastic "
+            "answers per question. Fifteen model pairs per benchmark; median share is 33.2% "
+            "on GSM8K and 4.6% on guided direct-choice ARC. These finite-pilot estimates are "
+            "descriptive, not known population variance components.")
+    L, R, top, bottom = 170, 20, 48, 184
+    x = scale(0, 0.65, L, 560 - R)
+    s.text(0, 18, "five stochastic answers/question; 15 model pairs/benchmark")
+    s.text(0, 38, "small dots: pairs; large dots: median")
+    for value in (0, 0.2, 0.4, 0.6):
+        s.line(x(value), top, x(value), bottom, "grid")
+        s.text(x(value), bottom + 21, f"{value * 100:.0f}%", anchor="middle")
+    for index, row in enumerate(data["rows"]):
+        y = 72 + index * 64
+        s.text(L - 12, y + 4, row["name"], anchor="end")
+        for point, share in enumerate(row["shares"]):
+            s.circle(x(share), y + (point % 3 - 1) * 4, 2.3, "dot")
+        s.circle(x(row["median_share"]), y, 4.3, "dot em")
+        s.text(x(row["median_share"]), y + 25, f'{row["median_share"] * 100:.1f}%',
+               "em", "middle")
+    s.text((L + 560 - R) / 2, 244, "estimated decoding share of total variance at k=5", anchor="middle")
+    return s.render()
+
+
 FIGURES = {
     "attention-numerics": attention_numerics,
     "branchpilot": branchpilot,
@@ -598,6 +623,7 @@ FIGURES = {
     "branchpilot-math": branchpilot_math,
     "alignmenttax": alignmenttax,
     "helios-audit": helios_audit,
+    "eval-prospective": eval_prospective,
 }
 
 

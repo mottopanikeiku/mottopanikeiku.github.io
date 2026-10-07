@@ -1,7 +1,7 @@
 name: Site
 on:
   push:
-    branches: [main, night2-site]
+    branches: [main, 'night2-site*']
   pull_request:
     branches: [main]
 permissions:

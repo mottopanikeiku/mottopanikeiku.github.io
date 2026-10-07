@@ -26,8 +26,8 @@ SOURCES = {
                    "results/summary.json"),
     "eval-power": ("eval-power", "ef7c451d678e7eece94344b0c87567a60e28e330",
                    "results/calibration.csv"),
-    "faultline": ("faultline", "d8dcf021e434d64adf06659ff0e1e0d61b70acf0",
-                  "artifacts/results/small-kill-v1-analysis.json"),
+    "faultline": ("faultline", "ac6ed689866de6cff18b51fc29fa1ab3c2cf2d50",
+                  "artifacts/results/seed-confirmation-analysis.json"),
     "heliostune": ("heliostune", "d1f5ab6fb6ff8b1862baf635dc8abd9241052809",
                    "benchmarks/results/parhelion-h100-final.json"),
     "verge-lab": ("verge-lab", "efa08d133f22501b2dedcb7a7aa636bf37bbc826",
@@ -48,6 +48,8 @@ SOURCES = {
                      "results/cross_family/analysis/summary.json"),
     "helios-audit": ("heliostune", "75f18ed8ee2d93e2d58935e3d5599ae95a32a46d",
                     "results/action-set-audit.json"),
+    "eval-prospective": ("eval-power", "f739bfa20ea000cf639e551d2c3523213e814b53",
+                         "results/prospective/summary.json"),
 }
 
 
@@ -106,13 +108,19 @@ def faultline(raw: dict) -> dict:
         arms[name] = {
             "mean": primary["estimate"],
             "ci": [primary["lower"], primary["upper"]],
-            "seeds": {str(s["seed"]): s["value"] for s in arm["individual_seeds"]},
         }
     paired = {
         name: {"estimate": p["estimate"], "ci": [p["lower"], p["upper"]]}
         for name, p in raw["paired_comparisons"].items()
     }
-    return {"arms": arms, "paired": paired, "decision": raw["decision"]}
+    protocol = raw["protocol"]
+    return {"arms": arms, "paired": paired, "decision": raw["decision"],
+            "seed_count": len(protocol["training_seeds"]),
+            "seed_range": [protocol["training_seeds"][0], protocol["training_seeds"][-1]],
+            "bootstrap_resamples": protocol["bootstrap_resamples"],
+            "training_steps": protocol["training_decision_steps"],
+            "evaluation_split": protocol["evaluation_split"],
+            "evaluation_base_pairs": protocol["evaluation_base_pair_count"]}
 
 
 def heliostune(raw: dict) -> dict:
@@ -371,6 +379,24 @@ def helios_audit(raw: dict) -> dict:
     }
 
 
+def eval_prospective(raw: dict) -> dict:
+    names = {"gsm8k": "GSM8K", "arc": "ARC (direct choice)"}
+    return {
+        "models": len(raw["pilot_models"]), "k": raw["k"],
+        "target_power": raw["target_power"], "detection": raw["detection"],
+        "rows": [
+            {"benchmark": key, "name": name,
+             "median_share": raw["benchmark_overview"][key]["median_sampling_fraction"],
+             "shares": [pair["pilot"]["sampling_fraction"] for pair in raw["pairs"]
+                        if pair["benchmark"] == key],
+             "detected": raw["benchmark_overview"][key]["detected_pairs"],
+             "tested": raw["benchmark_overview"][key]["confirmed_pairs"],
+             "infeasible": raw["benchmark_overview"][key]["infeasible_pairs"]}
+            for key, name in names.items()
+        ],
+    }
+
+
 TRANSFORMS = {
     "attention-numerics": attention_numerics,
     "branchpilot": branchpilot,
@@ -388,6 +414,7 @@ TRANSFORMS = {
     "branchpilot-math": branchpilot_math,
     "alignmenttax": alignmenttax,
     "helios-audit": helios_audit,
+    "eval-prospective": eval_prospective,
 }
 
 

@@ -1,78 +1,57 @@
 {
  "source": {
   "repo": "mottopanikeiku/faultline",
-  "commit": "d8dcf021e434d64adf06659ff0e1e0d61b70acf0",
-  "path": "artifacts/results/small-kill-v1-analysis.json",
-  "url": "https://github.com/mottopanikeiku/faultline/blob/d8dcf021e434d64adf06659ff0e1e0d61b70acf0/artifacts/results/small-kill-v1-analysis.json"
+  "commit": "ac6ed689866de6cff18b51fc29fa1ab3c2cf2d50",
+  "path": "artifacts/results/seed-confirmation-analysis.json",
+  "url": "https://github.com/mottopanikeiku/faultline/blob/ac6ed689866de6cff18b51fc29fa1ab3c2cf2d50/artifacts/results/seed-confirmation-analysis.json"
  },
  "arms": {
   "difficulty": {
-   "mean": 0.90234375,
+   "mean": 0.8986875,
    "ci": [
-    0.7099609375,
-    1.0
-   ],
-   "seeds": {
-    "100": 1.0,
-    "101": 1.0,
-    "102": 1.0,
-    "103": 0.23046875,
-    "104": 0.98828125,
-    "105": 1.0,
-    "106": 1.0,
-    "107": 1.0
-   }
+    0.8709993489583333,
+    0.9244449218749999
+   ]
   },
   "epistemic": {
-   "mean": 0.951171875,
+   "mean": 0.8393541666666666,
    "ci": [
-    0.8623046875,
-    1.0
-   ],
-   "seeds": {
-    "100": 1.0,
-    "101": 0.64453125,
-    "102": 0.96484375,
-    "103": 1.0,
-    "104": 1.0,
-    "105": 1.0,
-    "106": 1.0,
-    "107": 1.0
-   }
+    0.8031063802083334,
+    0.873922265625
+   ]
   },
   "random": {
-   "mean": 0.807373046875,
+   "mean": 0.7383125,
    "ci": [
-    0.557373046875,
-    0.994873046875
-   ],
-   "seeds": {
-    "100": 0.5,
-    "101": 1.0,
-    "102": 0.0,
-    "103": 0.982421875,
-    "104": 1.0,
-    "105": 0.9765625,
-    "106": 1.0,
-    "107": 1.0
-   }
+    0.6958067708333333,
+    0.7800631510416667
+   ]
   }
  },
  "paired": {
   "epistemic-difficulty": {
-   "estimate": 0.048828125,
+   "estimate": -0.059333333333333335,
    "ci": [
-    -0.13330078125,
-    0.28564453125
+    -0.10292864583333332,
+    -0.016660677083333346
    ]
   },
   "epistemic-random": {
-   "estimate": 0.143798828125,
+   "estimate": 0.10104166666666667,
    "ci": [
-    -0.083740234375,
-    0.43017578125
+    0.046754817708333334,
+    0.15532317708333335
    ]
   }
  },
- "decision": "no_preregistered_curriculum_effect"
+ "decision": "no_preregistered_curriculum_effect",
+ "seed_count": 375,
+ "seed_range": [
+  500,
+  874
+ ],
+ "bootstrap_resamples": 10000,
+ "training_steps": 30000,
+ "evaluation_split": "validation",
+ "evaluation_base_pairs": 128
 }
