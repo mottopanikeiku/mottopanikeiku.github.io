@@ -10,6 +10,7 @@ import http.server
 import json
 import os
 import pathlib
+import subprocess
 import threading
 
 from playwright.sync_api import sync_playwright
@@ -70,6 +71,9 @@ def main():
             document = PdfReader(pdf)
             size = document.pages[0].mediabox
             report["print"] = {"pages": len(document.pages), "width_points": float(size.width), "height_points": float(size.height)}
+            subprocess.run(
+                ["pdftoppm", "-f", "1", "-singlefile", "-scale-to", "1600", "-png",
+                 str(pdf), str(args.output / "cv-first-page")], check=True)
             if args.cards:
                 page.emulate_media(media="screen")
                 page.set_viewport_size({"width": 1280, "height": 800})

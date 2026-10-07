@@ -24,6 +24,7 @@ jobs:
           python -m pip install playwright==1.58.0 pypdf==6.8.0
           python -m playwright install --with-deps chromium
           curl --fail --location https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.3/axe.min.js --output "$RUNNER_TEMP/axe.min.js"
+          sudo apt-get update && sudo apt-get install -y poppler-utils
       - name: Check accessibility and print
         env:
           AXE_PATH: ${{ runner.temp }}/axe.min.js
@@ -32,7 +33,3 @@ jobs:
         with:
           name: site-checks
           path: ${{ runner.temp }}/site-checks
-      - name: Build Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: .
