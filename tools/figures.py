@@ -593,34 +593,33 @@ def branchpilot_math() -> str:
 
 def alignmenttax() -> str:
     data = load("alignmenttax")
-    s = SVG("alignmenttax", 560, 432,
-            "Instruction tuning changes binary accuracy and calibration with shared prompts",
-            "In seven base/instruct pairs, four gain accuracy and increase expected calibration "
-            "error; two lose accuracy and increase error. Qwen2.5-0.5B loses accuracy, with an "
-            "uncertain calibration change. SmolLM2-1.7B loses 15.8 accuracy points and gains "
-            "32.5 error points. Horizontal and vertical bars are separate 95% question-bootstrap "
-            "intervals, not a joint confidence region.")
-    L, R, T, bottom = 58, 16, 56, 292
-    x = scale(-22, 15, L, 560 - R)
+    s = SVG("alignmenttax", 560, 454,
+            "Instruction tuning changes ECE differently under standard and binary TruthfulQA",
+            "One point per base/instruct pair. Horizontal axis: standard MC1 ECE change; "
+            "vertical axis: binary-derivative ECE change, both instruct minus base in "
+            "percentage points. Seven point estimates improve standard ECE but worsen "
+            "binary ECE. Qwen14B changes by −5.5 and +10.2 points respectively. "
+            "These are fixed checkpoint comparisons under shared prompts, not causal effects.")
+    L, R, T, bottom = 58, 16, 64, 294
+    x = scale(-8, 4, L, 560 - R)
     y = scale(-8, 40, bottom, T)
-    s.text(L, 18, "shared prompts; instruct − base; 95% paired intervals")
-    s.text(L - 10, T - 12, "ECE change (points); higher is worse")
+    s.text(L, 18, "shared prompts; instruct − base; point estimates")
+    s.text(L, 40, "binary ECE change (points); higher is worse")
     for value in (0, 10, 20, 30, 40):
         s.line(L, y(value), 560 - R, y(value), "grid")
         s.text(L - 8, y(value) + 4, str(value), anchor="end")
-    for value in (-20, -10, 0, 10):
+    for value in (-8, -4, 0, 4):
         s.line(x(value), T, x(value), bottom, "grid")
         s.text(x(value), bottom + 21, str(value), anchor="middle")
     s.line(x(0), T, x(0), bottom, "axis")
     s.line(L, y(0), 560 - R, y(0), "axis")
-    s.text((L + 560 - R) / 2, 337, "accuracy change (percentage points)", anchor="middle")
-    offsets = ((8, -9), (-11, 18), (-10, 18), (8, -9), (5, -10), (8, -9), (8, -8))
+    s.text((L + 560 - R) / 2, 337, "standard MC1 ECE change (points); lower is better",
+           anchor="middle")
+    offsets = ((8, -8), (8, -8), (-12, 18), (8, -9), (8, -9),
+               (8, -8), (8, 16), (8, -9), (8, -9))
     for index, (row, (dx, dy)) in enumerate(zip(data["rows"], offsets)):
-        accuracy, ece = row["accuracy"], row["ece"]
-        px, py = x(accuracy["delta"] * 100), y(ece["delta"] * 100)
-        cls = "em" if row["classification"] == "accuracy_and_calibration_worsened" else "strong"
-        s.line(x(accuracy["ci"][0] * 100), py, x(accuracy["ci"][1] * 100), py, f"ci {cls}")
-        s.line(px, y(ece["ci"][0] * 100), px, y(ece["ci"][1] * 100), f"ci {cls}")
+        px, py = x(row["mc1_ece"]["delta"] * 100), y(row["binary_ece"]["delta"] * 100)
+        cls = "em" if row["key"] in ("qwen2_5_14b", "qwen2_5_32b") else "strong"
         s.circle(px, py, 3.4, f"dot {cls}")
         s.text(px + dx, py + dy, str(index + 1), cls)
         s.text(L + (index % 2) * 245, 363 + (index // 2) * 20,

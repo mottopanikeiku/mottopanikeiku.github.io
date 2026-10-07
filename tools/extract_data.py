@@ -50,8 +50,8 @@ SOURCES = {
                          "results/sampled-summary.json"),
     "branchpilot-math": ("branchpilot", "1dfa8dea2c5e201b171102aadd9bf3e8883136c5",
                          "benchmarks/math500/result.json"),
-    "alignmenttax": ("alignmenttax", "e8d788bc9da81833739868b407dd138e769eeff9",
-                     "results/cross_family/analysis/summary.json"),
+    "alignmenttax": ("alignmenttax", "61b0ffb6890ca7f53b3e37b117b28167f57b8e88",
+                     "results/day_scale/analysis/summary.json"),
     "helios-audit": ("heliostune", "75f18ed8ee2d93e2d58935e3d5599ae95a32a46d",
                     "results/action-set-audit.json"),
     "helios-expansion": ("heliostune", "f50b27e2c0664d7c9c082e2483867b1381623200",
@@ -390,6 +390,8 @@ def alignmenttax(raw: dict) -> dict:
         "qwen2_5_0_5b": "Qwen2.5-0.5B",
         "qwen2_5_1_5b": "Qwen2.5-1.5B",
         "qwen2_5_7b": "Qwen2.5-7B",
+        "qwen2_5_14b": "Qwen2.5-14B",
+        "qwen2_5_32b": "Qwen2.5-32B",
         "olmo2_0425_1b": "OLMo-2 1B (0425)",
         "olmo2_1124_7b": "OLMo-2 7B (1124)",
         "smollm2_1_7b": "SmolLM2-1.7B",
@@ -398,18 +400,28 @@ def alignmenttax(raw: dict) -> dict:
     by_id = {pair["pair_id"]: pair for pair in raw["pairs"]}
     rows = []
     for key, name in names.items():
-        primary = by_id[key]["protocols"]["shared_plain_ab_label"]
-        metrics = primary["deltas"]["metrics"]
+        pair = by_id[key]
+        metrics = {
+            benchmark: pair["benchmarks"][benchmark]["protocols"]["shared_plain_ab_label"]["deltas"]["metrics"]
+            for benchmark in ("standard", "binary")
+        }
         rows.append({
             "key": key, "name": name,
-            "classification": primary["classification"]["outcome"],
-            **{metric: {"delta": metrics[metric]["point"],
-                        "ci": [metrics[metric]["ci_low"], metrics[metric]["ci_high"]]}
-               for metric in ("accuracy", "ece")},
+            **{label: {"delta": metrics[benchmark][metric]["point"],
+                       "ci": [metrics[benchmark][metric]["ci_low"],
+                              metrics[benchmark][metric]["ci_high"]]}
+               for label, benchmark, metric in
+               (("mc1_ece", "standard", "mc1_ece"), ("binary_ece", "binary", "ece"))},
         })
-    return {"questions": raw["question_count"], "pairs": raw["pair_count"],
-            "resamples": raw["iterations"], "ece": raw["ece"],
-            "protocol": "shared_plain_ab_label", "rows": rows}
+    return {
+        "questions": {key: values["question_count"]
+                      for key, values in raw["benchmarks"].items()},
+        "pairs": raw["pair_count"], "resamples": raw["iterations"], "ece": raw["ece"],
+        "protocol": "shared_plain_ab_label",
+        "outcomes": {key: values["shared_plain_ab_label"]
+                     for key, values in raw["outcome_counts"].items()},
+        "rows": rows,
+    }
 
 
 def helios_expansion(raw: dict) -> dict:
