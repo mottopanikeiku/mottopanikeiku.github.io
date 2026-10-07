@@ -87,7 +87,7 @@
         <li class="entry brief">
           <h3 class="title"><a href="/projects/alignmenttax/" data-print="github.com/mottopanikeiku/alignmenttax">AlignmentTax</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">I compared seven matched base/instruct pairs on 790 binary TruthfulQA questions. Four gained accuracy and worsened calibration; two lost accuracy and worsened calibration. The smallest Qwen lost accuracy with an uncertain calibration change—not a consistent trade for better answers.</p>
+          <p class="desc">Does instruction tuning trade calibration for truthfulness? Across seven base/instruct pairs on 790 binary TruthfulQA questions, calibration got worse in six, but only four gained accuracy in exchange.</p>
         </li>
         <li class="entry brief">
           <h3 class="title"><a href="/projects/branchpilot/" data-print="github.com/mottopanikeiku/branchpilot">BranchPilot</a></h3>
@@ -128,7 +128,7 @@
         <li class="entry brief">
           <h3 class="title"><a href="/projects/heliostune/" data-print="github.com/mottopanikeiku/heliostune">HeliosTune</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">I reanalyzed stored measurements: torch.matmul had lower median latency on all 96 H100 workloads (84 shapes), with a 1.61× geometric-mean reference/torch ratio. It beat even the fastest of 36 Triton configurations on the scoring bank. The action set, not better search, limits the tuner here; L4 and A10 were mixed.</p>
+          <p class="desc">A Thompson-sampling autotuner for Triton matmul kernels, built to test whether timings from cheaper GPUs can warm-start H100 tuning. Transfer didn’t improve this study, and a later audit found that torch.matmul beat all 36 configurations on all 96 stored H100 workloads (1.61× geometric-mean reference/torch ratio). The action set, not the search, is the limit here; L4 and A10 were mixed.</p>
         </li>
         <li class="entry">
           <h3 class="title">Open source</h3>
