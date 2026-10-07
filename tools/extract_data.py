@@ -26,8 +26,8 @@ SOURCES = {
                    "results/summary.json"),
     "eval-power": ("eval-power", "ef7c451d678e7eece94344b0c87567a60e28e330",
                    "results/calibration.csv"),
-    "faultline": ("faultline", "d8dcf021e434d64adf06659ff0e1e0d61b70acf0",
-                  "artifacts/results/small-kill-v1-analysis.json"),
+    "faultline": ("faultline", "ac6ed689866de6cff18b51fc29fa1ab3c2cf2d50",
+                  "artifacts/results/seed-confirmation-analysis.json"),
     "heliostune": ("heliostune", "d1f5ab6fb6ff8b1862baf635dc8abd9241052809",
                    "benchmarks/results/parhelion-h100-final.json"),
     "verge-lab": ("verge-lab", "efa08d133f22501b2dedcb7a7aa636bf37bbc826",
@@ -106,13 +106,19 @@ def faultline(raw: dict) -> dict:
         arms[name] = {
             "mean": primary["estimate"],
             "ci": [primary["lower"], primary["upper"]],
-            "seeds": {str(s["seed"]): s["value"] for s in arm["individual_seeds"]},
         }
     paired = {
         name: {"estimate": p["estimate"], "ci": [p["lower"], p["upper"]]}
         for name, p in raw["paired_comparisons"].items()
     }
-    return {"arms": arms, "paired": paired, "decision": raw["decision"]}
+    protocol = raw["protocol"]
+    return {"arms": arms, "paired": paired, "decision": raw["decision"],
+            "seed_count": len(protocol["training_seeds"]),
+            "seed_range": [protocol["training_seeds"][0], protocol["training_seeds"][-1]],
+            "bootstrap_resamples": protocol["bootstrap_resamples"],
+            "training_steps": protocol["training_decision_steps"],
+            "evaluation_split": protocol["evaluation_split"],
+            "evaluation_base_pairs": protocol["evaluation_base_pair_count"]}
 
 
 def heliostune(raw: dict) -> dict:
