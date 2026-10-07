@@ -48,6 +48,8 @@ SOURCES = {
                      "results/cross_family/analysis/summary.json"),
     "helios-audit": ("heliostune", "75f18ed8ee2d93e2d58935e3d5599ae95a32a46d",
                     "results/action-set-audit.json"),
+    "eval-prospective": ("eval-power", "f739bfa20ea000cf639e551d2c3523213e814b53",
+                         "results/prospective/summary.json"),
 }
 
 
@@ -377,6 +379,24 @@ def helios_audit(raw: dict) -> dict:
     }
 
 
+def eval_prospective(raw: dict) -> dict:
+    names = {"gsm8k": "GSM8K", "arc": "ARC (direct choice)"}
+    return {
+        "models": len(raw["pilot_models"]), "k": raw["k"],
+        "target_power": raw["target_power"], "detection": raw["detection"],
+        "rows": [
+            {"benchmark": key, "name": name,
+             "median_share": raw["benchmark_overview"][key]["median_sampling_fraction"],
+             "shares": [pair["pilot"]["sampling_fraction"] for pair in raw["pairs"]
+                        if pair["benchmark"] == key],
+             "detected": raw["benchmark_overview"][key]["detected_pairs"],
+             "tested": raw["benchmark_overview"][key]["confirmed_pairs"],
+             "infeasible": raw["benchmark_overview"][key]["infeasible_pairs"]}
+            for key, name in names.items()
+        ],
+    }
+
+
 TRANSFORMS = {
     "attention-numerics": attention_numerics,
     "branchpilot": branchpilot,
@@ -394,6 +414,7 @@ TRANSFORMS = {
     "branchpilot-math": branchpilot_math,
     "alignmenttax": alignmenttax,
     "helios-audit": helios_audit,
+    "eval-prospective": eval_prospective,
 }
 
 

@@ -1,0 +1,73 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/eval-power",
+  "commit": "f739bfa20ea000cf639e551d2c3523213e814b53",
+  "path": "results/prospective/summary.json",
+  "url": "https://github.com/mottopanikeiku/eval-power/blob/f739bfa20ea000cf639e551d2c3523213e814b53/results/prospective/summary.json"
+ },
+ "models": 6,
+ "k": 5,
+ "target_power": 0.8,
+ "detection": {
+  "detected": 23,
+  "tested": 27,
+  "proportion": 0.8518518518518519,
+  "wilson_interval": [
+   0.6752131457218702,
+   0.9408407222375568
+  ],
+  "interpretation": "Observed detection across heterogeneous planned pairs, not single-pair power. Pairs share models and items and are not independent replicates; the Wilson interval is descriptive, not a dependence-adjusted coverage guarantee."
+ },
+ "rows": [
+  {
+   "benchmark": "gsm8k",
+   "name": "GSM8K",
+   "median_share": 0.33160559305689485,
+   "shares": [
+    0.47980367821279485,
+    0.39273278670111206,
+    0.6069645966337783,
+    0.40973142237745397,
+    0.42273384763741567,
+    0.45756880733944955,
+    0.33160559305689485,
+    0.3296301605504588,
+    0.3119981991445937,
+    0.3001870324189526,
+    0.20835583153347736,
+    0.27960877784170296,
+    0.24038743762841208,
+    0.352668452503606,
+    0.25459933800323303
+   ],
+   "detected": 13,
+   "tested": 14,
+   "infeasible": 1
+  },
+  {
+   "benchmark": "arc",
+   "name": "ARC (direct choice)",
+   "median_share": 0.04596676124847994,
+   "shares": [
+    0.05329418789808917,
+    0.04596676124847994,
+    0.19810036307053946,
+    0.033868539889613664,
+    0.051186220344491405,
+    0.020425366359745827,
+    0.17226562500000003,
+    0.007044615900704466,
+    0.004171356684102496,
+    0.17579279101831796,
+    0.04474431818181819,
+    0.0074573863636363666,
+    0.15102613576565513,
+    0.1728568560530014,
+    0.0
+   ],
+   "detected": 10,
+   "tested": 13,
+   "infeasible": 2
+  }
+ ]
+}

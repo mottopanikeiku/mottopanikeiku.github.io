@@ -581,6 +581,33 @@ def helios_audit() -> str:
     return s.render()
 
 
+def eval_prospective() -> str:
+    data = load("eval-prospective")
+    s = SVG("eval-prospective", 560, 250,
+            "Decoding-noise share differs sharply between GSM8K and direct-choice ARC",
+            "Estimated decoding contribution to paired item-mean variance with five stochastic "
+            "answers per question. Fifteen model pairs per benchmark; median share is 33.2% "
+            "on GSM8K and 4.6% on guided direct-choice ARC. These finite-pilot estimates are "
+            "descriptive, not known population variance components.")
+    L, R, top, bottom = 170, 20, 48, 184
+    x = scale(0, 0.65, L, 560 - R)
+    s.text(0, 18, "five stochastic answers/question; 15 model pairs/benchmark")
+    s.text(0, 38, "small dots: pairs; large dots: median")
+    for value in (0, 0.2, 0.4, 0.6):
+        s.line(x(value), top, x(value), bottom, "grid")
+        s.text(x(value), bottom + 21, f"{value * 100:.0f}%", anchor="middle")
+    for index, row in enumerate(data["rows"]):
+        y = 72 + index * 64
+        s.text(L - 12, y + 4, row["name"], anchor="end")
+        for point, share in enumerate(row["shares"]):
+            s.circle(x(share), y + (point % 3 - 1) * 4, 2.3, "dot")
+        s.circle(x(row["median_share"]), y, 4.3, "dot em")
+        s.text(x(row["median_share"]), y + 25, f'{row["median_share"] * 100:.1f}%',
+               "em", "middle")
+    s.text((L + 560 - R) / 2, 244, "estimated decoding share of total variance at k=5", anchor="middle")
+    return s.render()
+
+
 FIGURES = {
     "attention-numerics": attention_numerics,
     "branchpilot": branchpilot,
@@ -596,6 +623,7 @@ FIGURES = {
     "branchpilot-math": branchpilot_math,
     "alignmenttax": alignmenttax,
     "helios-audit": helios_audit,
+    "eval-prospective": eval_prospective,
 }
 
 
