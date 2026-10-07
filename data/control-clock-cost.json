@@ -1,0 +1,11 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/control-clock",
+  "commit": "b090dad8a3b53f937782676c6033ba3557cedfa1",
+  "path": "results/gpu/cost.json",
+  "url": "https://github.com/mottopanikeiku/control-clock/blob/b090dad8a3b53f937782676c6033ba3557cedfa1/results/gpu/cost.json"
+ },
+ "hardware": "Modal NVIDIA L4",
+ "total_all_in_cost_estimate_usd": 0.3745,
+ "method": "Requested GPU/CPU/RAM rate over entire Modal client wall time, plus 10% margin; rounded estimates, not an invoice. Client wall minutes are rounded to 0.01 minute. Overhead is the client wall time minus measured container execution and includes image/client preparation, provisioning and shutdown; those components are not separately instrumented."
+}

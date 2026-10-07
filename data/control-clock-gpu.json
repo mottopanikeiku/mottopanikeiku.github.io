@@ -1,0 +1,24 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/control-clock",
+  "commit": "b090dad8a3b53f937782676c6033ba3557cedfa1",
+  "path": "results/gpu/summary.json",
+  "url": "https://github.com/mottopanikeiku/control-clock/blob/b090dad8a3b53f937782676c6033ba3557cedfa1/results/gpu/summary.json"
+ },
+ "hardware": "Modal L4; not the laptop table",
+ "protocol": "fresh Python process through first passing 100-episode Gymnasium evaluation",
+ "groups": [
+  {
+   "task": "CartPole-v1",
+   "runs": 3,
+   "solved": 3,
+   "median_seconds": 26.377008411000006
+  },
+  {
+   "task": "Acrobot-v1",
+   "runs": 3,
+   "solved": 3,
+   "median_seconds": 97.427033027
+  }
+ ]
+}

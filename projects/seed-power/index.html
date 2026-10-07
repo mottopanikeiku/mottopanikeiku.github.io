@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>seed-power · Alp Cetin</title>
+  <meta name="description" content="Pilot-based RL seed budgets targeted 80% power but detected differences in 67 of 119 executable comparisons: 56.3%, on 11,440 fresh training seeds.">
+  <link rel="canonical" href="https://mottopanikeiku.github.io/projects/seed-power/">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f4ef">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#151412">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="/fonts/text-roman.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/display-roman.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/site.css?v=0d1abf57f3">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Alp Cetin">
+  <meta property="og:title" content="seed-power">
+  <meta property="og:description" content="Pilot-based RL seed budgets targeted 80% power but detected differences in 56.3% of executable comparisons.">
+  <meta property="og:url" content="https://mottopanikeiku.github.io/projects/seed-power/">
+  <meta property="og:image" content="https://mottopanikeiku.github.io/og/seed-power.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <p class="name"><a href="/">Alp Cetin</a></p>
+    <p>San Francisco</p>
+  </header>
+
+  <main class="content">
+
+    <div class="intro">
+      <h1>seed-power</h1>
+      <p>I test whether pilot-based seed budgets deliver their promised detection rate in reinforcement learning.</p>
+    </div>
+
+    <section class="block" aria-labelledby="question">
+      <h2 id="question">Question</h2>
+      <div class="prose">
+        <p>How many independent training seeds does an RL comparison need? If I estimate the gap from a small pilot and plan a larger study around it, does that study detect a difference as often as promised?</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="method">
+      <h2 id="method">Method</h2>
+      <div class="prose">
+        <p>I used established power calculations and affine ARS/CEM policy search adapted from <a href="/projects/control-clock/">Control Clock</a>. I fixed six different-variant comparisons per task on CartPole and Acrobot, changing iteration counts or comparing the optimizers. Each repeat used disjoint eight-seed pilots per arm to estimate the gap and variance, then plan a study targeting 80% power. A policy score averages sixteen evaluation episodes; those episodes are not extra training seeds. The <a href="https://github.com/mottopanikeiku/seed-power/blob/71ce487eac1eafc9481eec7427ea83340e23569a/README.md">README</a> describes the design and its assumptions.</p>
+        <p>I committed and pushed the complete <a href="https://github.com/mottopanikeiku/seed-power/blob/49c21edbc34ea43ab1804a85e7e9269d534abc65/results/pilot_plan.json">pilot plan</a> before confirmation. I then trained 11,440 fresh seeds, separate from 2,688 pilot seeds, and tested the resulting comparisons with Welch’s test. Every executable plan received its exact requested seed count (<a href="https://github.com/mottopanikeiku/seed-power/blob/71ce487eac1eafc9481eec7427ea83340e23569a/results/summary.json">counts</a>).</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="result">
+      <h2 id="result">Result</h2>
+      <div class="prose">
+        <p>The plans targeted 80% power but detected a difference in 67 of 119 executable different-variant comparisons: 56.3%, with a descriptive Wilson 95% interval of 47.3–64.9%. CartPole detected differences in 30/60 comparisons (50.0%); Acrobot in 37/59 (62.7%). This is detection frequency for a fixed set of short-budget comparisons, not power at a known effect.</p>
+        <figure class="figure">
+          <div class="scroll" tabindex="0" role="region" aria-labelledby="seed-power-title"><!-- figure:seed-power --><svg class="chart" viewBox="0 0 560 250" role="img" aria-labelledby="seed-power-title seed-power-desc"><title id="seed-power-title">Detection rates of fresh-seed RL studies planned for 80% power</title><desc id="seed-power-desc">All executable plans detected 67 of 119 differences, 56.3%. CartPole detected 30 of 60, 50.0%; Acrobot detected 37 of 59, 62.7%. Bars are Wilson 95% intervals. The dashed line is the 80% planning target.</desc><line class="grid" x1="160" y1="42" x2="160" y2="188"/><text text-anchor="middle" x="160" y="211">0%</text><line class="grid" x1="236.8" y1="42" x2="236.8" y2="188"/><text text-anchor="middle" x="236.8" y="211">20%</text><line class="grid" x1="313.6" y1="42" x2="313.6" y2="188"/><text text-anchor="middle" x="313.6" y="211">40%</text><line class="grid" x1="390.4" y1="42" x2="390.4" y2="188"/><text text-anchor="middle" x="390.4" y="211">60%</text><line class="grid" x1="467.2" y1="42" x2="467.2" y2="188"/><text text-anchor="middle" x="467.2" y="211">80%</text><line class="grid" x1="544" y1="42" x2="544" y2="188"/><text text-anchor="middle" x="544" y="211">100%</text><line class="line dash" x1="467.2" y1="40" x2="467.2" y2="188"/><text class="strong" text-anchor="middle" x="467.2" y="22">80% target</text><text text-anchor="end" x="148" y="69">All executable plans</text><line class="ci em" x1="341.8" y1="65" x2="409.1" y2="65"/><circle class="dot em" cx="376.2" cy="65" r="4"/><text class="em" text-anchor="middle" x="376.2" y="87">67/119 (56.3%)</text><text text-anchor="end" x="148" y="121">CartPole</text><line class="ci strong" x1="304.9" y1="117" x2="399.1" y2="117"/><circle class="dot strong" cx="352" cy="117" r="4"/><text class="strong" text-anchor="middle" x="352" y="139">30/60 (50.0%)</text><text text-anchor="end" x="148" y="173">Acrobot</text><line class="ci strong" x1="351.8" y1="169" x2="443.8" y2="169"/><circle class="dot strong" cx="400.8" cy="169" r="4"/><text class="strong" text-anchor="middle" x="400.8" y="191">37/59 (62.7%)</text><text text-anchor="middle" x="352" y="243">detection rate; Wilson 95% intervals</text></svg><!-- /figure:seed-power --></div>
+          <figcaption>Fresh-seed detection rates for executable different-variant plans, compared with the 80% planning target. Intervals are descriptive Wilson 95% intervals. Data: <a href="https://github.com/mottopanikeiku/seed-power/blob/71ce487eac1eafc9481eec7427ea83340e23569a/results/summary.json">summary.json</a>.</figcaption>
+        </figure>
+        <p>Of 144 attempted different-variant plans, 25 needed more than the predeclared limit of 256 seeds per arm and were not run. I did not cap their counts and still call them 80% plans. Seven detections reversed the pilot’s direction. Separate same-variant controls rejected in 1/17 tests; that small sample cannot establish exact type-I calibration (<a href="https://github.com/mottopanikeiku/seed-power/blob/71ce487eac1eafc9481eec7427ea83340e23569a/results/summary.json">outcomes</a>).</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="limits">
+      <h2 id="limits">Limits</h2>
+      <div class="prose">
+        <p>These are two cheap control tasks with affine policy search, not neural-network deep RL. The achieved rate is conditional on plans that fit the seed limit. Twelve repeats per comparison leave wide intervals, and pooling different comparisons makes the overall interval descriptive. Fixed iteration budgets are not equal environment-step budgets.</p>
+        <p>The planner treats noisy pilot gaps and variances as population values. Its equal-variance Gaussian calculation is pooled-t power; using it for Welch’s test is an approximation. Bounded, skewed RL returns need not fit that model, and some different-variant comparisons may have no true mean difference. This result does not show that all missed detections came from pilot noise, or estimate power for RL in general (<a href="https://github.com/mottopanikeiku/seed-power/blob/71ce487eac1eafc9481eec7427ea83340e23569a/README.md">interpretation and limits</a>).</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="links">
+      <h2 id="links">Links</h2>
+      <ul class="rows">
+        <li class="entry"><p class="title"><a href="https://github.com/mottopanikeiku/seed-power/tree/71ce487eac1eafc9481eec7427ea83340e23569a">Code, data and results</a> <span class="org">GitHub · pinned revision</span></p></li>
+        <li class="entry"><p class="title"><a href="https://github.com/mottopanikeiku/seed-power/blob/71ce487eac1eafc9481eec7427ea83340e23569a/docs/PROTOCOL.md">Protocol and interpretation</a> <span class="org">seed-power</span></p></li>
+        <li class="entry"><p class="title"><a href="https://github.com/mottopanikeiku/seed-power/blob/71ce487eac1eafc9481eec7427ea83340e23569a/figures/pilot_transfer.svg">How pilot gaps transferred to fresh seeds</a> <span class="org">Source figure</span></p></li>
+        <li class="entry"><p class="title"><a href="https://github.com/mottopanikeiku/seed-power/blob/71ce487eac1eafc9481eec7427ea83340e23569a/docs/PRIOR_WORK.md">Prior work and license details</a> <span class="org">seed-power</span></p></li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="colophon">
+    <p><a href="/">All work</a></p>
+  </footer>
+
+</div>
+</body>
+</html>

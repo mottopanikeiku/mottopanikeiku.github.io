@@ -26,21 +26,6 @@
   <meta property="profile:first_name" content="Alp">
   <meta property="profile:last_name" content="Cetin">
   <meta name="twitter:card" content="summary_large_image">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Alp Cetin",
-    "alternateName": "Fatih Alper Cetin",
-    "url": "https://mottopanikeiku.github.io/",
-    "jobTitle": "Founder",
-    "worksFor": { "@type": "Organization", "name": "Tenth Man Labs", "url": "https://tenthmanlabs.com" },
-    "alumniOf": { "@type": "CollegeOrUniversity", "name": "Illinois Institute of Technology" },
-    "homeLocation": { "@type": "Place", "name": "San Francisco, California" },
-    "email": "mailto:falpercetin@gmail.com",
-    "sameAs": ["https://github.com/mottopanikeiku", "https://www.linkedin.com/in/fatihctn"]
-  }
-  </script>
 </head>
 <body>
 <div class="page">
@@ -85,14 +70,19 @@
           <p class="desc">How many benchmark items it takes to tell two language models apart. Across 395 models on five benchmarks, almost no neighboring leaderboard gaps were significant, and studies planned from small pilots detected the difference only 49–79% of the time instead of 80%.</p>
         </li>
         <li class="entry">
+          <h3 class="title"><a href="/projects/seed-power/" data-print="github.com/mottopanikeiku/seed-power">seed-power</a></h3>
+          <p class="year"><time datetime="2026">2026</time></p>
+          <p class="desc">I tested RL study plans on 11,440 fresh training seeds. Plans targeting 80% power detected a difference in 67 of 119 executable comparisons (56.3%). A small pilot did not deliver the detection rate it promised.</p>
+        </li>
+        <li class="entry brief">
           <h3 class="title"><a href="/projects/control-clock/" data-print="github.com/mottopanikeiku/control-clock">control-clock</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">Seconds from a cold Python process to a policy that passes CartPole or Acrobot on a laptop CPU, with every evaluation on the clock. Search over linear policies passed CartPole in a median 1.1 seconds, nearly four times faster than the fastest PPO; on Acrobot, Stable-Baselines3’s tuned PPO was fastest at 10 seconds.</p>
         </li>
-        <li class="entry">
+        <li class="entry brief">
           <h3 class="title"><a href="/projects/verge-lab/" data-print="github.com/mottopanikeiku/verge-lab">Verge Lab</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">A rule for choosing preference pairs from multi-aspect judge scores that abstains when the aspects trade off. On 1,200 UltraFeedback pairs it defended 820; for 18.7% of the defended pairs that the dataset’s overall score ranks, that score ranks them the other way.</p>
+          <p class="desc">A rule that chooses preference pairs only when quality aspects agree. On HelpSteer2 human preferences, it agreed with 281 of 286 strict preferences (98.25%), against 277 of 282 (98.23%) for an overall-score-gap baseline at matched yield. I found no clear advantage.</p>
         </li>
         <li class="entry brief">
           <h3 class="title"><a href="/projects/branchpilot/" data-print="github.com/mottopanikeiku/branchpilot">BranchPilot</a></h3>
@@ -149,12 +139,37 @@
         <li class="entry">
           <h3 class="title"><a href="https://mottopanikeiku.github.io/kan-visualizer/" data-print="mottopanikeiku.github.io/kan-visualizer">KAN visualizer</a></h3>
           <p class="year"><time datetime="2025">2025</time></p>
-          <p class="desc">Small networks with learned functions on every edge, inspired by Kolmogorov–Arnold networks. The browser runs the exported model itself, matching PyTorch to within one part in a million, and shows its real activations.</p>
+          <p class="desc">I compare Gaussian-edge networks with parameter-matched MLPs and show the exported models’ real activations. <a href="https://github.com/mottopanikeiku/kan-visualizer/blob/298419407d3251bdaeb5f70426ec2ed526480799/results/mlp_comparison/summary.json">MLPs won both two-dimensional tasks in every paired seed; the edge network won the one-dimensional task.</a> These are small synthetic regression tasks.</p>
+        </li>
+        <li class="entry">
+          <h3 class="title"><a href="https://mottopanikeiku.github.io/attention-numerics/">Attention numerics explorable</a></h3>
+          <p class="year"><time datetime="2026">2026</time></p>
+          <p class="desc">Explore when rotating queries and keys before low-precision rounding changes attention error. The illustrations and measured results are labelled separately.</p>
+        </li>
+        <li class="entry">
+          <h3 class="title"><a href="https://mottopanikeiku.github.io/eval-power/">Eval power calculator</a></h3>
+          <p class="year"><time datetime="2026">2026</time></p>
+          <p class="desc">Plan a paired model comparison from the smallest accuracy difference that matters, rather than trusting the gap in a small pilot.</p>
+        </li>
+        <li class="entry">
+          <h3 class="title"><a href="https://mottopanikeiku.github.io/durability-debt/">Durability debt</a></h3>
+          <p class="year"><time datetime="2026">2026</time></p>
+          <p class="desc">Step through a synthetic producer–consumer handoff where a write becomes visible before it survives a crash. Compare publishing first with flushing first.</p>
+        </li>
+        <li class="entry">
+          <h3 class="title"><a href="https://mottopanikeiku.github.io/SouthsideAnalysis/">South Side census map</a></h3>
+          <p class="year"><time datetime="2026">2026</time></p>
+          <p class="desc">Explore Census block groups clustered by demographic similarity around Chicago’s South Side. These are exploratory partitions, not validated neighborhood boundaries.</p>
         </li>
         <li class="entry">
           <h3 class="title"><a href="https://mottopanikeiku.github.io/pdbview/" data-print="mottopanikeiku.github.io/pdbview">PDBView</a></h3>
           <p class="year"><time datetime="2025">2025</time></p>
-          <p class="desc">A protein structure viewer for PDB files that runs in the browser with nothing to install, built on 3Dmol.js.</p>
+          <p class="desc">I inspect protein structures in the browser with 3Dmol.js. Load an RCSB PDB ID or drop a local file, click an observed residue to highlight it, measure atom distances, and share a view of a public structure.</p>
+        </li>
+        <li class="entry">
+          <h3 class="title"><a href="https://mottopanikeiku.github.io/terrasim/">Terrasim</a></h3>
+          <p class="year"><time datetime="2026">2026</time></p>
+          <p class="desc">I built a browser terrarium in Three.js and TypeScript. Pour soil and water, plant a garden, and return to a browser-local save. Its water and plant-care rules are a playable illustration, not a validated ecosystem model.</p>
         </li>
       </ul>
     </section>

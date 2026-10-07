@@ -30,8 +30,16 @@ SOURCES = {
                   "artifacts/results/small-kill-v1-analysis.json"),
     "heliostune": ("heliostune", "d1f5ab6fb6ff8b1862baf635dc8abd9241052809",
                    "benchmarks/results/parhelion-h100-final.json"),
-    "verge-lab": ("verge-lab", "0e42e8ca557e38e91863cc8b64ba8dd64be6009a",
+    "verge-lab": ("verge-lab", "efa08d133f22501b2dedcb7a7aa636bf37bbc826",
                   "results/public-preferences/summary.json"),
+    "seed-power": ("seed-power", "71ce487eac1eafc9481eec7427ea83340e23569a",
+                   "results/summary.json"),
+    "verge-human": ("verge-lab", "efa08d133f22501b2dedcb7a7aa636bf37bbc826",
+                    "results/human-preferences/summary.json"),
+    "control-clock-gpu": ("control-clock", "b090dad8a3b53f937782676c6033ba3557cedfa1",
+                          "results/gpu/summary.json"),
+    "control-clock-cost": ("control-clock", "b090dad8a3b53f937782676c6033ba3557cedfa1",
+                           "results/gpu/cost.json"),
 }
 
 
@@ -218,6 +226,52 @@ def cpu_decode(raw: dict) -> dict:
     }
 
 
+def seed_power(raw: dict) -> dict:
+    def row(name: str, values: dict) -> dict:
+        return {
+            "name": name,
+            "plans": values["plans"],
+            "detections": values["detections"],
+            "rate": values["detection_rate"],
+            "ci": [values["wilson_95_low"], values["wilson_95_high"]],
+        }
+    return {
+        "target_power": raw["target_power"],
+        "fresh_seeds": raw["training_seeds_confirmation"],
+        "attempted_plans": raw["attempted_nonnull_plans"],
+        "over_budget": raw["nonnull_status_counts"]["over_budget"],
+        "rows": [row("All executable plans", raw["nonnull"]),
+                 *(row(task.removesuffix("-v1"), values)
+                   for task, values in raw["per_task"].items())],
+    }
+
+
+def verge_human(raw: dict) -> dict:
+    result = raw["configurations"]["correctness_coherence"]["validation"]["matched"]
+    return {
+        "yield": result["yield_pairs_each"],
+        "rows": [
+            {"name": name, "agree": result[key]["agree"],
+             "strict_pairs": result[key]["strict_human_pairs"],
+             "human_ties": result[key]["human_tie"],
+             "rate": result[key]["strict_agreement"],
+             "ci": result[key]["wilson_95"]}
+            for key, name in (("pareto", "Pareto selection"),
+                              ("helpfulness_gap", "Overall-score gap"))
+        ],
+    }
+
+
+def control_clock_gpu(raw: dict) -> dict:
+    return {"hardware": raw["hardware"], "protocol": raw["protocol"],
+            "groups": [{key: group[key] for key in ("task", "runs", "solved", "median_seconds")}
+                       for group in raw["groups"]]}
+
+
+def control_clock_cost(raw: dict) -> dict:
+    return {key: raw[key] for key in ("hardware", "total_all_in_cost_estimate_usd", "method")}
+
+
 TRANSFORMS = {
     "attention-numerics": attention_numerics,
     "branchpilot": branchpilot,
@@ -227,6 +281,10 @@ TRANSFORMS = {
     "faultline": faultline,
     "heliostune": heliostune,
     "verge-lab": verge_lab,
+    "seed-power": seed_power,
+    "verge-human": verge_human,
+    "control-clock-gpu": control_clock_gpu,
+    "control-clock-cost": control_clock_cost,
 }
 
 

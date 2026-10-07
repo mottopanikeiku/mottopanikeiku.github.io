@@ -1,0 +1,44 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/seed-power",
+  "commit": "71ce487eac1eafc9481eec7427ea83340e23569a",
+  "path": "results/summary.json",
+  "url": "https://github.com/mottopanikeiku/seed-power/blob/71ce487eac1eafc9481eec7427ea83340e23569a/results/summary.json"
+ },
+ "target_power": 0.8,
+ "fresh_seeds": 11440,
+ "attempted_plans": 144,
+ "over_budget": 25,
+ "rows": [
+  {
+   "name": "All executable plans",
+   "plans": 119,
+   "detections": 67,
+   "rate": 0.5630252100840336,
+   "ci": [
+    0.47331840744696124,
+    0.6487902042872481
+   ]
+  },
+  {
+   "name": "CartPole",
+   "plans": 60,
+   "detections": 30,
+   "rate": 0.5,
+   "ci": [
+    0.3773502424155577,
+    0.6226497575844423
+   ]
+  },
+  {
+   "name": "Acrobot",
+   "plans": 59,
+   "detections": 37,
+   "rate": 0.6271186440677966,
+   "ci": [
+    0.4995359106706382,
+    0.7391600120767886
+   ]
+  }
+ ]
+}
