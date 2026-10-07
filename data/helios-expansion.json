@@ -1,0 +1,91 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/heliostune",
+  "commit": "f50b27e2c0664d7c9c082e2483867b1381623200",
+  "path": "results/action-expansion-summary.json",
+  "url": "https://github.com/mottopanikeiku/heliostune/blob/f50b27e2c0664d7c9c082e2483867b1381623200/results/action-expansion-summary.json"
+ },
+ "definition": "candidate bank-2 median / same-workload torch bank-2 median",
+ "selection_bank": 1,
+ "scoring_bank": 2,
+ "old_actions": 36,
+ "new_actions": 10,
+ "overall": {
+  "arms": {
+   "new": {
+    "comparable_loss_count": 86,
+    "comparable_tie_count": 1,
+    "comparable_win_count": 9,
+    "failure_count": 0,
+    "geometric_mean_to_torch": 1.1740615871650928,
+    "scored_count": 96
+   },
+   "old": {
+    "comparable_loss_count": 96,
+    "comparable_tie_count": 0,
+    "comparable_win_count": 0,
+    "failure_count": 0,
+    "geometric_mean_to_torch": 1.6082273459702048,
+    "scored_count": 96
+   },
+   "union": {
+    "comparable_loss_count": 86,
+    "comparable_tie_count": 1,
+    "comparable_win_count": 9,
+    "failure_count": 0,
+    "geometric_mean_to_torch": 1.1730170156445219,
+    "scored_count": 96
+   }
+  },
+  "comparable_count": 96,
+  "named_workload_count": 96,
+  "noncomparable_count": 0,
+  "old_new_comparison": {
+   "geometric_mean_new_to_old": 0.7300345875270575,
+   "new_faster_count": 95,
+   "old_faster_count": 1,
+   "tie_count": 0
+  },
+  "torch_failure_count": 0,
+  "torch_scored_count": 96,
+  "unique_shape_count": 84
+ },
+ "groups": [
+  {
+   "m": 1,
+   "workloads": 16,
+   "old_wins": 0,
+   "new_wins": 5
+  },
+  {
+   "m": 7,
+   "workloads": 16,
+   "old_wins": 0,
+   "new_wins": 3
+  },
+  {
+   "m": 31,
+   "workloads": 16,
+   "old_wins": 0,
+   "new_wins": 0
+  },
+  {
+   "m": 96,
+   "workloads": 16,
+   "old_wins": 0,
+   "new_wins": 1
+  },
+  {
+   "m": 257,
+   "workloads": 16,
+   "old_wins": 0,
+   "new_wins": 0
+  },
+  {
+   "m": 1024,
+   "workloads": 16,
+   "old_wins": 0,
+   "new_wins": 0
+  }
+ ]
+}

@@ -418,29 +418,101 @@ def cpu_decode() -> str:
     return s.render()
 
 
+def attention_accuracy() -> str:
+    data = load("attention-accuracy")
+    s = SVG("attention-accuracy", 560, 420,
+            "Qwen2.5-7B task accuracy changes under real FA3 FP8 attention",
+            "Paired accuracy changes versus native BF16 on three multiple-choice tasks. "
+            "HellaSwag drops 17.2 points unrotated and 35.4 points with Q/K rotation "
+            "(95% interval −37.9 to −32.9). Centered variants stay near zero on this "
+            "checkpoint, but are not lossless across all eight checkpoints. These are "
+            "batch scores with full-sequence scales, not streaming generation.")
+    variants = (("tile", "unrotated", "strong"),
+                ("rotate", "rotate Q/K", "em"),
+                ("smooth_k", "center K", "hollow strong"),
+                ("rotate_smooth_k", "center + rotate", "hollow em"))
+    for index, (_, label, cls) in enumerate(variants):
+        lx, ly = 10 + (index % 2) * 275, 18 + (index // 2) * 22
+        s.circle(lx, ly - 4, 3.5, f"dot {cls}")
+        s.text(lx + 12, ly, label)
+    x = scale(-0.4, 0.04, 166, 544)
+    for value in (-0.4, -0.3, -0.2, -0.1, 0):
+        s.line(x(value), 64, x(value), 350, "axis" if value == 0 else "grid")
+        s.text(x(value), 374, f"{value * 100:.0f}", anchor="middle")
+    for index, task in enumerate(data["tasks"]):
+        y = 100 + index * 100
+        s.text(154, y, task["name"], "strong", "end")
+        s.text(154, y + 18, f'{task["rows"][0]["baseline_accuracy"] * 100:.1f}% BF16',
+               anchor="end")
+        s.text(154, y + 36, f'{task["items"]:,} items', anchor="end")
+        rows = {row["variant"]: row for row in task["rows"]}
+        for offset, (variant, _, cls) in zip((-24, -8, 8, 24), variants):
+            row, py = rows[variant], y + offset
+            s.line(x(row["ci95"][0]), py, x(row["ci95"][1]), py, "ci")
+            s.circle(x(row["delta"]), py, 3.5, f"dot {cls}")
+    s.text(355, 396, "accuracy change (percentage points)", anchor="middle")
+    s.text(355, 416, "paired-item 95% intervals; no multiplicity correction", anchor="middle")
+    return s.render()
+
+
 def seed_power() -> str:
-    data = load("seed-power")
-    s = SVG("seed-power", 560, 250,
-            "Detection rates of fresh-seed RL studies planned for 80% power",
-            "All executable plans detected 67 of 119 differences, 56.3%. CartPole detected "
-            "30 of 60, 50.0%; Acrobot detected 37 of 59, 62.7%. Bars are Wilson 95% intervals. "
-            "The dashed line is the 80% planning target.")
-    x = scale(0, 1, 160, 544)
-    for value in (0, 0.2, 0.4, 0.6, 0.8, 1):
-        s.line(x(value), 42, x(value), 188, "grid")
-        s.text(x(value), 211, f"{value * 100:.0f}%", anchor="middle")
-    s.line(x(data["target_power"]), 40, x(data["target_power"]), 188, "line dash")
-    s.text(x(data["target_power"]), 22, "80% target", "strong", "middle")
-    for index, row in enumerate(data["rows"]):
-        y = 65 + index * 52
-        cls = "em" if index == 0 else "strong"
-        s.text(148, y + 4, row["name"], anchor="end")
-        s.line(x(row["ci"][0]), y, x(row["ci"][1]), y, f"ci {cls}")
-        s.circle(x(row["rate"]), y, 4, f"dot {cls}")
-        s.text(x(row["rate"]), y + 22,
-               f'{row["detections"]}/{row["plans"]} ({row["rate"] * 100:.1f}%)',
-               cls, "middle")
-    s.text(352, 243, "detection rate; Wilson 95% intervals", anchor="middle")
+    experiments = (("Linear ARS/CEM", load("seed-power")),
+                   ("Neural PPO", load("seed-neural")))
+    s = SVG("seed-power", 560, 324,
+            "Fresh-seed detection in linear policy search and neural PPO",
+            "Plans targeting 80% power detected 67 of 119 linear-search differences "
+            "(56.3%) and 139 of 307 neural-PPO differences (45.3%). Linear CartPole: "
+            "30/60; Acrobot: 37/59. Neural CartPole: 109/175; Acrobot: 30/132. "
+            "Intervals are descriptive Wilson 95% intervals, not power at known effects.")
+    for panel, (name, data) in enumerate(experiments):
+        left = 88 + panel * 280
+        x = scale(0, 1, left, left + 176)
+        s.text(left + 82, 18, name, "strong", "middle")
+        for value in (0, 0.4, 0.8, 1):
+            s.line(x(value), 50, x(value), 258, "grid")
+            s.text(x(value), 282, f"{value * 100:.0f}%", anchor="middle")
+        s.line(x(data["target_power"]), 48, x(data["target_power"]), 258, "line dash")
+        s.text(x(data["target_power"]), 38, "80% target", "strong", "middle")
+        for index, row in enumerate(data["rows"]):
+            y = 76 + index * 76
+            cls = "em" if index == 0 else "strong"
+            label = "All plans" if index == 0 else row["name"]
+            s.text(left - 9, y + 4, label, anchor="end")
+            s.line(x(row["ci"][0]), y, x(row["ci"][1]), y, "ci")
+            s.circle(x(row["rate"]), y, 4, f"dot {cls}")
+            s.text(x(row["rate"]), y + 23,
+                   f'{row["detections"]}/{row["plans"]} · {row["rate"] * 100:.1f}%',
+                   cls, "middle")
+    s.text(280, 316, "detection frequency; descriptive Wilson 95% intervals", anchor="middle")
+    return s.render()
+
+
+def verge_dpo() -> str:
+    data = load("verge-dpo")
+    primary = data["primary"]
+    s = SVG("verge-dpo", 560, 310,
+            "DPO reward difference: Pareto selection minus score-gap selection",
+            "Three matched training-seed mean reward differences are −0.027, −0.118 "
+            "and −0.190 raw reward logits. The overall mean is −0.112, with a 95% "
+            "crossed prompt-and-seed bootstrap interval of −0.257 to +0.032. "
+            "The result is inconclusive, not superiority or equivalence. This scorer "
+            "is a reward proxy, not a human judge.")
+    s.text(0, 18, f'{data["prompts"]} held-out prompts · {len(data["training_seeds"])} matched seeds')
+    x = scale(-0.3, 0.05, 154, 544)
+    for value in (-0.3, -0.2, -0.1, 0):
+        s.line(x(value), 40, x(value), 250, "axis" if value == 0 else "grid")
+        s.text(x(value), 276, f"{value:.1f}", anchor="middle")
+    for index, row in enumerate(primary["per_seed"]):
+        y = 62 + index * 48
+        s.text(142, y + 4, f'Seed {row["seed"]}', anchor="end")
+        s.circle(x(row["mean"]), y, 3.5, "dot strong")
+        s.text(x(row["mean"]) + 9, y + 4, f'{row["mean"]:+.3f}', "strong")
+    y = 224
+    s.text(142, y + 4, "Overall mean", "em", "end")
+    s.line(x(primary["ci95"][0]), y, x(primary["ci95"][1]), y, "ci")
+    s.circle(x(primary["mean"]), y, 4, "dot em")
+    s.text(x(primary["mean"]), y + 22, f'{primary["mean"]:+.3f}', "em", "middle")
+    s.text(350, 307, "Pareto − gap reward (raw logits)", anchor="middle")
     return s.render()
 
 
@@ -521,38 +593,64 @@ def branchpilot_math() -> str:
 
 def alignmenttax() -> str:
     data = load("alignmenttax")
-    s = SVG("alignmenttax", 560, 432,
-            "Instruction tuning changes binary accuracy and calibration with shared prompts",
-            "In seven base/instruct pairs, four gain accuracy and increase expected calibration "
-            "error; two lose accuracy and increase error. Qwen2.5-0.5B loses accuracy, with an "
-            "uncertain calibration change. SmolLM2-1.7B loses 15.8 accuracy points and gains "
-            "32.5 error points. Horizontal and vertical bars are separate 95% question-bootstrap "
-            "intervals, not a joint confidence region.")
-    L, R, T, bottom = 58, 16, 56, 292
-    x = scale(-22, 15, L, 560 - R)
+    s = SVG("alignmenttax", 560, 454,
+            "Instruction tuning changes ECE differently under standard and binary TruthfulQA",
+            "One point per base/instruct pair. Horizontal axis: standard MC1 ECE change; "
+            "vertical axis: binary-derivative ECE change, both instruct minus base in "
+            "percentage points. Seven point estimates improve standard ECE but worsen "
+            "binary ECE. Qwen14B changes by −5.5 and +10.2 points respectively. "
+            "These are fixed checkpoint comparisons under shared prompts, not causal effects.")
+    L, R, T, bottom = 58, 16, 64, 294
+    x = scale(-8, 4, L, 560 - R)
     y = scale(-8, 40, bottom, T)
-    s.text(L, 18, "shared prompts; instruct − base; 95% paired intervals")
-    s.text(L - 10, T - 12, "ECE change (points); higher is worse")
+    s.text(L, 18, "shared prompts; instruct − base; point estimates")
+    s.text(L, 40, "binary ECE change (points); higher is worse")
     for value in (0, 10, 20, 30, 40):
         s.line(L, y(value), 560 - R, y(value), "grid")
         s.text(L - 8, y(value) + 4, str(value), anchor="end")
-    for value in (-20, -10, 0, 10):
+    for value in (-8, -4, 0, 4):
         s.line(x(value), T, x(value), bottom, "grid")
         s.text(x(value), bottom + 21, str(value), anchor="middle")
     s.line(x(0), T, x(0), bottom, "axis")
     s.line(L, y(0), 560 - R, y(0), "axis")
-    s.text((L + 560 - R) / 2, 337, "accuracy change (percentage points)", anchor="middle")
-    offsets = ((8, -9), (-11, 18), (-10, 18), (8, -9), (5, -10), (8, -9), (8, -8))
+    s.text((L + 560 - R) / 2, 337, "standard MC1 ECE change (points); lower is better",
+           anchor="middle")
+    offsets = ((8, -8), (8, -8), (-12, 18), (8, -9), (8, -9),
+               (8, -8), (8, 16), (8, -9), (8, -9))
     for index, (row, (dx, dy)) in enumerate(zip(data["rows"], offsets)):
-        accuracy, ece = row["accuracy"], row["ece"]
-        px, py = x(accuracy["delta"] * 100), y(ece["delta"] * 100)
-        cls = "em" if row["classification"] == "accuracy_and_calibration_worsened" else "strong"
-        s.line(x(accuracy["ci"][0] * 100), py, x(accuracy["ci"][1] * 100), py, f"ci {cls}")
-        s.line(px, y(ece["ci"][0] * 100), px, y(ece["ci"][1] * 100), f"ci {cls}")
+        px, py = x(row["mc1_ece"]["delta"] * 100), y(row["binary_ece"]["delta"] * 100)
+        cls = "em" if row["key"] in ("qwen2_5_14b", "qwen2_5_32b") else "strong"
         s.circle(px, py, 3.4, f"dot {cls}")
         s.text(px + dx, py + dy, str(index + 1), cls)
         s.text(L + (index % 2) * 245, 363 + (index // 2) * 20,
                f'{index + 1}  {row["name"]}', cls)
+    return s.render()
+
+
+def helios_expansion() -> str:
+    data = load("helios-expansion")
+    s = SVG("helios-expansion", 560, 320,
+            "Nominal H100 wins over torch before and after adding actions",
+            "The bank-1-selected old 36 actions win on zero of 96 workloads. Ten new "
+            "actions win on nine: five of 16 at M=1, three of 16 at M=7, one of 16 "
+            "at M=96, and none at M=31,257,1024. Bank 2 scores fixed winners. "
+            "Five winning margins are below 1%; counts are descriptive, not significance tests.")
+    s.circle(10, 14, 3.5, "dot hollow strong")
+    s.text(22, 18, f'old {data["old_actions"]} actions: 0/96', "strong")
+    s.circle(280, 14, 3.5, "dot em")
+    s.text(292, 18, f'{data["new_actions"]} new actions: 9/96', "em")
+    x = scale(0, 16, 160, 544)
+    for value in (0, 4, 8, 12, 16):
+        s.line(x(value), 40, x(value), 258, "axis" if value == 0 else "grid")
+        s.text(x(value), 280, str(value), anchor="middle")
+    for index, row in enumerate(data["groups"]):
+        y = 64 + index * 36
+        s.text(146, y + 4, f'M = {row["m"]}', anchor="end")
+        s.circle(x(row["old_wins"]), y - 6, 3.5, "dot hollow strong")
+        s.circle(x(row["new_wins"]), y + 6, 3.5, "dot em")
+        s.text(x(row["new_wins"]) + 9, y + 10,
+               f'{row["new_wins"]}/{row["workloads"]}', "em")
+    s.text(352, 314, "nominal wins; 16 named workloads per M", anchor="middle")
     return s.render()
 
 
@@ -610,6 +708,7 @@ def eval_prospective() -> str:
 
 FIGURES = {
     "attention-numerics": attention_numerics,
+    "attention-accuracy": attention_accuracy,
     "branchpilot": branchpilot,
     "control-clock": control_clock,
     "cpu-decode": cpu_decode,
@@ -619,10 +718,12 @@ FIGURES = {
     "verge-lab": verge_lab,
     "seed-power": seed_power,
     "verge-human": verge_human,
+    "verge-dpo": verge_dpo,
     "quantile-sampled": quantile_sampled,
     "branchpilot-math": branchpilot_math,
     "alignmenttax": alignmenttax,
     "helios-audit": helios_audit,
+    "helios-expansion": helios_expansion,
     "eval-prospective": eval_prospective,
 }
 

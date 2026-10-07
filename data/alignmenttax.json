@@ -1,12 +1,15 @@
 {
  "source": {
   "repo": "mottopanikeiku/alignmenttax",
-  "commit": "e8d788bc9da81833739868b407dd138e769eeff9",
-  "path": "results/cross_family/analysis/summary.json",
-  "url": "https://github.com/mottopanikeiku/alignmenttax/blob/e8d788bc9da81833739868b407dd138e769eeff9/results/cross_family/analysis/summary.json"
+  "commit": "61b0ffb6890ca7f53b3e37b117b28167f57b8e88",
+  "path": "results/day_scale/analysis/summary.json",
+  "url": "https://github.com/mottopanikeiku/alignmenttax/blob/61b0ffb6890ca7f53b3e37b117b28167f57b8e88/results/day_scale/analysis/summary.json"
  },
- "questions": 790,
- "pairs": 7,
+ "questions": {
+  "binary": 790,
+  "standard": 817
+ },
+ "pairs": 9,
  "resamples": 10000,
  "ece": {
   "binning": "equal_frequency",
@@ -15,20 +18,46 @@
   "tie_order": "stable sampled order"
  },
  "protocol": "shared_plain_ab_label",
+ "outcomes": {
+  "binary": {
+   "accuracy": {
+    "truth_and_calibration_improve": 0,
+    "truth_and_calibration_worsen": 2,
+    "truth_gain_ece_worse": 6,
+    "truth_worse_calibration_improves": 0,
+    "uncertain": 1
+   }
+  },
+  "standard": {
+   "mc1_accuracy": {
+    "truth_and_calibration_improve": 4,
+    "truth_and_calibration_worsen": 0,
+    "truth_gain_ece_worse": 0,
+    "truth_worse_calibration_improves": 0,
+    "uncertain": 5
+   },
+   "mc2": {
+    "truth_and_calibration_improve": 4,
+    "truth_and_calibration_worsen": 0,
+    "truth_gain_ece_worse": 0,
+    "truth_worse_calibration_improves": 0,
+    "uncertain": 5
+   }
+  }
+ },
  "rows": [
   {
    "key": "qwen2_5_0_5b",
    "name": "Qwen2.5-0.5B",
-   "classification": "uncertain",
-   "accuracy": {
-    "delta": -0.0405063291139241,
+   "mc1_ece": {
+    "delta": -0.0072523556333965455,
     "ci": [
-     -0.06712025316455701,
-     -0.013924050632911411
+     -0.026946650551248348,
+     0.012118024878225617
     ]
    },
-   "ece": {
-    "delta": -0.0293186779817666,
+   "binary_ece": {
+    "delta": -0.029318677981766572,
     "ci": [
      -0.049783507260425686,
      0.004219947794696303
@@ -38,16 +67,15 @@
   {
    "key": "qwen2_5_1_5b",
    "name": "Qwen2.5-1.5B",
-   "classification": "supports_tradeoff",
-   "accuracy": {
-    "delta": 0.048101265822784844,
+   "mc1_ece": {
+    "delta": 0.010318162803776731,
     "ci": [
-     0.015189873417721489,
-     0.08227848101265822
+     -0.004942762201498549,
+     0.026054610191966622
     ]
    },
-   "ece": {
-    "delta": 0.07956250382728594,
+   "binary_ece": {
+    "delta": 0.07956250382728583,
     "ci": [
      0.047464294520407596,
      0.1101878157904158
@@ -57,16 +85,15 @@
   {
    "key": "qwen2_5_7b",
    "name": "Qwen2.5-7B",
-   "classification": "supports_tradeoff",
-   "accuracy": {
-    "delta": 0.08354430379746836,
+   "mc1_ece": {
+    "delta": -0.03309407953468113,
     "ci": [
-     0.05696202531645567,
-     0.11012658227848104
+     -0.06004367694560525,
+     -0.00611342546763152
     ]
    },
-   "ece": {
-    "delta": 0.07074014019452642,
+   "binary_ece": {
+    "delta": 0.07074014019452635,
     "ci": [
      0.039695684386732925,
      0.09650357027796908
@@ -74,18 +101,53 @@
    }
   },
   {
-   "key": "olmo2_0425_1b",
-   "name": "OLMo-2 1B (0425)",
-   "classification": "accuracy_and_calibration_worsened",
-   "accuracy": {
-    "delta": -0.03924050632911391,
+   "key": "qwen2_5_14b",
+   "name": "Qwen2.5-14B",
+   "mc1_ece": {
+    "delta": -0.05466595076559849,
     "ci": [
-     -0.07721518987341769,
-     -0.0025316455696202667
+     -0.08151418566158859,
+     -0.02795615485548644
     ]
    },
-   "ece": {
-    "delta": 0.1283782112647948,
+   "binary_ece": {
+    "delta": 0.10152859650947346,
+    "ci": [
+     0.06267313750750908,
+     0.11580824387951387
+    ]
+   }
+  },
+  {
+   "key": "qwen2_5_32b",
+   "name": "Qwen2.5-32B",
+   "mc1_ece": {
+    "delta": -0.034835069815114084,
+    "ci": [
+     -0.060787728921090266,
+     -0.008910921306740337
+    ]
+   },
+   "binary_ece": {
+    "delta": 0.07137748252102863,
+    "ci": [
+     0.03397967577394443,
+     0.09089788259243525
+    ]
+   }
+  },
+  {
+   "key": "olmo2_0425_1b",
+   "name": "OLMo-2 1B (0425)",
+   "mc1_ece": {
+    "delta": -0.0162860922277972,
+    "ci": [
+     -0.04483032261736491,
+     0.01328124040644454
+    ]
+   },
+   "binary_ece": {
+    "delta": 0.12837821126479476,
     "ci": [
      0.08601688618855469,
      0.15617886889683644
@@ -95,15 +157,14 @@
   {
    "key": "olmo2_1124_7b",
    "name": "OLMo-2 7B (1124)",
-   "classification": "supports_tradeoff",
-   "accuracy": {
-    "delta": 0.05316455696202527,
+   "mc1_ece": {
+    "delta": -0.014255399798642543,
     "ci": [
-     0.025316455696202445,
-     0.08227848101265822
+     -0.042558726051339195,
+     0.014216471777910814
     ]
    },
-   "ece": {
+   "binary_ece": {
     "delta": 0.10659703757884192,
     "ci": [
      0.07489636728583224,
@@ -114,16 +175,15 @@
   {
    "key": "smollm2_1_7b",
    "name": "SmolLM2-1.7B",
-   "classification": "accuracy_and_calibration_worsened",
-   "accuracy": {
-    "delta": -0.15822784810126583,
+   "mc1_ece": {
+    "delta": -0.0034832001024385217,
     "ci": [
-     -0.1962025316455696,
-     -0.120253164556962
+     -0.024094306082353502,
+     0.017299302082446615
     ]
    },
-   "ece": {
-    "delta": 0.3250002748773107,
+   "binary_ece": {
+    "delta": 0.32500027487731065,
     "ci": [
      0.28364160761979057,
      0.3579930130130693
@@ -133,15 +193,14 @@
   {
    "key": "mistral_7b_v0_3",
    "name": "Mistral-7B-v0.3",
-   "classification": "supports_tradeoff",
-   "accuracy": {
-    "delta": 0.09240506329113929,
+   "mc1_ece": {
+    "delta": -0.0666151285285968,
     "ci": [
-     0.06075949367088607,
-     0.1240506329113924
+     -0.09560046850712567,
+     -0.03728303344216661
     ]
    },
-   "ece": {
+   "binary_ece": {
     "delta": 0.08717803809618972,
     "ci": [
      0.04304136613153591,

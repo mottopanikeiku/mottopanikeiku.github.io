@@ -18,6 +18,8 @@ OWNER = "mottopanikeiku"
 SOURCES = {
     "attention-numerics": ("attention-numerics", "911d642a5aab42f7ced2bcc7c9f13995cdeb8eb0",
                            "results/hardware/summary.json"),
+    "attention-accuracy": ("attention-numerics", "11281b844d8b0cd55e93bdfaff486e0fed20f3ab",
+                           "results/accuracy/summary.json"),
     "branchpilot": ("branchpilot", "6f2ff8654aec07e806c3fcfea4f5e2514c36928d",
                     "benchmarks/gsm8k-sampling-bootstrap.json"),
     "control-clock": ("control-clock", "ee9c303de8e7698ca25569fc585e173e3e172bb8",
@@ -32,10 +34,14 @@ SOURCES = {
                    "benchmarks/results/parhelion-h100-final.json"),
     "verge-lab": ("verge-lab", "efa08d133f22501b2dedcb7a7aa636bf37bbc826",
                   "results/public-preferences/summary.json"),
-    "seed-power": ("seed-power", "71ce487eac1eafc9481eec7427ea83340e23569a",
+    "seed-power": ("seed-power", "06fe936715ccba056e1e5e44971e52e051df901c",
                    "results/summary.json"),
+    "seed-neural": ("seed-power", "06fe936715ccba056e1e5e44971e52e051df901c",
+                    "results/neural/summary.json"),
     "verge-human": ("verge-lab", "efa08d133f22501b2dedcb7a7aa636bf37bbc826",
                     "results/human-preferences/summary.json"),
+    "verge-dpo": ("verge-lab", "c70f5cf9731957b912d0c6c1e3399aa85377648a",
+                   "results/day-dpo/summary.json"),
     "control-clock-gpu": ("control-clock", "b090dad8a3b53f937782676c6033ba3557cedfa1",
                           "results/gpu/summary.json"),
     "control-clock-cost": ("control-clock", "b090dad8a3b53f937782676c6033ba3557cedfa1",
@@ -44,10 +50,12 @@ SOURCES = {
                          "results/sampled-summary.json"),
     "branchpilot-math": ("branchpilot", "1dfa8dea2c5e201b171102aadd9bf3e8883136c5",
                          "benchmarks/math500/result.json"),
-    "alignmenttax": ("alignmenttax", "e8d788bc9da81833739868b407dd138e769eeff9",
-                     "results/cross_family/analysis/summary.json"),
+    "alignmenttax": ("alignmenttax", "61b0ffb6890ca7f53b3e37b117b28167f57b8e88",
+                     "results/day_scale/analysis/summary.json"),
     "helios-audit": ("heliostune", "75f18ed8ee2d93e2d58935e3d5599ae95a32a46d",
                     "results/action-set-audit.json"),
+    "helios-expansion": ("heliostune", "f50b27e2c0664d7c9c082e2483867b1381623200",
+                        "results/action-expansion-summary.json"),
     "eval-prospective": ("eval-power", "f739bfa20ea000cf639e551d2c3523213e814b53",
                          "results/prospective/summary.json"),
 }
@@ -200,6 +208,36 @@ def attention_numerics(raw: dict) -> dict:
     }
 
 
+def attention_accuracy(raw: dict) -> dict:
+    variants = ("tile", "rotate", "smooth_k", "rotate_smooth_k")
+    rows = [row for row in raw["rows"] if row["variant"] in variants]
+    return {
+        "interval_method": raw["interval_method"],
+        "harm_rule": raw["harm_rule"],
+        "models": len({row["model"] for row in rows}),
+        "comparisons": len(rows),
+        "harm_flags": sum(row["harm_flag"] for row in rows),
+        "centered_comparisons": sum("smooth_k" in row["variant"] for row in rows),
+        "centered_harm_flags": sum(row["harm_flag"] for row in rows
+                                   if "smooth_k" in row["variant"]),
+        "model": "Qwen2.5-7B",
+        "tasks": [
+            {
+                "key": key,
+                "name": name,
+                "items": raw["denominators"][key],
+                "rows": [
+                    {field: row[field] for field in
+                     ("variant", "baseline_accuracy", "accuracy", "delta", "ci95", "harm_flag")}
+                    for row in rows if row["model"] == "qwen7" and row["task"] == key
+                ],
+            }
+            for key, name in (("hellaswag", "HellaSwag"),
+                              ("arc_challenge", "ARC-Challenge"), ("mmlu", "MMLU"))
+        ],
+    }
+
+
 def control_clock(raw: dict) -> dict:
     cohorts = []
     for key, cohort in raw.items():
@@ -255,6 +293,21 @@ def seed_power(raw: dict) -> dict:
         "rows": [row("All executable plans", raw["nonnull"]),
                  *(row(task.removesuffix("-v1"), values)
                    for task, values in raw["per_task"].items())],
+    }
+
+
+def verge_dpo(raw: dict) -> dict:
+    return {
+        "prompts": raw["design"]["prompts"],
+        "training_seeds": raw["design"]["training_seeds"],
+        "reward_measure": raw["reward_measure"],
+        "bootstrap": raw["bootstrap"],
+        "primary": raw["primary_pareto_minus_gap_reward"],
+        "conditions": [
+            {"name": name, "mean_reward": raw["conditions"][key]["mean_reward"],
+             "wins_vs_start": raw["conditions"][key]["vs_start"]["rates"]["win"]}
+            for key, name in (("pareto", "Pareto"), ("gap", "Score gap"), ("human", "Human"))
+        ],
     }
 
 
@@ -337,6 +390,8 @@ def alignmenttax(raw: dict) -> dict:
         "qwen2_5_0_5b": "Qwen2.5-0.5B",
         "qwen2_5_1_5b": "Qwen2.5-1.5B",
         "qwen2_5_7b": "Qwen2.5-7B",
+        "qwen2_5_14b": "Qwen2.5-14B",
+        "qwen2_5_32b": "Qwen2.5-32B",
         "olmo2_0425_1b": "OLMo-2 1B (0425)",
         "olmo2_1124_7b": "OLMo-2 7B (1124)",
         "smollm2_1_7b": "SmolLM2-1.7B",
@@ -345,18 +400,45 @@ def alignmenttax(raw: dict) -> dict:
     by_id = {pair["pair_id"]: pair for pair in raw["pairs"]}
     rows = []
     for key, name in names.items():
-        primary = by_id[key]["protocols"]["shared_plain_ab_label"]
-        metrics = primary["deltas"]["metrics"]
+        pair = by_id[key]
+        metrics = {
+            benchmark: pair["benchmarks"][benchmark]["protocols"]["shared_plain_ab_label"]["deltas"]["metrics"]
+            for benchmark in ("standard", "binary")
+        }
         rows.append({
             "key": key, "name": name,
-            "classification": primary["classification"]["outcome"],
-            **{metric: {"delta": metrics[metric]["point"],
-                        "ci": [metrics[metric]["ci_low"], metrics[metric]["ci_high"]]}
-               for metric in ("accuracy", "ece")},
+            **{label: {"delta": metrics[benchmark][metric]["point"],
+                       "ci": [metrics[benchmark][metric]["ci_low"],
+                              metrics[benchmark][metric]["ci_high"]]}
+               for label, benchmark, metric in
+               (("mc1_ece", "standard", "mc1_ece"), ("binary_ece", "binary", "ece"))},
         })
-    return {"questions": raw["question_count"], "pairs": raw["pair_count"],
-            "resamples": raw["iterations"], "ece": raw["ece"],
-            "protocol": "shared_plain_ab_label", "rows": rows}
+    return {
+        "questions": {key: values["question_count"]
+                      for key, values in raw["benchmarks"].items()},
+        "pairs": raw["pair_count"], "resamples": raw["iterations"], "ece": raw["ece"],
+        "protocol": "shared_plain_ab_label",
+        "outcomes": {key: values["shared_plain_ab_label"]
+                     for key, values in raw["outcome_counts"].items()},
+        "rows": rows,
+    }
+
+
+def helios_expansion(raw: dict) -> dict:
+    return {
+        "definition": raw["ratio_definition"],
+        "selection_bank": raw["selection_bank"],
+        "scoring_bank": raw["scoring_bank"],
+        "old_actions": len(raw["action_set"]["old"]),
+        "new_actions": len(raw["action_set"]["new"]),
+        "overall": raw["overall"],
+        "groups": [
+            {"m": row["m"], "workloads": row["comparable_count"],
+             "old_wins": row["arms"]["old"]["comparable_win_count"],
+             "new_wins": row["arms"]["new"]["comparable_win_count"]}
+            for row in raw["by_m"]
+        ],
+    }
 
 
 def helios_audit(raw: dict) -> dict:
@@ -399,6 +481,7 @@ def eval_prospective(raw: dict) -> dict:
 
 TRANSFORMS = {
     "attention-numerics": attention_numerics,
+    "attention-accuracy": attention_accuracy,
     "branchpilot": branchpilot,
     "control-clock": control_clock,
     "cpu-decode": cpu_decode,
@@ -407,13 +490,16 @@ TRANSFORMS = {
     "heliostune": heliostune,
     "verge-lab": verge_lab,
     "seed-power": seed_power,
+    "seed-neural": seed_power,
     "verge-human": verge_human,
+    "verge-dpo": verge_dpo,
     "control-clock-gpu": control_clock_gpu,
     "control-clock-cost": control_clock_cost,
     "quantile-sampled": quantile_sampled,
     "branchpilot-math": branchpilot_math,
     "alignmenttax": alignmenttax,
     "helios-audit": helios_audit,
+    "helios-expansion": helios_expansion,
     "eval-prospective": eval_prospective,
 }
 
