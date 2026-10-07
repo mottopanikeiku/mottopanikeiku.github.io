@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AlignmentTax · Alp Cetin</title>
+  <meta name="description" content="Seven matched base/instruct pairs on binary TruthfulQA: calibration usually worsens, but not consistently in exchange for better answers.">
+  <link rel="canonical" href="https://mottopanikeiku.github.io/projects/alignmenttax/">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f4ef">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#151412">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="/fonts/text-roman.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/display-roman.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/site.css?v=0d1abf57f3">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Alp Cetin">
+  <meta property="og:title" content="AlignmentTax">
+  <meta property="og:description" content="Instruction tuning usually worsens calibration here, but not consistently in exchange for better answers.">
+  <meta property="og:url" content="https://mottopanikeiku.github.io/projects/alignmenttax/">
+  <meta property="og:image" content="https://mottopanikeiku.github.io/og/alignmenttax.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <p class="name"><a href="/">Alp Cetin</a></p>
+    <p>San Francisco</p>
+  </header>
+
+  <main class="content">
+
+    <div class="intro">
+      <h1>AlignmentTax</h1>
+      <p>Does instruction tuning trade calibration for truthfulness?</p>
+    </div>
+
+    <section class="block" aria-labelledby="question">
+      <h2 id="question">Question</h2>
+      <div class="prose">
+        <p>A model can answer more questions correctly while becoming too confident about the answers it gets wrong. I asked whether instruction tuning consistently makes that trade: better truthfulness, worse confidence calibration.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="method">
+      <h2 id="method">Method</h2>
+      <div class="prose">
+        <p>I compared seven matched base/instruct pairs across four families: Qwen2.5 at 0.5B, 1.5B and 7B; OLMo-2 at 1B and 7B; SmolLM2-1.7B; and Mistral-7B-v0.3. Each checkpoint answered the same 790 questions from a binary TruthfulQA derivative. I used shared plain prompts and normalized the likelihoods of the A/B answer labels, not generated explanations or verbal confidence.</p>
+        <p>I measured accuracy and expected calibration error (ECE), using ten equal-frequency bins. The 95% intervals use 10,000 paired question resamples, recomputing ECE each time. The <a href="https://github.com/mottopanikeiku/alignmenttax/commit/e299861">analysis plan</a> was committed before scoring; <a href="https://github.com/mottopanikeiku/alignmenttax/blob/e8d788bc9da81833739868b407dd138e769eeff9/configs/cross_family.json">model and tokenizer commits</a> are pinned.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="result">
+      <h2 id="result">Result</h2>
+      <div class="prose">
+        <p>Calibration usually worsens, but not consistently in exchange for better truthfulness. Four pairs gain accuracy and worsen ECE; two lose accuracy and worsen ECE, with both intervals excluding zero. Qwen2.5-0.5B loses accuracy, with an uncertain ECE change.</p>
+        <figure class="figure">
+          <div class="scroll" tabindex="0" role="region" aria-labelledby="alignmenttax-title"><!-- figure:alignmenttax --><svg class="chart" viewBox="0 0 560 432" role="img" aria-labelledby="alignmenttax-title alignmenttax-desc"><title id="alignmenttax-title">Instruction tuning changes binary accuracy and calibration with shared prompts</title><desc id="alignmenttax-desc">In seven base/instruct pairs, four gain accuracy and increase expected calibration error; two lose accuracy and increase error. Qwen2.5-0.5B loses accuracy, with an uncertain calibration change. SmolLM2-1.7B loses 15.8 accuracy points and gains 32.5 error points. Horizontal and vertical bars are separate 95% question-bootstrap intervals, not a joint confidence region.</desc><text x="58" y="18">shared prompts; instruct − base; 95% paired intervals</text><text x="48" y="44">ECE change (points); higher is worse</text><line class="grid" x1="58" y1="252.7" x2="544" y2="252.7"/><text text-anchor="end" x="50" y="256.7">0</text><line class="grid" x1="58" y1="203.5" x2="544" y2="203.5"/><text text-anchor="end" x="50" y="207.5">10</text><line class="grid" x1="58" y1="154.3" x2="544" y2="154.3"/><text text-anchor="end" x="50" y="158.3">20</text><line class="grid" x1="58" y1="105.2" x2="544" y2="105.2"/><text text-anchor="end" x="50" y="109.2">30</text><line class="grid" x1="58" y1="56" x2="544" y2="56"/><text text-anchor="end" x="50" y="60">40</text><line class="grid" x1="84.3" y1="56" x2="84.3" y2="292"/><text text-anchor="middle" x="84.3" y="313">-20</text><line class="grid" x1="215.6" y1="56" x2="215.6" y2="292"/><text text-anchor="middle" x="215.6" y="313">-10</text><line class="grid" x1="347" y1="56" x2="347" y2="292"/><text text-anchor="middle" x="347" y="313">0</text><line class="grid" x1="478.3" y1="56" x2="478.3" y2="292"/><text text-anchor="middle" x="478.3" y="313">10</text><line class="axis" x1="347" y1="56" x2="347" y2="292"/><line class="axis" x1="58" y1="252.7" x2="544" y2="252.7"/><text text-anchor="middle" x="301" y="337">accuracy change (percentage points)</text><line class="ci strong" x1="258.8" y1="267.1" x2="328.7" y2="267.1"/><line class="ci strong" x1="293.8" y1="277.1" x2="293.8" y2="250.6"/><circle class="dot strong" cx="293.8" cy="267.1" r="3.4"/><text class="strong" x="301.8" y="258.1">1</text><text class="strong" x="58" y="363">1  Qwen2.5-0.5B</text><line class="ci strong" x1="366.9" y1="213.5" x2="455" y2="213.5"/><line class="ci strong" x1="410.2" y1="229.3" x2="410.2" y2="198.5"/><circle class="dot strong" cx="410.2" cy="213.5" r="3.4"/><text class="strong" x="399.2" y="231.5">2</text><text class="strong" x="303" y="363">2  Qwen2.5-1.5B</text><line class="ci strong" x1="421.8" y1="217.9" x2="491.6" y2="217.9"/><line class="ci strong" x1="456.7" y1="233.1" x2="456.7" y2="205.2"/><circle class="dot strong" cx="456.7" cy="217.9" r="3.4"/><text class="strong" x="446.7" y="235.9">3</text><text class="strong" x="58" y="383">3  Qwen2.5-7B</text><line class="ci em" x1="245.5" y1="189.5" x2="343.6" y2="189.5"/><line class="ci em" x1="295.4" y1="210.4" x2="295.4" y2="175.9"/><circle class="dot em" cx="295.4" cy="189.5" r="3.4"/><text class="em" x="303.4" y="180.5">4</text><text class="em" x="303" y="383">4  OLMo-2 1B (0425)</text><line class="ci strong" x1="380.2" y1="200.3" x2="455" y2="200.3"/><line class="ci strong" x1="416.8" y1="215.8" x2="416.8" y2="188.3"/><circle class="dot strong" cx="416.8" cy="200.3" r="3.4"/><text class="strong" x="421.8" y="190.3">5</text><text class="strong" x="58" y="403">5  OLMo-2 7B (1124)</text><line class="ci em" x1="89.3" y1="92.9" x2="189" y2="92.9"/><line class="ci em" x1="139.1" y1="113.2" x2="139.1" y2="76.7"/><circle class="dot em" cx="139.1" cy="92.9" r="3.4"/><text class="em" x="147.1" y="83.9">6</text><text class="em" x="303" y="403">6  SmolLM2-1.7B</text><line class="ci strong" x1="426.8" y1="209.8" x2="509.9" y2="209.8"/><line class="ci strong" x1="468.3" y1="231.5" x2="468.3" y2="190.6"/><circle class="dot strong" cx="468.3" cy="209.8" r="3.4"/><text class="strong" x="476.3" y="201.8">7</text><text class="strong" x="58" y="423">7  Mistral-7B-v0.3</text></svg><!-- /figure:alignmenttax --></div>
+          <figcaption>Instruct minus base under shared prompts. Right means higher binary accuracy; up means worse ECE. Bars are separate 95% paired-bootstrap intervals for each metric, not a joint confidence region. Data: <a href="https://github.com/mottopanikeiku/alignmenttax/blob/e8d788bc9da81833739868b407dd138e769eeff9/results/cross_family/analysis/summary.json">summary.json</a>, <a href="https://github.com/mottopanikeiku/alignmenttax/blob/e8d788bc9da81833739868b407dd138e769eeff9/results/cross_family/analysis/summary.csv">full metric table</a>.</figcaption>
+        </figure>
+        <p>SmolLM2-1.7B loses 15.8 percentage points of accuracy and adds 32.5 points of ECE. That is not a trade for better answers: both measures get worse. The metric also matters. Qwen2.5-7B’s Brier score improves while its ECE and negative log-likelihood worsen, so I report all the metrics rather than treating them as interchangeable.</p>
+        <p>I also checked native chat templates. That comparison changes both the checkpoint and its prompt; it cannot isolate a weights-only effect. The figure above uses only the shared-prompt comparison.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="limits">
+      <h2 id="limits">Limits</h2>
+      <div class="prose">
+        <p>This is one binary TruthfulQA derivative, not official MC1/MC2 or free-form truthfulness. Confidence is restricted to the A/B labels, not all possible answers. Base/instruct checkpoints differ in training stages and data; this is not a causal effect of reinforcement learning.</p>
+        <p>These selected checkpoints are not a model-family population. The intervals resample questions, not training seeds, and are pointwise rather than adjusted for multiple comparisons. ECE depends on binning. I used scalar bf16 inference after a batching pilot failed its numerical tolerance; no precision sweep was run.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="links">
+      <h2 id="links">Links</h2>
+      <ul class="rows">
+        <li class="entry"><p class="title"><a href="https://github.com/mottopanikeiku/alignmenttax">Code, scores and results</a> <span class="org">GitHub</span></p></li>
+        <li class="entry"><p class="title"><a href="https://github.com/mottopanikeiku/alignmenttax/blob/e8d788bc9da81833739868b407dd138e769eeff9/docs/PROTOCOL.md">Scoring and comparison protocol</a> <span class="org">Pinned source</span></p></li>
+        <li class="entry"><p class="title"><a href="https://arxiv.org/abs/2109.07958">TruthfulQA</a> <span class="org">Lin, Hilton and Evans, 2021</span></p></li>
+        <li class="entry"><p class="title"><a href="https://arxiv.org/abs/1706.04599">On calibration of modern neural networks</a> <span class="org">Guo et al., 2017</span></p></li>
+        <li class="entry"><p class="title"><a href="https://arxiv.org/abs/2508.00264">Post-training calibration</a> <span class="org">Huang, Lu and Zeng, 2025</span></p></li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="colophon">
+    <p><a href="/">All work</a></p>
+  </footer>
+
+</div>
+</body>
+</html>

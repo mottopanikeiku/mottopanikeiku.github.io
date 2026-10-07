@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Quantile cycles · Alp Cetin</title>
-  <meta name="description" content="A counterexample in distributional reinforcement learning: greedy control with quantile-projected Bellman updates can cycle forever with no fixed point.">
+  <meta name="description" content="An exact quantile-control cycle, a Lean check of its smallest rational instance, and a sampled test where the specified Huber failure did not appear.">
   <link rel="canonical" href="https://mottopanikeiku.github.io/projects/quantile-cycles/">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f4ef">
@@ -17,7 +17,7 @@
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="Alp Cetin">
   <meta property="og:title" content="Quantile cycles">
-  <meta property="og:description" content="A counterexample in distributional reinforcement learning, checked in exact arithmetic.">
+  <meta property="og:description" content="An exact quantile-control cycle checked in Lean; the specified sampled Huber failure did not appear.">
   <meta property="og:url" content="https://mottopanikeiku.github.io/projects/quantile-cycles/">
   <meta property="og:image" content="https://mottopanikeiku.github.io/og/quantile-cycles.png">
   <meta property="og:image:width" content="1200">
@@ -42,16 +42,24 @@
     <section class="block" aria-labelledby="question">
       <h2 id="question">Question</h2>
       <div class="prose">
-        <p>Quantile-based distributional RL, as in QR-DQN, represents each action’s return distribution by a few quantiles and acts greedily on their mean. For evaluating a fixed policy, the quantile-projected Bellman update is known to converge. Does it converge for control, when the greedy action can change from one update to the next?</p>
+        <p>Quantile-based distributional RL represents each action’s return distribution by a few quantiles and acts greedily on their mean. For evaluating a fixed policy, hard quantile-projected Bellman updates converge. I asked whether they also converge for control, when the greedy action can change—and whether a failure survives sampled Huber learning.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="method">
+      <h2 id="method">Method</h2>
+      <div class="prose">
+        <p>I constructed one-state, two-action problems and checked their exact Bellman backups in rational arithmetic. The <a href="https://github.com/mottopanikeiku/quantile-cycles/blob/bc0fbc5218be69f0e88acf6ff200d199cdfb4aab/THEOREM.md">paper proof</a> covers a corresponding problem for every quantile count K ≥ 2. I separately formalized the smallest rational instance in Lean.</p>
+        <p>I then compared hard projection, pinball and Huber updates with a paired scalar learner. The sampled test used 32 seeds, 100,000 updates and batches of 32 target pairs per action. I fixed the methods, endpoint and rule for continuing to replay/network experiments <a href="https://github.com/mottopanikeiku/quantile-cycles/blob/bc0fbc5218be69f0e88acf6ff200d199cdfb4aab/docs/SAMPLED_PROTOCOL.md">before the run</a>.</p>
       </div>
     </section>
 
     <section class="block" aria-labelledby="result">
       <h2 id="result">Result</h2>
       <div class="prose">
-        <p>No. For every number of quantiles K ≥ 2 there is a one-state, two-action problem where the update has no fixed point. From any starting point it falls into a two-step cycle that alternates between the optimal action and a worse one, forever. The optimal policy is unique and the cycle needs no ties, so this is not an artifact of tie-breaking.</p>
-        <p>The smallest case uses two quantiles and discount 1/4. Action A always pays 91/128. Action B pays 0, 1/2 or 1 with probabilities 3/16, 1/2 and 5/16. A is better by 19/128 in expected reward, and always choosing B loses 19/96 in discounted value. But the projected means make A look better by 3/128 in one phase and B look better by 3/128 in the next, so the greedy choice flips back and forth. The repository has a <a href="https://github.com/mottopanikeiku/quantile-cycles/blob/main/docs/two-phase-cycle.svg">diagram of both phases</a> with every exact value.</p>
-        <p>A second family keeps the discount fixed at 0.9 and stretches the cycle across more states:</p>
+        <p>The exact operator does not converge. For every K ≥ 2 there is a one-state, two-action problem with no fixed point. Every finite real starting table approaches a strict two-cycle, modulo phase. The greedy choices on the cycle alternate between the unique optimal action and a worse one; no greedy tie is needed.</p>
+        <p>The smallest case uses two quantiles and discount 1/4. A always pays 91/128. B pays 0, 1/2 or 1 with probabilities 3/16, 1/2 and 5/16. A’s true mean-reward advantage is 19/128, and always choosing B loses 19/96 in discounted value. The projected means instead favor A by 3/128 in one phase and B by 3/128 in the next (<a href="https://github.com/mottopanikeiku/quantile-cycles/blob/bc0fbc5218be69f0e88acf6ff200d199cdfb4aab/results/certificates.json">exact certificates</a>, <a href="https://github.com/mottopanikeiku/quantile-cycles/blob/bc0fbc5218be69f0e88acf6ff200d199cdfb4aab/docs/two-phase-cycle.svg">phase diagram</a>).</p>
+        <p>A delay-chain construction keeps the discount fixed at 0.9. These instances have local attraction, not a claim that all starts approach one common phase:</p>
         <table class="table">
           <thead>
             <tr><th>Quantiles K</th><th class="num">States</th><th class="num">Cycle length</th></tr>
@@ -64,27 +72,32 @@
             <tr><td>32</td><td class="num">40</td><td class="num">80</td></tr>
           </tbody>
         </table>
+        <p>The state counts and cycle lengths above are in the same <a href="https://github.com/mottopanikeiku/quantile-cycles/blob/bc0fbc5218be69f0e88acf6ff200d199cdfb4aab/results/certificates.json">certificates</a>.</p>
+        <p>Lean’s kernel checks the specific rational K=2, discount-1/4 cycle: the actual target laws, all eight generalized-inverse quantiles, strict greedy choices and both exact backups. There is no <code>sorry</code>. The proof uses only Lean’s standard axioms, <code>propext</code>, <code>Classical.choice</code> and <code>Quot.sound</code> (<a href="https://github.com/mottopanikeiku/quantile-cycles/blob/bc0fbc5218be69f0e88acf6ff200d199cdfb4aab/results/lean-axioms.txt">axiom listings</a>, <a href="https://github.com/mottopanikeiku/quantile-cycles/blob/bc0fbc5218be69f0e88acf6ff200d199cdfb4aab/results/lean-build.json">build record</a>). The general real-valued theorem is not formalized.</p>
+        <p>The specified material Huber failure did not appear in the sampled test. All four required comparisons missed the rule for continuing, so I did not run replay/network training. With K=32 and constant steps, Huber’s normalized regret was 0.0043 versus 0.0783 for the scalar learner; the paired difference was −0.0740, with a 95% interval of [−0.0766, −0.0713]. In this comparison Huber did better, not worse.</p>
+        <figure class="figure">
+          <div class="scroll" tabindex="0" role="region" aria-labelledby="quantile-sampled-title"><!-- figure:quantile-sampled --><svg class="chart" viewBox="0 0 560 284" role="img" aria-labelledby="quantile-sampled-title quantile-sampled-desc"><title id="quantile-sampled-title">Sampled Huber regret minus scalar regret in four specified comparisons</title><desc id="quantile-sampled-desc">All four comparisons fail the material-failure rule. At K=8, both schedules have zero observed excess regret. At K=32, excess is -0.0740 with constant steps and -0.0023 with decaying steps. Bars are paired-seed 95% bootstrap intervals. Regret is normalized by the loss of always choosing the bad action.</desc><line class="grid" x1="178" y1="42" x2="178" y2="224"/><text text-anchor="middle" x="178" y="247">-0.1</text><line class="grid" x1="269.5" y1="42" x2="269.5" y2="224"/><text text-anchor="middle" x="269.5" y="247">0.0</text><line class="grid" x1="361" y1="42" x2="361" y2="224"/><text text-anchor="middle" x="361" y="247">0.1</text><line class="grid" x1="452.5" y1="42" x2="452.5" y2="224"/><text text-anchor="middle" x="452.5" y="247">0.2</text><line class="grid" x1="544" y1="42" x2="544" y2="224"/><text text-anchor="middle" x="544" y="247">0.3</text><line class="axis" x1="269.5" y1="42" x2="269.5" y2="224"/><line class="line dash" x1="498.2" y1="42" x2="498.2" y2="224"/><text class="strong" text-anchor="end" x="544" y="18">material-failure threshold: 0.25</text><text text-anchor="end" x="166" y="68">K=8, constant</text><line class="ci em" x1="269.5" y1="64" x2="269.5" y2="64"/><circle class="dot em" cx="269.5" cy="64" r="3.5"/><text class="em" text-anchor="middle" x="269.5" y="84">0.0000</text><text text-anchor="end" x="166" y="116">K=8, decaying</text><line class="ci em" x1="269.5" y1="112" x2="269.5" y2="112"/><circle class="dot em" cx="269.5" cy="112" r="3.5"/><text class="em" text-anchor="middle" x="269.5" y="132">0.0000</text><text text-anchor="end" x="166" y="164">K=32, constant</text><line class="ci em" x1="199.4" y1="160" x2="204.3" y2="160"/><circle class="dot em" cx="201.8" cy="160" r="3.5"/><text class="em" text-anchor="middle" x="201.8" y="180">-0.0740</text><text text-anchor="end" x="166" y="212">K=32, decaying</text><line class="ci em" x1="266.8" y1="208" x2="267.9" y2="208"/><circle class="dot em" cx="267.4" cy="208" r="3.5"/><text class="em" text-anchor="middle" x="267.4" y="228">-0.0023</text><text text-anchor="middle" x="361" y="277">normalized regret difference: Huber − scalar</text></svg><!-- /figure:quantile-sampled --></div>
+          <figcaption>Huber minus scalar regret across the four specified comparisons. Regret is averaged over the final 20,000 post-update stationary policies and normalized by the loss of always choosing B. Bars are 95% paired-seed bootstrap intervals; the dashed line is the material-failure threshold. Data: <a href="https://github.com/mottopanikeiku/quantile-cycles/blob/bc0fbc5218be69f0e88acf6ff200d199cdfb4aab/results/sampled-summary.json">sampled-summary.json</a>.</figcaption>
+        </figure>
       </div>
     </section>
 
-    <section class="block" aria-labelledby="checks">
-      <h2 id="checks">Checks</h2>
+    <section class="block" aria-labelledby="limits">
+      <h2 id="limits">Limits</h2>
       <div class="prose">
-        <p>The proof is written out in the repository. Separately, every finite instance is checked in exact rational arithmetic: 18 one-state instances (K from 2 to 16, then 32, 64 and 128), the five fixed-discount instances above, and 18 trajectories started from zero. One command, <code>python -B verify.py</code>, reproduces all of them in seconds using only the standard library. The general proof has not been checked in a proof assistant.</p>
+        <p>The general theorem is not Lean-checked or externally peer-reviewed. The finite Lean cycle does not exclude other fixed points; attraction, the arbitrary-K theorem and the delay construction remain paper proofs. The exact verifier separately checks 18 one-state instances, five delay instances and 18 zero-start trajectories (<a href="https://github.com/mottopanikeiku/quantile-cycles/blob/bc0fbc5218be69f0e88acf6ff200d199cdfb4aab/results/verification.json">verification record</a>).</p>
+        <p>The sampled study is tabular and synthetic, with a generative sampler: no exploration, replay or neural network. The family changes with K. Hard projection, pinball and Huber are different operators. Finite runs neither prove convergence nor rule out rare failing seeds, and noisy switches do not prove an exact cycle. The hard-operator counterexample is not evidence of a QR-DQN training failure.</p>
       </div>
     </section>
 
-    <section class="block" aria-labelledby="prior">
-      <h2 id="prior">Prior work</h2>
-      <div class="prose">
-        <p>Rowland et al. (2019, appendix B.4) showed that quantile means can strictly prefer a worse action for any K, in a one-step setting. Bellemare, Dabney and Munos (2017) and the Distributional RL book (example 7.11) showed that distributional control can cycle, using a chosen rule for breaking ties between equally good actions. What is new here is the combination: a recurring strict cycle, a unique optimal action and no fixed point, for every K.</p>
-      </div>
-    </section>
 
     <section class="block" aria-labelledby="links">
       <h2 id="links">Links</h2>
       <ul class="rows">
         <li class="entry"><p class="title"><a href="https://github.com/mottopanikeiku/quantile-cycles">Proof, checker and certificates</a> <span class="org">GitHub</span></p></li>
+        <li class="entry"><p class="title"><a href="https://github.com/mottopanikeiku/quantile-cycles/blob/bc0fbc5218be69f0e88acf6ff200d199cdfb4aab/lean/QuantileCycles.lean">Smallest-cycle Lean proof</a> <span class="org">Pinned source</span></p></li>
+        <li class="entry"><p class="title"><a href="https://github.com/mottopanikeiku/quantile-cycles/blob/bc0fbc5218be69f0e88acf6ff200d199cdfb4aab/docs/SAMPLED_RESULTS.md">Complete sampled-learning results</a> <span class="org">Pinned report</span></p></li>
+        <li class="entry"><p class="title"><a href="https://arxiv.org/abs/1710.10044">Distributional reinforcement learning with quantile regression</a> <span class="org">Dabney et al., 2018</span></p></li>
         <li class="entry"><p class="title"><a href="https://proceedings.mlr.press/v97/rowland19a.html">Statistics and samples in distributional RL</a> <span class="org">Rowland et al., 2019</span></p></li>
         <li class="entry"><p class="title"><a href="https://www.distributional-rl.org/contents/chapter7">Distributional Reinforcement Learning, chapter 7</a> <span class="org">Bellemare, Dabney and Rowland, 2023</span></p></li>
       </ul>

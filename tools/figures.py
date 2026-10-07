@@ -172,8 +172,9 @@ def heliostune() -> str:
     torch = methods["torch"]["points"][0]["mean"]
     s = SVG("heliostune", W, H,
             "H100 tuning quality against the number of configurations timed",
-            "Score is the best Triton configuration found divided by the best of the 36 curated "
-            "configurations. Cold-start Thompson sampling and Parhelion both reach 0.997 by eight "
+            "Score is bank-1-selected curated-reference latency divided by selected latency; "
+            "higher is better, not a fraction of a hardware ceiling. Cold-start Thompson "
+            "sampling and Parhelion both reach 0.997 by eight "
             f"probes; reuse and retrieval baselines stay lower. torch.matmul scores {torch:.2f} on "
             "the same scale, off the top of the chart.")
     for i, (key, cls, label) in enumerate(series):
@@ -182,7 +183,7 @@ def heliostune() -> str:
         s.line(lx, ly - 4, lx + 22, ly - 4, cls)
         s.text(lx + 30, ly, label, "em" if "em" in cls else ("strong" if "strong" in cls else ""))
     s.text(W - R, 70, f"torch.matmul: {torch:.2f} \u2191", "strong", "end")
-    s.text(L - 8, T - 12, "score against the best of 36 Triton configurations")
+    s.text(L - 8, T - 12, "curated-reference latency / selected latency")
     for v in (0.8, 0.85, 0.9, 0.95, 1.0):
         s.line(L, y(v), W - R, y(v), "grid")
         s.text(L - 8, y(v) + 4, f"{v:.2f}", anchor="end")
@@ -292,39 +293,31 @@ def eval_power() -> str:
 
 def attention_numerics() -> str:
     data = load("attention-numerics")
-    models = sorted(data["models"], key=lambda m: -m["perplexity_increase"]["rotate"])
-    marks = (("tile", "FP8 per tile", "dot hollow strong"),
-             ("rotate", "with rotation", "dot em"),
-             ("rotate_smooth_k", "keys centered, then rotated", "dot strong"))
-    W, L, R, band, top = 560, 116, 20, 34, 58
-    floor, ceiling = 0.05, 1000
-    lo, hi = math.log10(floor), math.log10(ceiling)
-    x = lambda pct: L + (math.log10(max(pct, floor)) - lo) / (hi - lo) * (W - R - L)
-    bottom = top + band * len(models)
-    H = bottom + 48
-    pct = lambda m, v: 100 * m["perplexity_increase"][v]
-    desc = "; ".join(
-        f"{m['name']}: per tile {pct(m, 'tile'):.1f}%, rotated {pct(m, 'rotate'):.1f}%, "
-        f"centered then rotated {pct(m, 'rotate_smooth_k'):.2f}%" for m in models)
-    s = SVG("attention-numerics", W, H,
-            "Whole-model perplexity increase with emulated FP8 attention in every layer",
-            "Increase over BF16 attention, log scale. " + desc + ".")
-    lx = L
-    for _, label, cls in marks:
-        s.circle(lx + 4, 14, 3.6, cls)
-        s.text(lx + 13, 18, label, "em" if "em" in cls else "strong")
-        lx += 22 + len(label) * 6.4
-    for v in (0.1, 1, 10, 100, 1000):
-        s.line(x(v), top - 18, x(v), bottom - 10, "grid")
-        s.text(x(v), bottom + 8, f"{v:g}%", anchor="middle")
-    for i, m in enumerate(models):
-        y = top + i * band
-        s.text(L - 12, y + 4, m["name"], anchor="end")
-        s.line(x(pct(m, "tile")), y, x(pct(m, "rotate")), y, "ci em")
-        for variant, _, cls in marks:
-            s.circle(x(pct(m, variant)), y, 4, cls)
-    s.text((L + W - R) / 2, H - 6, "increase in perplexity over BF16 attention, log scale",
-           anchor="middle")
+    variants = (("tile", "unrotated"), ("rotate", "rotate Q/K"),
+                ("smooth_k", "center K"), ("rotate_smooth_k", "rotate + center K"))
+    s = SVG("attention-numerics", 560, 352,
+            "FA3 batch exp-CE ratio versus native GPU BF16 in both Qwen models",
+            "Real FA3 E4M3 attention in every layer on H100, log scale. Qwen2.5-1.5B: "
+            "unrotated 4.808, rotated 12.560, center K 1.014, rotate plus center K 1.004. "
+            "Qwen2.5-0.5B: 1.071, 2.032, 1.018 and 1.056 respectively. Each uses 3,072 "
+            "held-out next-token labels. This is batch teacher forcing, not streaming perplexity.")
+    L, R = 168, 64
+    x = lambda ratio: L + math.log2(ratio) / 4 * (560 - R - L)
+    s.text(0, 18, "FA3 E4M3 · H100 · all layers · 3,072 labels/model")
+    for value in (1, 2, 4, 8, 16):
+        s.line(x(value), 50, x(value), 296, "axis" if value == 1 else "grid")
+        s.text(x(value), 324, f"{value}×", anchor="middle")
+    for index, model in enumerate(data["models"]):
+        top = 64 + index * 143
+        s.text(0, top - 22, model["name"], "strong")
+        for row, (key, label) in enumerate(variants):
+            y = top + row * 26
+            ratio = model["ratios"][key]
+            cls = "em" if key == "rotate" else "strong"
+            s.text(L - 12, y + 4, label, anchor="end")
+            s.circle(x(ratio), y, 3.7, f"dot {cls}")
+            s.text(x(ratio) + 9, y + 4, f"{ratio:.3f}×", cls)
+    s.text((L + 560 - R) / 2, 347, "exp(CE variant − CE BF16), log scale", anchor="middle")
     return s.render()
 
 
@@ -477,6 +470,119 @@ def verge_human() -> str:
     return s.render()
 
 
+def quantile_sampled() -> str:
+    data = load("quantile-sampled")
+    s = SVG("quantile-sampled", 560, 284,
+            "Sampled Huber regret minus scalar regret in four specified comparisons",
+            "All four comparisons fail the material-failure rule. At K=8, both schedules "
+            "have zero observed excess regret. At K=32, excess is -0.0740 with constant "
+            "steps and -0.0023 with decaying steps. Bars are paired-seed 95% bootstrap "
+            "intervals. Regret is normalized by the loss of always choosing the bad action.")
+    x = scale(-0.1, 0.3, 178, 544)
+    for value in (-0.1, 0, 0.1, 0.2, 0.3):
+        s.line(x(value), 42, x(value), 224, "grid")
+        s.text(x(value), 247, f"{value:.1f}", anchor="middle")
+    s.line(x(0), 42, x(0), 224, "axis")
+    threshold = data["minimum_excess_regret"]
+    s.line(x(threshold), 42, x(threshold), 224, "line dash")
+    s.text(544, 18, f"material-failure threshold: {threshold:g}", "strong", "end")
+    for index, row in enumerate(data["comparisons"]):
+        y = 64 + index * 48
+        k = row["case"].removeprefix("family-")
+        s.text(166, y + 4, f'K={k}, {row["schedule"]}', anchor="end")
+        s.line(x(row["ci"][0]), y, x(row["ci"][1]), y, "ci em")
+        s.circle(x(row["excess"]), y, 3.5, "dot em")
+        s.text(x(row["excess"]), y + 20, f'{row["excess"]:.4f}', "em", "middle")
+    s.text(361, 277, "normalized regret difference: Huber − scalar", anchor="middle")
+    return s.render()
+
+
+def branchpilot_math() -> str:
+    data = load("branchpilot-math")
+    s = SVG("branchpilot-math", 560, 228,
+            "Learned stopping loses utility on an internal 200-problem MATH-500 holdout",
+            "At sample penalties 0.05, 0.075 and 0.10, learned-minus-comparator utility "
+            "is -0.0825, -0.1048 and -0.0955. All paired 95% intervals lie below zero. "
+            "Validation selected the fixed-one comparator at all three penalties.")
+    x = scale(-0.16, 0.02, 114, 544)
+    s.text(114, 18, "utility = accuracy − cost × (samples − 1)")
+    for value in (-0.15, -0.1, -0.05, 0):
+        s.line(x(value), 38, x(value), 176, "grid")
+        s.text(x(value), 200, f"{value:.2f}", anchor="middle")
+    s.line(x(0), 38, x(0), 176, "axis")
+    for index, row in enumerate(data["comparisons"]):
+        y = 61 + index * 48
+        s.text(102, y + 4, f'cost {row["cost"]:g}', anchor="end")
+        s.line(x(row["ci"][0]), y, x(row["ci"][1]), y, "ci em")
+        s.circle(x(row["utility_delta"]), y, 3.5, "dot em")
+        s.text(x(row["utility_delta"]), y + 20,
+               f'{row["utility_delta"]:.4f}', "em", "middle")
+    s.text(329, 224, "paired utility difference: learned − fixed one", anchor="middle")
+    return s.render()
+
+
+def alignmenttax() -> str:
+    data = load("alignmenttax")
+    s = SVG("alignmenttax", 560, 432,
+            "Instruction tuning changes binary accuracy and calibration with shared prompts",
+            "In seven base/instruct pairs, four gain accuracy and increase expected calibration "
+            "error; two lose accuracy and increase error. Qwen2.5-0.5B loses accuracy, with an "
+            "uncertain calibration change. SmolLM2-1.7B loses 15.8 accuracy points and gains "
+            "32.5 error points. Horizontal and vertical bars are separate 95% question-bootstrap "
+            "intervals, not a joint confidence region.")
+    L, R, T, bottom = 58, 16, 56, 292
+    x = scale(-22, 15, L, 560 - R)
+    y = scale(-8, 40, bottom, T)
+    s.text(L, 18, "shared prompts; instruct − base; 95% paired intervals")
+    s.text(L - 10, T - 12, "ECE change (points); higher is worse")
+    for value in (0, 10, 20, 30, 40):
+        s.line(L, y(value), 560 - R, y(value), "grid")
+        s.text(L - 8, y(value) + 4, str(value), anchor="end")
+    for value in (-20, -10, 0, 10):
+        s.line(x(value), T, x(value), bottom, "grid")
+        s.text(x(value), bottom + 21, str(value), anchor="middle")
+    s.line(x(0), T, x(0), bottom, "axis")
+    s.line(L, y(0), 560 - R, y(0), "axis")
+    s.text((L + 560 - R) / 2, 337, "accuracy change (percentage points)", anchor="middle")
+    offsets = ((8, -9), (-11, 18), (-10, 18), (8, -9), (5, -10), (8, -9), (8, -8))
+    for index, (row, (dx, dy)) in enumerate(zip(data["rows"], offsets)):
+        accuracy, ece = row["accuracy"], row["ece"]
+        px, py = x(accuracy["delta"] * 100), y(ece["delta"] * 100)
+        cls = "em" if row["classification"] == "accuracy_and_calibration_worsened" else "strong"
+        s.line(x(accuracy["ci"][0] * 100), py, x(accuracy["ci"][1] * 100), py, f"ci {cls}")
+        s.line(px, y(ece["ci"][0] * 100), px, y(ece["ci"][1] * 100), f"ci {cls}")
+        s.circle(px, py, 3.4, f"dot {cls}")
+        s.text(px + dx, py + dy, str(index + 1), cls)
+        s.text(L + (index % 2) * 245, 363 + (index // 2) * 20,
+               f'{index + 1}  {row["name"]}', cls)
+    return s.render()
+
+
+def helios_audit() -> str:
+    data = load("helios-audit")
+    s = SVG("helios-audit", 560, 280,
+            "Stored H100 reference-to-torch latency ratios by matrix row count",
+            "In each of six row-count groups, torch.matmul has lower stored median latency "
+            "than the bank-1-selected Triton reference on all 16 workloads. Geometric-mean "
+            "reference-to-torch ratios range from 1.404 to 1.680. These are old measurements "
+            "reanalyzed, without uncertainty estimates or new timings.")
+    L, R, top, bottom = 70, 16, 52, 212
+    y = scale(0.95, 1.8, bottom, top)
+    x = scale(0, 5, L, 560 - R)
+    s.text(0, 18, "reference latency / torch latency; higher favors torch")
+    s.text(0, 38, "stored H100 medians; 16 torch wins / 16 workloads per group")
+    for value in (1, 1.2, 1.4, 1.6, 1.8):
+        s.line(L, y(value), 560 - R, y(value), "axis" if value == 1 else "grid")
+        s.text(L - 8, y(value) + 4, f"{value:.1f}×", anchor="end")
+    for index, row in enumerate(data["by_m"]):
+        px, py = x(index), y(row["ratio"])
+        s.circle(px, py, 4, "dot em")
+        s.text(px, py - 12, f'{row["ratio"]:.3f}×', "em", "middle")
+        s.text(px, bottom + 20, str(row["m"]), anchor="middle")
+    s.text((L + 560 - R) / 2, 274, "M in A[M,K] × B[K,N]; geometric-mean ratio", anchor="middle")
+    return s.render()
+
+
 FIGURES = {
     "attention-numerics": attention_numerics,
     "branchpilot": branchpilot,
@@ -488,6 +594,10 @@ FIGURES = {
     "verge-lab": verge_lab,
     "seed-power": seed_power,
     "verge-human": verge_human,
+    "quantile-sampled": quantile_sampled,
+    "branchpilot-math": branchpilot_math,
+    "alignmenttax": alignmenttax,
+    "helios-audit": helios_audit,
 }
 
 

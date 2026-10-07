@@ -1,87 +1,36 @@
 {
  "source": {
   "repo": "mottopanikeiku/attention-numerics",
-  "commit": "54fd549b3d8d7f0b0fb1a82032143952e8b4d72c",
-  "path": "results/v2/summary.json",
-  "url": "https://github.com/mottopanikeiku/attention-numerics/blob/54fd549b3d8d7f0b0fb1a82032143952e8b4d72c/results/v2/summary.json"
+  "commit": "911d642a5aab42f7ced2bcc7c9f13995cdeb8eb0",
+  "path": "results/hardware/summary.json",
+  "url": "https://github.com/mottopanikeiku/attention-numerics/blob/911d642a5aab42f7ced2bcc7c9f13995cdeb8eb0/results/hardware/summary.json"
  },
+ "definition": "Batch next-token teacher forcing; native GPU BF16 is the matched baseline, not CPU v2. exp(delta CE) is a batch exp-CE ratio, not streaming decoder perplexity.",
  "models": [
   {
-   "key": "olmo1",
-   "name": "OLMo-2-1B",
+   "key": "qwen15",
+   "name": "Qwen2.5-1.5B",
    "tokens": 3072,
-   "perplexity_increase": {
-    "bf16": 0.0,
-    "rotate": 0.001575290949660651,
-    "rotate_smooth_k": 0.0008394148055937117,
-    "smooth_k": 0.006439444195113131,
-    "smooth_kq": 0.0009802778024659766,
-    "tile": 0.0371056344760414
+   "bf16_ce": 2.4103119910308473,
+   "ratios": {
+    "bf16": 1.0,
+    "rotate": 12.560326944291408,
+    "rotate_smooth_k": 1.0043790829037014,
+    "smooth_k": 1.0136829428212513,
+    "tile": 4.808269734492192
    }
   },
   {
    "key": "qwen05",
    "name": "Qwen2.5-0.5B",
    "tokens": 3072,
-   "perplexity_increase": {
-    "bf16": 0.0,
-    "rotate": 0.9091571793511051,
-    "rotate_smooth_k": 0.06065491811836416,
-    "smooth_k": 0.017982131921211276,
-    "smooth_kq": 0.003337620252802599,
-    "tile": 0.06905469724636917
-   }
-  },
-  {
-   "key": "qwen15",
-   "name": "Qwen2.5-1.5B",
-   "tokens": 3072,
-   "perplexity_increase": {
-    "bf16": 0.0,
-    "rotate": 6.259891913876559,
-    "rotate_smooth_k": 0.0035078012900849566,
-    "smooth_k": 0.01537345437830654,
-    "smooth_kq": 0.004373187698974077,
-    "tile": 4.7217971822059175
-   }
-  },
-  {
-   "key": "smol036",
-   "name": "SmolLM2-360M",
-   "tokens": 3072,
-   "perplexity_increase": {
-    "bf16": 0.0,
-    "rotate": 0.0030388088690103776,
-    "rotate_smooth_k": 0.003230227363963749,
-    "smooth_k": 0.00904737920544337,
-    "smooth_kq": 0.0009470962889092027,
-    "tile": 0.010390003539112942
-   }
-  },
-  {
-   "key": "smol17",
-   "name": "SmolLM2-1.7B",
-   "tokens": 3072,
-   "perplexity_increase": {
-    "bf16": 0.0,
-    "rotate": 0.01243315362066847,
-    "rotate_smooth_k": 0.014172271415083613,
-    "smooth_k": 0.015441850008039501,
-    "smooth_kq": 0.01056406413301622,
-    "tile": 0.02632724752108991
-   }
-  },
-  {
-   "key": "tiny11",
-   "name": "TinyLlama-1.1B",
-   "tokens": 3072,
-   "perplexity_increase": {
-    "bf16": 0.0,
-    "rotate": 0.0024855218805872963,
-    "rotate_smooth_k": 0.0009413554055449166,
-    "smooth_k": 0.012924588438989958,
-    "smooth_kq": 0.0020657589730546204,
-    "tile": 0.012694049778955116
+   "bf16_ce": 2.994395637566664,
+   "ratios": {
+    "bf16": 1.0,
+    "rotate": 2.0320864420955163,
+    "rotate_smooth_k": 1.0558709265730566,
+    "smooth_k": 1.0180644674352186,
+    "tile": 1.071138073169164
    }
   }
  ]

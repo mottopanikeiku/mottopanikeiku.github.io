@@ -1,0 +1,63 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/branchpilot",
+  "commit": "1dfa8dea2c5e201b171102aadd9bf3e8883136c5",
+  "path": "benchmarks/math500/result.json",
+  "url": "https://github.com/mottopanikeiku/branchpilot/blob/1dfa8dea2c5e201b171102aadd9bf3e8883136c5/benchmarks/math500/result.json"
+ },
+ "prompts": 200,
+ "max_samples": 8,
+ "success": false,
+ "comparisons": [
+  {
+   "cost": 0.05,
+   "baseline": "fixed-1",
+   "utility_delta": -0.08250000000000002,
+   "ci": [
+    -0.12775000000000003,
+    -0.037250000000000026
+   ]
+  },
+  {
+   "cost": 0.075,
+   "baseline": "fixed-1",
+   "utility_delta": -0.10475000000000007,
+   "ci": [
+    -0.14400312499999995,
+    -0.06587499999999999
+   ]
+  },
+  {
+   "cost": 0.1,
+   "baseline": "fixed-1",
+   "utility_delta": -0.09550000000000003,
+   "ci": [
+    -0.1375,
+    -0.055
+   ]
+  }
+ ],
+ "illustration_cost": 0.05,
+ "rows": [
+  {
+   "policy": "BranchPilot λ=0.05",
+   "accuracy": 0.585,
+   "samples": 3.35
+  },
+  {
+   "policy": "fixed-1",
+   "accuracy": 0.55,
+   "samples": 1.0
+  },
+  {
+   "policy": "fixed-8",
+   "accuracy": 0.625,
+   "samples": 8.0
+  },
+  {
+   "policy": "agreement-2",
+   "accuracy": 0.625,
+   "samples": 4.325
+  }
+ ]
+}
