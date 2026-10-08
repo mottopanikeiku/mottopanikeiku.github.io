@@ -482,6 +482,43 @@ def verge_human() -> str:
     return s.render()
 
 
+def verge_dpo() -> str:
+    data = load("verge-dpo")
+    diff = data["pareto_minus_gap"]
+    s = SVG("verge-dpo", 560, 304,
+            "DPO on Pareto pairs versus helpfulness-gap pairs: no clear difference",
+            "Mean reward-model logit on 192 held-out HelpSteer2 prompts: untrained start 0.550, "
+            "Pareto 0.620, helpfulness gap 0.731, human reference 0.651, each trained row over "
+            "three seeds. Pareto minus gap is -0.112 with a crossed prompt and seed bootstrap "
+            "95% interval of -0.257 to +0.032; seed means are -0.027, -0.118 and -0.190.")
+    s.text(0, 18, f'mean reward-model logit; {data["prompts"]} held-out prompts × '
+                  f'{len(data["seeds"])} seeds')
+    x = scale(0.5, 0.8, 170, 544)
+    for value in (0.5, 0.6, 0.7, 0.8):
+        s.line(x(value), 34, x(value), 150, "grid")
+        s.text(x(value), 168, f"{value:.1f}", anchor="middle")
+    styles = {"start": "", "pareto": "em", "gap": "strong", "human": "strong"}
+    for index, row in enumerate(data["conditions"]):
+        y = 50 + index * 28
+        cls = styles[row["key"]]
+        s.text(158, y + 4, row["name"], cls, "end")
+        s.circle(x(row["mean_reward"]), y, 4, f"dot {cls}".strip())
+        s.text(x(row["mean_reward"]) + 10, y + 4, f'{row["mean_reward"]:.3f}', cls)
+    s.text(0, 200, "Pareto − gap; crossed prompt/seed bootstrap 95% interval")
+    x = scale(-0.3, 0.1, 170, 544)
+    for value in (-0.3, -0.2, -0.1, 0, 0.1):
+        s.line(x(value), 214, x(value), 262, "axis" if value == 0 else "grid")
+        s.text(x(value), 280, f"{value:+.1f}" if value else "0", anchor="middle")
+    s.text(158, 232, "Pareto − gap", "em", "end")
+    s.line(x(diff["ci"][0]), 228, x(diff["ci"][1]), 228, "ci em")
+    s.circle(x(diff["mean"]), 228, 4, "dot em")
+    s.text(158, 254, "seed means", anchor="end")
+    for value in diff["per_seed"]:
+        s.circle(x(value), 250, 3.2, "dot hollow strong")
+    s.text(357, 300, "reward difference (logit)", anchor="middle")
+    return s.render()
+
+
 def quantile_sampled() -> str:
     data = load("quantile-sampled")
     s = SVG("quantile-sampled", 560, 284,
@@ -637,6 +674,7 @@ FIGURES = {
     "verge-lab": verge_lab,
     "seed-power": seed_power,
     "verge-human": verge_human,
+    "verge-dpo": verge_dpo,
     "quantile-sampled": quantile_sampled,
     "branchpilot-math": branchpilot_math,
     "alignmenttax": alignmenttax,

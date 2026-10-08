@@ -52,6 +52,8 @@ SOURCES = {
                          "results/prospective/summary.json"),
     "seed-power-neural": ("seed-power", "06fe936715ccba056e1e5e44971e52e051df901c",
                           "results/neural/summary.json"),
+    "verge-dpo": ("verge-lab", "c70f5cf9731957b912d0c6c1e3399aa85377648a",
+                  "results/day-dpo/summary.json"),
 }
 
 
@@ -276,6 +278,28 @@ def verge_human(raw: dict) -> dict:
     }
 
 
+def verge_dpo(raw: dict) -> dict:
+    names = {"start": "Untrained start", "pareto": "Pareto", "gap": "Helpfulness gap",
+             "human": "Human reference"}
+    primary = raw["primary_pareto_minus_gap_reward"]
+    return {
+        "prompts": raw["design"]["prompts"],
+        "seeds": raw["design"]["training_seeds"],
+        "bootstrap_draws": raw["bootstrap"]["draws"],
+        "reward_model": raw["reward_measure"]["model"],
+        "conditions": [
+            {"key": key, "name": name,
+             "mean_reward": raw["conditions"][key]["mean_reward"],
+             "records": raw["conditions"][key]["records"],
+             "mean_tokens": raw["conditions"][key]["response_tokens"]["mean"]}
+            for key, name in names.items()
+        ],
+        "pareto_minus_gap": {"mean": primary["mean"], "ci": primary["ci95"],
+                             "per_seed": [row["mean"] for row in primary["per_seed"]],
+                             "conclusion": primary["conclusion"]},
+    }
+
+
 def control_clock_gpu(raw: dict) -> dict:
     return {"hardware": raw["hardware"], "protocol": raw["protocol"],
             "groups": [{key: group[key] for key in ("task", "runs", "solved", "median_seconds")}
@@ -427,6 +451,7 @@ TRANSFORMS = {
     "helios-audit": helios_audit,
     "eval-prospective": eval_prospective,
     "seed-power-neural": seed_power,
+    "verge-dpo": verge_dpo,
 }
 
 
