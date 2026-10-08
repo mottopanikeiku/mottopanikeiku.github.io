@@ -72,7 +72,7 @@
         <li class="entry">
           <h3 class="title"><a href="/projects/seed-power/" data-print="github.com/mottopanikeiku/seed-power">seed-power</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">I tested RL study plans on 11,440 fresh training seeds. Plans targeting 80% power detected a difference in 67 of 119 executable comparisons (56.3%). A small pilot did not deliver the detection rate it promised.</p>
+          <p class="desc">I tested RL study plans on more than 77,000 fresh training seeds. Plans targeting 80% power detected a difference in 67 of 119 executable affine policy-search comparisons (56.3%) and 139 of 307 neural PPO comparisons (45.3%). A small pilot did not deliver the detection rate it promised.</p>
         </li>
         <li class="entry brief">
           <h3 class="title"><a href="/projects/control-clock/" data-print="github.com/mottopanikeiku/control-clock">control-clock</a></h3>
@@ -82,12 +82,12 @@
         <li class="entry brief">
           <h3 class="title"><a href="/projects/verge-lab/" data-print="github.com/mottopanikeiku/verge-lab">Verge Lab</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">A rule that chooses preference pairs only when quality aspects agree. On HelpSteer2 human preferences, it agreed with 281 of 286 strict preferences (98.25%), against 277 of 282 (98.23%) for an overall-score-gap baseline at matched yield. I found no clear advantage.</p>
+          <p class="desc">A rule that chooses preference pairs only when quality aspects agree. I trained nine DPO adapters on its pairs, an overall-score-gap baseline and human labels; Pareto minus gap reward was −0.11 logits, 95% interval −0.26 to +0.03. Agreement with HelpSteer2 human preferences was also level (98.25% against 98.23%). I found no clear advantage.</p>
         </li>
         <li class="entry brief">
           <h3 class="title"><a href="/projects/alignmenttax/" data-print="github.com/mottopanikeiku/alignmenttax">AlignmentTax</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">Does instruction tuning trade calibration for truthfulness? Across seven base/instruct pairs on 790 binary TruthfulQA questions, calibration got worse in six, but only four gained accuracy in exchange.</p>
+          <p class="desc">Does instruction tuning trade calibration for truthfulness? Across nine base/instruct pairs, the answer depends on scoring. On a binary TruthfulQA derivative, six pairs gained accuracy while calibration worsened; on standard MC1, four improved both and none made that trade.</p>
         </li>
         <li class="entry brief">
           <h3 class="title"><a href="/projects/branchpilot/" data-print="github.com/mottopanikeiku/branchpilot">BranchPilot</a></h3>
@@ -118,7 +118,7 @@
         <li class="entry">
           <h3 class="title"><a href="/projects/attention-numerics/" data-print="github.com/mottopanikeiku/attention-numerics">attention-numerics</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">I ran real FlashAttention-3 FP8 attention in every layer on an H100. Rotation raised Qwen2.5-1.5B’s batch exp-CE ratio to 12.56× versus native BF16; centering keys first brought it to 1.004×. The locked predictor transferred to FA3, but produced 118 false alarms for five harmed SageAttention heads.</p>
+          <p class="desc">I ran real FlashAttention-3 FP8 attention in every layer on an H100. Rotating queries and keys cut Qwen2.5-7B’s HellaSwag accuracy by 35.4 points and raised Qwen2.5-1.5B’s batch exp-CE ratio to 12.56× versus native BF16. Centering keys first brought that ratio to 1.004× and had no accuracy-harm flags across eight checkpoints.</p>
         </li>
         <li class="entry">
           <h3 class="title">Aperture</h3>
@@ -128,7 +128,7 @@
         <li class="entry brief">
           <h3 class="title"><a href="/projects/heliostune/" data-print="github.com/mottopanikeiku/heliostune">HeliosTune</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">A Thompson-sampling autotuner for Triton matmul kernels, built to test whether timings from cheaper GPUs can warm-start H100 tuning. Transfer didn’t improve this study, and a later audit found that torch.matmul beat all 36 configurations on all 96 stored H100 workloads (1.61× geometric-mean reference/torch ratio). The action set, not the search, is the limit here; L4 and A10 were mixed.</p>
+          <p class="desc">A Thompson-sampling autotuner for Triton matmul kernels, built to test whether timings from cheaper GPUs can warm-start H100 tuning. Transfer didn’t improve this study, and torch.matmul beat all 36 configurations on all 96 H100 workloads: the action set, not the search, was the limit. Ten new Hopper-aware actions cut the geometric-mean gap from 1.61× to 1.17× torch and won 9 of 96 workloads.</p>
         </li>
         <li class="entry">
           <h3 class="title">Open source</h3>

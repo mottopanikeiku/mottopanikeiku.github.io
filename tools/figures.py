@@ -418,13 +418,9 @@ def cpu_decode() -> str:
     return s.render()
 
 
-def seed_power() -> str:
-    data = load("seed-power")
-    s = SVG("seed-power", 560, 250,
-            "Detection rates of fresh-seed RL studies planned for 80% power",
-            "All executable plans detected 67 of 119 differences, 56.3%. CartPole detected "
-            "30 of 60, 50.0%; Acrobot detected 37 of 59, 62.7%. Bars are Wilson 95% intervals. "
-            "The dashed line is the 80% planning target.")
+def detection_rates(name: str, title: str, desc: str) -> str:
+    data = load(name)
+    s = SVG(name, 560, 250, title, desc)
     x = scale(0, 1, 160, 544)
     for value in (0, 0.2, 0.4, 0.6, 0.8, 1):
         s.line(x(value), 42, x(value), 188, "grid")
@@ -442,6 +438,24 @@ def seed_power() -> str:
                cls, "middle")
     s.text(352, 243, "detection rate; Wilson 95% intervals", anchor="middle")
     return s.render()
+
+
+def seed_power() -> str:
+    return detection_rates(
+        "seed-power",
+        "Detection rates of fresh-seed RL studies planned for 80% power",
+        "All executable plans detected 67 of 119 differences, 56.3%. CartPole detected "
+        "30 of 60, 50.0%; Acrobot detected 37 of 59, 62.7%. Bars are Wilson 95% intervals. "
+        "The dashed line is the 80% planning target.")
+
+
+def seed_power_neural() -> str:
+    return detection_rates(
+        "seed-power-neural",
+        "Detection rates of fresh-seed neural PPO studies planned for 80% power",
+        "All executable plans detected 139 of 307 differences, 45.3%. CartPole detected "
+        "109 of 175, 62.3%; Acrobot detected 30 of 132, 22.7%. Bars are Wilson 95% intervals. "
+        "The dashed line is the 80% planning target.")
 
 
 def verge_human() -> str:
@@ -465,6 +479,43 @@ def verge_human() -> str:
                f'{row["agree"]}/{row["strict_pairs"]} ({row["rate"] * 100:.2f}%)',
                cls, "middle")
     s.text(357, 212, "strict agreement; Wilson 95% intervals", anchor="middle")
+    return s.render()
+
+
+def verge_dpo() -> str:
+    data = load("verge-dpo")
+    diff = data["pareto_minus_gap"]
+    s = SVG("verge-dpo", 560, 304,
+            "DPO on Pareto pairs versus helpfulness-gap pairs: no clear difference",
+            "Mean reward-model logit on 192 held-out HelpSteer2 prompts: untrained start 0.550, "
+            "Pareto 0.620, helpfulness gap 0.731, human reference 0.651, each trained row over "
+            "three seeds. Pareto minus gap is -0.112 with a crossed prompt and seed bootstrap "
+            "95% interval of -0.257 to +0.032; seed means are -0.027, -0.118 and -0.190.")
+    s.text(0, 18, f'mean reward-model logit; {data["prompts"]} held-out prompts × '
+                  f'{len(data["seeds"])} seeds')
+    x = scale(0.5, 0.8, 170, 544)
+    for value in (0.5, 0.6, 0.7, 0.8):
+        s.line(x(value), 34, x(value), 150, "grid")
+        s.text(x(value), 168, f"{value:.1f}", anchor="middle")
+    styles = {"start": "", "pareto": "em", "gap": "strong", "human": "strong"}
+    for index, row in enumerate(data["conditions"]):
+        y = 50 + index * 28
+        cls = styles[row["key"]]
+        s.text(158, y + 4, row["name"], cls, "end")
+        s.circle(x(row["mean_reward"]), y, 4, f"dot {cls}".strip())
+        s.text(x(row["mean_reward"]) + 10, y + 4, f'{row["mean_reward"]:.3f}', cls)
+    s.text(0, 200, "Pareto − gap; crossed prompt/seed bootstrap 95% interval")
+    x = scale(-0.3, 0.1, 170, 544)
+    for value in (-0.3, -0.2, -0.1, 0, 0.1):
+        s.line(x(value), 214, x(value), 262, "axis" if value == 0 else "grid")
+        s.text(x(value), 280, f"{value:+.1f}" if value else "0", anchor="middle")
+    s.text(158, 232, "Pareto − gap", "em", "end")
+    s.line(x(diff["ci"][0]), 228, x(diff["ci"][1]), 228, "ci em")
+    s.circle(x(diff["mean"]), 228, 4, "dot em")
+    s.text(158, 254, "seed means", anchor="end")
+    for value in diff["per_seed"]:
+        s.circle(x(value), 250, 3.2, "dot hollow strong")
+    s.text(357, 300, "reward difference (logit)", anchor="middle")
     return s.render()
 
 
@@ -521,38 +572,42 @@ def branchpilot_math() -> str:
 
 def alignmenttax() -> str:
     data = load("alignmenttax")
-    s = SVG("alignmenttax", 560, 432,
-            "Instruction tuning changes binary accuracy and calibration with shared prompts",
-            "In seven base/instruct pairs, four gain accuracy and increase expected calibration "
-            "error; two lose accuracy and increase error. Qwen2.5-0.5B loses accuracy, with an "
-            "uncertain calibration change. SmolLM2-1.7B loses 15.8 accuracy points and gains "
-            "32.5 error points. Horizontal and vertical bars are separate 95% question-bootstrap "
-            "intervals, not a joint confidence region.")
-    L, R, T, bottom = 58, 16, 56, 292
-    x = scale(-22, 15, L, 560 - R)
-    y = scale(-8, 40, bottom, T)
-    s.text(L, 18, "shared prompts; instruct − base; 95% paired intervals")
-    s.text(L - 10, T - 12, "ECE change (points); higher is worse")
-    for value in (0, 10, 20, 30, 40):
-        s.line(L, y(value), 560 - R, y(value), "grid")
-        s.text(L - 8, y(value) + 4, str(value), anchor="end")
-    for value in (-20, -10, 0, 10):
-        s.line(x(value), T, x(value), bottom, "grid")
-        s.text(x(value), bottom + 21, str(value), anchor="middle")
-    s.line(x(0), T, x(0), bottom, "axis")
-    s.line(L, y(0), 560 - R, y(0), "axis")
-    s.text((L + 560 - R) / 2, 337, "accuracy change (percentage points)", anchor="middle")
-    offsets = ((8, -9), (-11, 18), (-10, 18), (8, -9), (5, -10), (8, -9), (8, -8))
-    for index, (row, (dx, dy)) in enumerate(zip(data["rows"], offsets)):
-        accuracy, ece = row["accuracy"], row["ece"]
-        px, py = x(accuracy["delta"] * 100), y(ece["delta"] * 100)
-        cls = "em" if row["classification"] == "accuracy_and_calibration_worsened" else "strong"
-        s.line(x(accuracy["ci"][0] * 100), py, x(accuracy["ci"][1] * 100), py, f"ci {cls}")
-        s.line(px, y(ece["ci"][0] * 100), px, y(ece["ci"][1] * 100), f"ci {cls}")
-        s.circle(px, py, 3.4, f"dot {cls}")
-        s.text(px + dx, py + dy, str(index + 1), cls)
-        s.text(L + (index % 2) * 245, 363 + (index // 2) * 20,
-               f'{index + 1}  {row["name"]}', cls)
+    s = SVG("alignmenttax", 560, 356,
+            "Instruction tuning worsens binary-derivative ECE but not standard MC1 ECE",
+            "Expected calibration error change, instruct minus base, for nine pairs under shared "
+            "prompts. On the 790-question binary derivative, six pairs gain accuracy while ECE "
+            "worsens and two lose accuracy while ECE worsens; Qwen2.5-0.5B is uncertain. On "
+            "817-question standard MC1, four pairs improve both accuracy and ECE and five are "
+            "uncertain. Bars are separate 95% question-bootstrap intervals.")
+    styles = {
+        "truth_gain_ece_worse": ("dot em", "ci em", "accuracy up, ECE worse"),
+        "truth_and_calibration_improve": ("dot strong", "ci strong", "both better"),
+        "truth_and_calibration_worsen": ("dot hollow em", "ci em", "both worse"),
+        "uncertain": ("dot", "ci", "uncertain"),
+    }
+    for index, (dot, _, label) in enumerate(styles.values()):
+        lx = (0, 168, 272, 376)[index]
+        s.circle(lx + 4, 14, 3.4, dot)
+        s.text(lx + 13, 18, label)
+    s.text(0, 42, "ECE change (points), instruct − base; higher is worse; 95% intervals")
+    top, bottom, label_right = 82, 298, 112
+    panels = (("binary", "Binary A/B derivative", scale(-6, 36, 126, 330), (0, 10, 20, 30)),
+              ("standard", "Standard MC1", scale(-10, 4, 360, 544), (-10, -5, 0)))
+    for benchmark, title, x, ticks in panels:
+        s.text((x(ticks[0]) + x(ticks[-1])) / 2, 70,
+               f'{title} ({data["questions"][benchmark]})', "strong", "middle")
+        for value in ticks:
+            s.line(x(value), top, x(value), bottom, "axis" if value == 0 else "grid")
+            s.text(x(value), bottom + 20, str(value), anchor="middle")
+    for index, row in enumerate(data["rows"]):
+        y = top + 12 + index * 24
+        s.text(label_right, y + 4, row["name"], anchor="end")
+        for benchmark, _, x, _ in panels:
+            ece = row[benchmark]["ece"]
+            dot, ci, _ = styles[row[benchmark]["classification"]]
+            s.line(x(ece["ci"][0] * 100), y, x(ece["ci"][1] * 100), y, ci)
+            s.circle(x(ece["delta"] * 100), y, 3.4, dot)
+    s.text(335, 346, "shared prompts; separate scales per panel", anchor="middle")
     return s.render()
 
 
@@ -578,6 +633,74 @@ def helios_audit() -> str:
         s.text(px, py - 12, f'{row["ratio"]:.3f}×', "em", "middle")
         s.text(px, bottom + 20, str(row["m"]), anchor="middle")
     s.text((L + 560 - R) / 2, 274, "M in A[M,K] × B[K,N]; geometric-mean ratio", anchor="middle")
+    return s.render()
+
+
+def attention_accuracy() -> str:
+    data = load("attention-accuracy")
+    s = SVG("attention-accuracy", 560, 300,
+            "FP8 attention answer-accuracy harm by checkpoint and variant",
+            "Worst accuracy change versus native BF16 across ARC-Challenge, HellaSwag and MMLU, "
+            "with real FA3 E4M3 attention in every layer on H100. Rotation is flagged on all "
+            "three tasks for Qwen2.5-0.5B, 1.5B and 7B, down to -35.4 points on Qwen2.5-7B "
+            "HellaSwag. Unrotated FA3 is flagged seven times. Key centering, with or without "
+            "rotation, has no harm flags in 48 comparisons; its worst change is -1.5 points.")
+    labels = {"tile": "unrotated", "rotate": "rotate", "smooth_k": "center K",
+              "rotate_smooth_k": "center K + rotate"}
+    s.text(0, 18, "worst accuracy change across ARC, HellaSwag and MMLU (points) vs BF16")
+    s.rect(0, 28, 12, 12, "seg em")
+    s.text(18, 38, "flagged: drop ≥ 2 points with interval below zero; (n) = tasks flagged")
+    left, width, top, height = 160, 98, 76, 26
+    for column, label in enumerate(labels.values()):
+        s.text(left + column * width + width / 2, top - 10, label, "strong", "middle")
+    for index, row in enumerate(data["rows"]):
+        y = top + index * height
+        s.text(150, y + 17, row["name"], anchor="end")
+        for column, variant in enumerate(labels):
+            cell = row["variants"][variant]
+            flagged = cell["flags"] > 0
+            s.rect(left + column * width + 2, y + 2, width - 4, height - 4,
+                   "seg em" if flagged else "seg light")
+            value = f'{cell["worst_delta"] * 100:+.1f}'.replace("-", "−")
+            if value == "+0.0":
+                value = "0.0"
+            text = f'{value} ({cell["flags"]})' if flagged else value
+            s.text(left + column * width + width / 2, y + 17, text,
+                   "on-dark" if flagged else "strong", "middle")
+    return s.render()
+
+
+def helios_expansion() -> str:
+    data = load("helios-expansion")
+    s = SVG("helios-expansion", 560, 300,
+            "Ten new Triton actions narrow, but rarely close, the H100 gap to torch.matmul",
+            "Geometric-mean bank-2 latency relative to torch by row count M, 16 workloads per "
+            "group. The old 36 actions range from 1.401 to 1.676 times torch. With the new "
+            "actions selected on bank 1, ratios range from 1.045 at M=1 to 1.378 at M=96. New "
+            "actions beat torch on 5, 3, 0, 1, 0 and 0 workloads and tie on one.")
+    L, R, top, bottom = 70, 16, 56, 222
+    y = scale(0.95, 1.8, bottom, top)
+    x = scale(0, 5, L + 20, 560 - R - 30)
+    s.text(0, 18, "bank-2 latency / torch latency; below 1 favors Triton")
+    s.circle(4, 34, 3.6, "dot strong")
+    s.text(13, 38, f'old {data["action_counts"]["old"]} actions', "strong")
+    s.circle(124, 34, 3.6, "dot em")
+    s.text(133, 38, f'new {data["action_counts"]["new"]} actions, selected on bank 1', "em")
+    for value in (1, 1.2, 1.4, 1.6, 1.8):
+        s.line(L, y(value), 560 - R, y(value), "axis" if value == 1 else "grid")
+        s.text(L - 8, y(value) + 4, f"{value:.1f}×", anchor="end")
+    s.text(L - 8, 262, "wins", anchor="end")
+    for index, row in enumerate(data["by_m"]):
+        old, new = row["arms"]["old"], row["arms"]["new"]
+        px = x(index)
+        s.line(px, y(old["ratio"]), px, y(new["ratio"]), "line faint")
+        s.circle(px, y(old["ratio"]), 4, "dot strong")
+        s.circle(px, y(new["ratio"]), 4, "dot em")
+        s.text(px + 8, y(new["ratio"]) + 4, f'{new["ratio"]:.2f}×', "em")
+        s.text(px, bottom + 20, str(row["m"]), anchor="middle")
+        s.text(px, 262, f'{new["wins"]}/{row["workloads"]}', "em", "middle")
+    s.text((L + 560 - R) / 2, 292, "M in A[M,K] × B[K,N]; new-action wins against torch",
+           anchor="middle")
     return s.render()
 
 
@@ -619,11 +742,15 @@ FIGURES = {
     "verge-lab": verge_lab,
     "seed-power": seed_power,
     "verge-human": verge_human,
+    "verge-dpo": verge_dpo,
+    "helios-expansion": helios_expansion,
+    "attention-accuracy": attention_accuracy,
     "quantile-sampled": quantile_sampled,
     "branchpilot-math": branchpilot_math,
     "alignmenttax": alignmenttax,
     "helios-audit": helios_audit,
     "eval-prospective": eval_prospective,
+    "seed-power-neural": seed_power_neural,
 }
 
 
