@@ -24,6 +24,7 @@ jobs:
           python -m pip install playwright==1.58.0 pypdf==6.8.0
           python -m playwright install --with-deps chromium
           curl --fail --location https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.3/axe.min.js --output "$RUNNER_TEMP/axe.min.js"
+          echo "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb  $RUNNER_TEMP/axe.min.js" | sha256sum --check
           sudo apt-get update && sudo apt-get install -y poppler-utils
       - name: Check accessibility and print
         env:
