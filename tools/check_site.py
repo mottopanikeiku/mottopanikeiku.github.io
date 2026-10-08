@@ -1,4 +1,4 @@
-"""Check every page with axe in both themes and print the one-page A4 CV.
+"""Check every page with axe in both themes, check same-site links and print the one-page A4 CV.
 
 Requires playwright, pypdf and an axe-core script supplied through AXE_PATH.
 Screenshots, the CV and the results JSON go outside the published site.
@@ -37,7 +37,8 @@ def main():
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     base = f"http://127.0.0.1:{server.server_port}"
-    report = {"axe": [], "print": {}}
+    report = {"axe": [], "links": [], "print": {}}
+    targets = set()
     try:
         with sync_playwright() as playwright:
             options = {"headless": True, "args": ["--renderer-process-limit=1"]}
@@ -59,8 +60,21 @@ def main():
                     result = page.evaluate("async () => { const r = await axe.run(); return r.violations; }")
                     report["axe"].append({"page": relative, "theme": theme, "violations": result})
                     if theme == "light":
+                        targets.update(page.evaluate(
+                            "() => [...document.querySelectorAll('[href], [src]')]"
+                            ".map(el => el.href || el.src)"
+                            ".filter(url => typeof url === 'string' && url.startsWith(location.origin))"))
                         name = "homepage-desktop" if relative == "index.html" else relative.replace("/index.html", "").replace("/", "-").replace(".html", "")
                         page.screenshot(path=str(args.output / f"{name}.png"), full_page=True)
+            for url in sorted(targets):
+                address, _, fragment = url.partition("#")
+                status = page.request.get(address).status
+                if status != 200:
+                    report["links"].append({"url": url, "problem": f"HTTP {status}"})
+                elif fragment:
+                    page.goto(address)
+                    if not page.evaluate("id => document.getElementById(id) !== null", fragment):
+                        report["links"].append({"url": url, "problem": "missing fragment"})
             page.emulate_media(color_scheme="light")
             page.set_viewport_size({"width": 390, "height": 844})
             page.goto(base)
@@ -92,8 +106,11 @@ def main():
     (args.output / "checks.json").write_text(json.dumps(report, indent=2) + "\n")
     failures = sum(len(row["violations"]) for row in report["axe"])
     print(f"axe: {len(report['axe'])} page/theme checks, {failures} violations")
+    print(f"links: {len(targets)} same-site targets, {len(report['links'])} broken")
+    for row in report["links"]:
+        print(f"  {row['url']}: {row['problem']}")
     print(f"print: {report['print']['pages']} A4 page(s)")
-    if failures or report["print"]["pages"] != 1:
+    if failures or report["links"] or report["print"]["pages"] != 1:
         raise SystemExit(1)
 
 
