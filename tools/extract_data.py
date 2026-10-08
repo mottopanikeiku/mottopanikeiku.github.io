@@ -44,8 +44,8 @@ SOURCES = {
                          "results/sampled-summary.json"),
     "branchpilot-math": ("branchpilot", "1dfa8dea2c5e201b171102aadd9bf3e8883136c5",
                          "benchmarks/math500/result.json"),
-    "alignmenttax": ("alignmenttax", "e8d788bc9da81833739868b407dd138e769eeff9",
-                     "results/cross_family/analysis/summary.json"),
+    "alignmenttax": ("alignmenttax", "61b0ffb6890ca7f53b3e37b117b28167f57b8e88",
+                     "results/day_scale/analysis/summary.json"),
     "helios-audit": ("heliostune", "75f18ed8ee2d93e2d58935e3d5599ae95a32a46d",
                     "results/action-set-audit.json"),
     "eval-prospective": ("eval-power", "f739bfa20ea000cf639e551d2c3523213e814b53",
@@ -339,26 +339,35 @@ def alignmenttax(raw: dict) -> dict:
         "qwen2_5_0_5b": "Qwen2.5-0.5B",
         "qwen2_5_1_5b": "Qwen2.5-1.5B",
         "qwen2_5_7b": "Qwen2.5-7B",
-        "olmo2_0425_1b": "OLMo-2 1B (0425)",
-        "olmo2_1124_7b": "OLMo-2 7B (1124)",
+        "qwen2_5_14b": "Qwen2.5-14B",
+        "qwen2_5_32b": "Qwen2.5-32B",
+        "olmo2_0425_1b": "OLMo-2 1B",
+        "olmo2_1124_7b": "OLMo-2 7B",
         "smollm2_1_7b": "SmolLM2-1.7B",
         "mistral_7b_v0_3": "Mistral-7B-v0.3",
     }
+    metrics = {"binary": ("accuracy", "ece"), "standard": ("mc1_accuracy", "mc1_ece")}
+    protocol = "shared_plain_ab_label"
     by_id = {pair["pair_id"]: pair for pair in raw["pairs"]}
     rows = []
     for key, name in names.items():
-        primary = by_id[key]["protocols"]["shared_plain_ab_label"]
-        metrics = primary["deltas"]["metrics"]
-        rows.append({
-            "key": key, "name": name,
-            "classification": primary["classification"]["outcome"],
-            **{metric: {"delta": metrics[metric]["point"],
-                        "ci": [metrics[metric]["ci_low"], metrics[metric]["ci_high"]]}
-               for metric in ("accuracy", "ece")},
-        })
-    return {"questions": raw["question_count"], "pairs": raw["pair_count"],
-            "resamples": raw["iterations"], "ece": raw["ece"],
-            "protocol": "shared_plain_ab_label", "rows": rows}
+        row = {"key": key, "name": name}
+        for benchmark, (accuracy, ece) in metrics.items():
+            primary = by_id[key]["benchmarks"][benchmark]["protocols"][protocol]
+            deltas = primary["deltas"]["metrics"]
+            row[benchmark] = {
+                "classification": primary["classification"]["truth_calibration"][accuracy],
+                **{label: {"delta": deltas[metric]["point"],
+                           "ci": [deltas[metric]["ci_low"], deltas[metric]["ci_high"]]}
+                   for label, metric in (("accuracy", accuracy), ("ece", ece))},
+            }
+        rows.append(row)
+    return {"questions": {name: raw["benchmarks"][name]["question_count"] for name in metrics},
+            "pairs": raw["pair_count"], "resamples": raw["iterations"], "ece": raw["ece"],
+            "protocol": protocol,
+            "outcome_counts": {name: raw["outcome_counts"][name][protocol][accuracy]
+                               for name, (accuracy, _) in metrics.items()},
+            "rows": rows}
 
 
 def helios_audit(raw: dict) -> dict:

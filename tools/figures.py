@@ -535,38 +535,42 @@ def branchpilot_math() -> str:
 
 def alignmenttax() -> str:
     data = load("alignmenttax")
-    s = SVG("alignmenttax", 560, 432,
-            "Instruction tuning changes binary accuracy and calibration with shared prompts",
-            "In seven base/instruct pairs, four gain accuracy and increase expected calibration "
-            "error; two lose accuracy and increase error. Qwen2.5-0.5B loses accuracy, with an "
-            "uncertain calibration change. SmolLM2-1.7B loses 15.8 accuracy points and gains "
-            "32.5 error points. Horizontal and vertical bars are separate 95% question-bootstrap "
-            "intervals, not a joint confidence region.")
-    L, R, T, bottom = 58, 16, 56, 292
-    x = scale(-22, 15, L, 560 - R)
-    y = scale(-8, 40, bottom, T)
-    s.text(L, 18, "shared prompts; instruct − base; 95% paired intervals")
-    s.text(L - 10, T - 12, "ECE change (points); higher is worse")
-    for value in (0, 10, 20, 30, 40):
-        s.line(L, y(value), 560 - R, y(value), "grid")
-        s.text(L - 8, y(value) + 4, str(value), anchor="end")
-    for value in (-20, -10, 0, 10):
-        s.line(x(value), T, x(value), bottom, "grid")
-        s.text(x(value), bottom + 21, str(value), anchor="middle")
-    s.line(x(0), T, x(0), bottom, "axis")
-    s.line(L, y(0), 560 - R, y(0), "axis")
-    s.text((L + 560 - R) / 2, 337, "accuracy change (percentage points)", anchor="middle")
-    offsets = ((8, -9), (-11, 18), (-10, 18), (8, -9), (5, -10), (8, -9), (8, -8))
-    for index, (row, (dx, dy)) in enumerate(zip(data["rows"], offsets)):
-        accuracy, ece = row["accuracy"], row["ece"]
-        px, py = x(accuracy["delta"] * 100), y(ece["delta"] * 100)
-        cls = "em" if row["classification"] == "accuracy_and_calibration_worsened" else "strong"
-        s.line(x(accuracy["ci"][0] * 100), py, x(accuracy["ci"][1] * 100), py, f"ci {cls}")
-        s.line(px, y(ece["ci"][0] * 100), px, y(ece["ci"][1] * 100), f"ci {cls}")
-        s.circle(px, py, 3.4, f"dot {cls}")
-        s.text(px + dx, py + dy, str(index + 1), cls)
-        s.text(L + (index % 2) * 245, 363 + (index // 2) * 20,
-               f'{index + 1}  {row["name"]}', cls)
+    s = SVG("alignmenttax", 560, 356,
+            "Instruction tuning worsens binary-derivative ECE but not standard MC1 ECE",
+            "Expected calibration error change, instruct minus base, for nine pairs under shared "
+            "prompts. On the 790-question binary derivative, six pairs gain accuracy while ECE "
+            "worsens and two lose accuracy while ECE worsens; Qwen2.5-0.5B is uncertain. On "
+            "817-question standard MC1, four pairs improve both accuracy and ECE and five are "
+            "uncertain. Bars are separate 95% question-bootstrap intervals.")
+    styles = {
+        "truth_gain_ece_worse": ("dot em", "ci em", "accuracy up, ECE worse"),
+        "truth_and_calibration_improve": ("dot strong", "ci strong", "both better"),
+        "truth_and_calibration_worsen": ("dot hollow em", "ci em", "both worse"),
+        "uncertain": ("dot", "ci", "uncertain"),
+    }
+    for index, (dot, _, label) in enumerate(styles.values()):
+        lx = (0, 168, 272, 376)[index]
+        s.circle(lx + 4, 14, 3.4, dot)
+        s.text(lx + 13, 18, label)
+    s.text(0, 42, "ECE change (points), instruct − base; higher is worse; 95% intervals")
+    top, bottom, label_right = 82, 298, 112
+    panels = (("binary", "Binary A/B derivative", scale(-6, 36, 126, 330), (0, 10, 20, 30)),
+              ("standard", "Standard MC1", scale(-10, 4, 360, 544), (-10, -5, 0)))
+    for benchmark, title, x, ticks in panels:
+        s.text((x(ticks[0]) + x(ticks[-1])) / 2, 70,
+               f'{title} ({data["questions"][benchmark]})', "strong", "middle")
+        for value in ticks:
+            s.line(x(value), top, x(value), bottom, "axis" if value == 0 else "grid")
+            s.text(x(value), bottom + 20, str(value), anchor="middle")
+    for index, row in enumerate(data["rows"]):
+        y = top + 12 + index * 24
+        s.text(label_right, y + 4, row["name"], anchor="end")
+        for benchmark, _, x, _ in panels:
+            ece = row[benchmark]["ece"]
+            dot, ci, _ = styles[row[benchmark]["classification"]]
+            s.line(x(ece["ci"][0] * 100), y, x(ece["ci"][1] * 100), y, ci)
+            s.circle(x(ece["delta"] * 100), y, 3.4, dot)
+    s.text(335, 346, "shared prompts; separate scales per panel", anchor="middle")
     return s.render()
 
 
