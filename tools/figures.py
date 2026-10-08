@@ -636,6 +636,40 @@ def helios_audit() -> str:
     return s.render()
 
 
+def attention_accuracy() -> str:
+    data = load("attention-accuracy")
+    s = SVG("attention-accuracy", 560, 300,
+            "FP8 attention answer-accuracy harm by checkpoint and variant",
+            "Worst accuracy change versus native BF16 across ARC-Challenge, HellaSwag and MMLU, "
+            "with real FA3 E4M3 attention in every layer on H100. Rotation is flagged on all "
+            "three tasks for Qwen2.5-0.5B, 1.5B and 7B, down to -35.4 points on Qwen2.5-7B "
+            "HellaSwag. Unrotated FA3 is flagged seven times. Key centering, with or without "
+            "rotation, has no harm flags in 48 comparisons; its worst change is -1.5 points.")
+    labels = {"tile": "unrotated", "rotate": "rotate", "smooth_k": "center K",
+              "rotate_smooth_k": "center K + rotate"}
+    s.text(0, 18, "worst accuracy change across ARC, HellaSwag and MMLU (points) vs BF16")
+    s.rect(0, 28, 12, 12, "seg em")
+    s.text(18, 38, "flagged: drop ≥ 2 points with interval below zero; (n) = tasks flagged")
+    left, width, top, height = 160, 98, 76, 26
+    for column, label in enumerate(labels.values()):
+        s.text(left + column * width + width / 2, top - 10, label, "strong", "middle")
+    for index, row in enumerate(data["rows"]):
+        y = top + index * height
+        s.text(150, y + 17, row["name"], anchor="end")
+        for column, variant in enumerate(labels):
+            cell = row["variants"][variant]
+            flagged = cell["flags"] > 0
+            s.rect(left + column * width + 2, y + 2, width - 4, height - 4,
+                   "seg em" if flagged else "seg light")
+            value = f'{cell["worst_delta"] * 100:+.1f}'.replace("-", "−")
+            if value == "+0.0":
+                value = "0.0"
+            text = f'{value} ({cell["flags"]})' if flagged else value
+            s.text(left + column * width + width / 2, y + 17, text,
+                   "on-dark" if flagged else "strong", "middle")
+    return s.render()
+
+
 def helios_expansion() -> str:
     data = load("helios-expansion")
     s = SVG("helios-expansion", 560, 300,
@@ -710,6 +744,7 @@ FIGURES = {
     "verge-human": verge_human,
     "verge-dpo": verge_dpo,
     "helios-expansion": helios_expansion,
+    "attention-accuracy": attention_accuracy,
     "quantile-sampled": quantile_sampled,
     "branchpilot-math": branchpilot_math,
     "alignmenttax": alignmenttax,

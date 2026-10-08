@@ -118,7 +118,7 @@
         <li class="entry">
           <h3 class="title"><a href="/projects/attention-numerics/" data-print="github.com/mottopanikeiku/attention-numerics">attention-numerics</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">I ran real FlashAttention-3 FP8 attention in every layer on an H100. Rotation raised Qwen2.5-1.5B’s batch exp-CE ratio to 12.56× versus native BF16; centering keys first brought it to 1.004×. The locked predictor transferred to FA3, but produced 118 false alarms for five harmed SageAttention heads.</p>
+          <p class="desc">I ran real FlashAttention-3 FP8 attention in every layer on an H100. Rotating queries and keys cut Qwen2.5-7B’s HellaSwag accuracy by 35.4 points and raised Qwen2.5-1.5B’s batch exp-CE ratio to 12.56× versus native BF16. Centering keys first brought that ratio to 1.004× and had no accuracy-harm flags across eight checkpoints.</p>
         </li>
         <li class="entry">
           <h3 class="title">Aperture</h3>

@@ -56,6 +56,8 @@ SOURCES = {
                   "results/day-dpo/summary.json"),
     "helios-expansion": ("heliostune", "f50b27e2c0664d7c9c082e2483867b1381623200",
                          "results/action-expansion-summary.json"),
+    "attention-accuracy": ("attention-numerics", "11281b844d8b0cd55e93bdfaff486e0fed20f3ab",
+                           "results/accuracy/summary.json"),
 }
 
 
@@ -416,6 +418,29 @@ def helios_audit(raw: dict) -> dict:
     }
 
 
+def attention_accuracy(raw: dict) -> dict:
+    names = {"qwen05": "Qwen2.5-0.5B-Instruct", "qwen15": "Qwen2.5-1.5B-Instruct",
+             "qwen3": "Qwen2.5-3B-Instruct", "qwen7": "Qwen2.5-7B-Instruct",
+             "qwen14": "Qwen2.5-14B-Instruct", "mistral7": "Mistral-7B-v0.3",
+             "olmo7": "OLMo-2-1124-7B", "smol17": "SmolLM2-1.7B"}
+    variants = ("tile", "rotate", "smooth_k", "rotate_smooth_k")
+    rows = []
+    for key, name in names.items():
+        cells = {}
+        for variant in variants:
+            tasks = {row["task"]: {"delta": row["delta"], "ci": row["ci95"],
+                                   "harm_flag": row["harm_flag"]}
+                     for row in raw["rows"] if row["model"] == key and row["variant"] == variant}
+            cells[variant] = {"tasks": tasks,
+                              "flags": sum(task["harm_flag"] for task in tasks.values()),
+                              "worst_delta": min(task["delta"] for task in tasks.values())}
+        baseline = {row["task"]: row["baseline_accuracy"] for row in raw["rows"]
+                    if row["model"] == key and row["variant"] == "bf16"}
+        rows.append({"key": key, "name": name, "bf16_accuracy": baseline, "variants": cells})
+    return {"denominators": raw["denominators"], "harm_rule": raw["harm_rule"],
+            "bootstrap_replicates": raw["bootstrap"]["replicates"], "rows": rows}
+
+
 def helios_expansion(raw: dict) -> dict:
     def arms(row: dict) -> dict:
         return {
@@ -476,6 +501,7 @@ TRANSFORMS = {
     "seed-power-neural": seed_power,
     "verge-dpo": verge_dpo,
     "helios-expansion": helios_expansion,
+    "attention-accuracy": attention_accuracy,
 }
 
 
