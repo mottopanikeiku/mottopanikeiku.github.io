@@ -636,6 +636,40 @@ def helios_audit() -> str:
     return s.render()
 
 
+def helios_expansion() -> str:
+    data = load("helios-expansion")
+    s = SVG("helios-expansion", 560, 300,
+            "Ten new Triton actions narrow, but rarely close, the H100 gap to torch.matmul",
+            "Geometric-mean bank-2 latency relative to torch by row count M, 16 workloads per "
+            "group. The old 36 actions range from 1.401 to 1.676 times torch. With the new "
+            "actions selected on bank 1, ratios range from 1.045 at M=1 to 1.378 at M=96. New "
+            "actions beat torch on 5, 3, 0, 1, 0 and 0 workloads and tie on one.")
+    L, R, top, bottom = 70, 16, 56, 222
+    y = scale(0.95, 1.8, bottom, top)
+    x = scale(0, 5, L + 20, 560 - R - 30)
+    s.text(0, 18, "bank-2 latency / torch latency; below 1 favors Triton")
+    s.circle(4, 34, 3.6, "dot strong")
+    s.text(13, 38, f'old {data["action_counts"]["old"]} actions', "strong")
+    s.circle(124, 34, 3.6, "dot em")
+    s.text(133, 38, f'new {data["action_counts"]["new"]} actions, selected on bank 1', "em")
+    for value in (1, 1.2, 1.4, 1.6, 1.8):
+        s.line(L, y(value), 560 - R, y(value), "axis" if value == 1 else "grid")
+        s.text(L - 8, y(value) + 4, f"{value:.1f}×", anchor="end")
+    s.text(L - 8, 262, "wins", anchor="end")
+    for index, row in enumerate(data["by_m"]):
+        old, new = row["arms"]["old"], row["arms"]["new"]
+        px = x(index)
+        s.line(px, y(old["ratio"]), px, y(new["ratio"]), "line faint")
+        s.circle(px, y(old["ratio"]), 4, "dot strong")
+        s.circle(px, y(new["ratio"]), 4, "dot em")
+        s.text(px + 8, y(new["ratio"]) + 4, f'{new["ratio"]:.2f}×', "em")
+        s.text(px, bottom + 20, str(row["m"]), anchor="middle")
+        s.text(px, 262, f'{new["wins"]}/{row["workloads"]}', "em", "middle")
+    s.text((L + 560 - R) / 2, 292, "M in A[M,K] × B[K,N]; new-action wins against torch",
+           anchor="middle")
+    return s.render()
+
+
 def eval_prospective() -> str:
     data = load("eval-prospective")
     s = SVG("eval-prospective", 560, 250,
@@ -675,6 +709,7 @@ FIGURES = {
     "seed-power": seed_power,
     "verge-human": verge_human,
     "verge-dpo": verge_dpo,
+    "helios-expansion": helios_expansion,
     "quantile-sampled": quantile_sampled,
     "branchpilot-math": branchpilot_math,
     "alignmenttax": alignmenttax,

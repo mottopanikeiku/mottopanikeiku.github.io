@@ -128,7 +128,7 @@
         <li class="entry brief">
           <h3 class="title"><a href="/projects/heliostune/" data-print="github.com/mottopanikeiku/heliostune">HeliosTune</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">A Thompson-sampling autotuner for Triton matmul kernels, built to test whether timings from cheaper GPUs can warm-start H100 tuning. Transfer didn’t improve this study, and a later audit found that torch.matmul beat all 36 configurations on all 96 stored H100 workloads (1.61× geometric-mean reference/torch ratio). The action set, not the search, is the limit here; L4 and A10 were mixed.</p>
+          <p class="desc">A Thompson-sampling autotuner for Triton matmul kernels, built to test whether timings from cheaper GPUs can warm-start H100 tuning. Transfer didn’t improve this study, and torch.matmul beat all 36 configurations on all 96 H100 workloads: the action set, not the search, was the limit. Ten new Hopper-aware actions cut the geometric-mean gap from 1.61× to 1.17× torch and won 9 of 96 workloads.</p>
         </li>
         <li class="entry">
           <h3 class="title">Open source</h3>

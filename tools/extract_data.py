@@ -54,6 +54,8 @@ SOURCES = {
                           "results/neural/summary.json"),
     "verge-dpo": ("verge-lab", "c70f5cf9731957b912d0c6c1e3399aa85377648a",
                   "results/day-dpo/summary.json"),
+    "helios-expansion": ("heliostune", "f50b27e2c0664d7c9c082e2483867b1381623200",
+                         "results/action-expansion-summary.json"),
 }
 
 
@@ -414,6 +416,27 @@ def helios_audit(raw: dict) -> dict:
     }
 
 
+def helios_expansion(raw: dict) -> dict:
+    def arms(row: dict) -> dict:
+        return {
+            name: {"wins": arm["comparable_win_count"], "ties": arm["comparable_tie_count"],
+                   "losses": arm["comparable_loss_count"],
+                   "ratio": arm["geometric_mean_to_torch"]}
+            for name, arm in row["arms"].items()
+        }
+    return {
+        "plan_commit": raw["plan_commit"], "gpu": raw["hardware"]["device_name"],
+        "action_counts": {name: len(actions) for name, actions in raw["action_set"].items()},
+        "overall": {"workloads": raw["overall"]["named_workload_count"],
+                    "unique_shapes": raw["overall"]["unique_shape_count"],
+                    "arms": arms(raw["overall"]),
+                    "new_to_old": raw["overall"]["old_new_comparison"]["geometric_mean_new_to_old"],
+                    "new_faster": raw["overall"]["old_new_comparison"]["new_faster_count"]},
+        "by_m": [{"m": row["m"], "workloads": row["named_workload_count"], "arms": arms(row)}
+                 for row in raw["by_m"]],
+    }
+
+
 def eval_prospective(raw: dict) -> dict:
     names = {"gsm8k": "GSM8K", "arc": "ARC (direct choice)"}
     return {
@@ -452,6 +475,7 @@ TRANSFORMS = {
     "eval-prospective": eval_prospective,
     "seed-power-neural": seed_power,
     "verge-dpo": verge_dpo,
+    "helios-expansion": helios_expansion,
 }
 
 
