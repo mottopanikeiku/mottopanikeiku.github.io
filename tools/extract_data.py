@@ -50,6 +50,8 @@ SOURCES = {
                     "results/action-set-audit.json"),
     "eval-prospective": ("eval-power", "f739bfa20ea000cf639e551d2c3523213e814b53",
                          "results/prospective/summary.json"),
+    "seed-power-neural": ("seed-power", "06fe936715ccba056e1e5e44971e52e051df901c",
+                          "results/neural/summary.json"),
 }
 
 
@@ -415,6 +417,7 @@ TRANSFORMS = {
     "alignmenttax": alignmenttax,
     "helios-audit": helios_audit,
     "eval-prospective": eval_prospective,
+    "seed-power-neural": seed_power,
 }
 
 

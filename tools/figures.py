@@ -418,13 +418,9 @@ def cpu_decode() -> str:
     return s.render()
 
 
-def seed_power() -> str:
-    data = load("seed-power")
-    s = SVG("seed-power", 560, 250,
-            "Detection rates of fresh-seed RL studies planned for 80% power",
-            "All executable plans detected 67 of 119 differences, 56.3%. CartPole detected "
-            "30 of 60, 50.0%; Acrobot detected 37 of 59, 62.7%. Bars are Wilson 95% intervals. "
-            "The dashed line is the 80% planning target.")
+def detection_rates(name: str, title: str, desc: str) -> str:
+    data = load(name)
+    s = SVG(name, 560, 250, title, desc)
     x = scale(0, 1, 160, 544)
     for value in (0, 0.2, 0.4, 0.6, 0.8, 1):
         s.line(x(value), 42, x(value), 188, "grid")
@@ -442,6 +438,24 @@ def seed_power() -> str:
                cls, "middle")
     s.text(352, 243, "detection rate; Wilson 95% intervals", anchor="middle")
     return s.render()
+
+
+def seed_power() -> str:
+    return detection_rates(
+        "seed-power",
+        "Detection rates of fresh-seed RL studies planned for 80% power",
+        "All executable plans detected 67 of 119 differences, 56.3%. CartPole detected "
+        "30 of 60, 50.0%; Acrobot detected 37 of 59, 62.7%. Bars are Wilson 95% intervals. "
+        "The dashed line is the 80% planning target.")
+
+
+def seed_power_neural() -> str:
+    return detection_rates(
+        "seed-power-neural",
+        "Detection rates of fresh-seed neural PPO studies planned for 80% power",
+        "All executable plans detected 139 of 307 differences, 45.3%. CartPole detected "
+        "109 of 175, 62.3%; Acrobot detected 30 of 132, 22.7%. Bars are Wilson 95% intervals. "
+        "The dashed line is the 80% planning target.")
 
 
 def verge_human() -> str:
@@ -624,6 +638,7 @@ FIGURES = {
     "alignmenttax": alignmenttax,
     "helios-audit": helios_audit,
     "eval-prospective": eval_prospective,
+    "seed-power-neural": seed_power_neural,
 }
 
 
