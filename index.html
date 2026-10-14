@@ -67,32 +67,32 @@
         <li class="entry">
           <h3 class="title"><a href="/projects/eval-power/" data-print="github.com/mottopanikeiku/eval-power">eval-power</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">How many benchmark items it takes to tell two language models apart. Across 395 models, almost no neighboring leaderboard gaps were significant, and small-pilot plans detected differences only 49–79% of the time, not 80%. In a live six-model test, plans committed before collecting answers detected 23 of 27.</p>
+          <p class="desc">How many benchmark items it takes to tell two language models apart. Across 395 leaderboard models, almost no neighboring gaps were significant, and budgets planned from small pilots found differences 49–79% of the time instead of 80%. In a live test on six models, 23 of 27 planned comparisons found the difference they were sized for.</p>
         </li>
         <li class="entry">
           <h3 class="title"><a href="/projects/seed-power/" data-print="github.com/mottopanikeiku/seed-power">seed-power</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">I tested RL study plans on more than 77,000 fresh training seeds. Plans targeting 80% power detected a difference in 67 of 119 executable affine policy-search comparisons (56.3%) and 139 of 307 neural PPO comparisons (45.3%). A small pilot did not deliver the detection rate it promised.</p>
+          <p class="desc">The same question for RL seeds. On more than 77,000 fresh training runs, plans built for 80% power detected the difference 56% of the time with policy search and 45% with PPO.</p>
         </li>
         <li class="entry brief">
           <h3 class="title"><a href="/projects/control-clock/" data-print="github.com/mottopanikeiku/control-clock">control-clock</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">Seconds from a cold Python process to a policy that passes CartPole or Acrobot on a laptop CPU, with every evaluation on the clock. Search over linear policies passed CartPole in a median 1.1 seconds, nearly four times faster than the fastest PPO; on Acrobot, Stable-Baselines3’s tuned PPO was fastest at 10 seconds.</p>
+          <p class="desc">Seconds from a cold Python start to a policy that passes CartPole or Acrobot, with every evaluation on the clock. Random search over linear policies won CartPole in 1.1 seconds, about four times faster than any PPO; tuned PPO won Acrobot.</p>
         </li>
         <li class="entry brief">
           <h3 class="title"><a href="/projects/verge-lab/" data-print="github.com/mottopanikeiku/verge-lab">Verge Lab</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">A rule that chooses preference pairs only when quality aspects agree. I trained nine DPO adapters on its pairs, an overall-score-gap baseline and human labels; Pareto minus gap reward was −0.11 logits, 95% interval −0.26 to +0.03. Agreement with HelpSteer2 human preferences was also level (98.25% against 98.23%). I found no clear advantage.</p>
+          <p class="desc">A rule that picks preference pairs only when every quality aspect agrees. It matched human preferences no better than a simple score-gap rule (98.25% against 98.23%), and DPO on its pairs showed no clear gain.</p>
         </li>
         <li class="entry brief">
           <h3 class="title"><a href="/projects/alignmenttax/" data-print="github.com/mottopanikeiku/alignmenttax">AlignmentTax</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">Does instruction tuning trade calibration for truthfulness? Across nine base/instruct pairs, the answer depends on scoring. On a binary TruthfulQA derivative, six pairs gained accuracy while calibration worsened; on standard MC1, four improved both and none made that trade.</p>
+          <p class="desc">Does instruction tuning trade calibration for truthfulness? Across nine base/instruct pairs it depends on the scoring: on a binary TruthfulQA variant six pairs made that trade, while on standard MC1 none did and four improved on both.</p>
         </li>
         <li class="entry brief">
           <h3 class="title"><a href="/projects/quantile-cycles/" data-print="github.com/mottopanikeiku/quantile-cycles">Quantile cycles</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">I constructed an exact quantile-control operator that alternates forever between the optimal and a worse action, with no fixed point, and checked its smallest rational cycle in Lean. Sampled Huber updates did not reproduce the cycle, so it belongs to the exact operator, not to QR-DQN training.</p>
+          <p class="desc">An exact quantile-control operator that alternates forever between the best action and a worse one, with no fixed point. Lean checks the smallest cycle; sampled Huber updates don’t reproduce it.</p>
         </li>
       </ul>
     </section>
@@ -103,7 +103,7 @@
         <li class="entry">
           <h3 class="title"><a href="/projects/cpu-decode/" data-print="github.com/mottopanikeiku/cpu-decode">cpu-decode</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">A from-scratch C++ int8 decoder for Qwen2.5-0.5B on a laptop CPU. With 2 threads and short context it reaches 69 tokens per second, 83% of the estimated memory-read ceiling, ahead of llama.cpp at the same thread count (62) and level with its best (68.5). At 4,096 tokens of context llama.cpp wins, 44 to 32, because my attention is still scalar.</p>
+          <p class="desc">A from-scratch C++ int8 decoder for Qwen2.5-0.5B on a laptop CPU. At short context it reaches 83% of the estimated memory-read ceiling and matches llama.cpp’s best speed; at 4,096 tokens llama.cpp wins, 44 to 32 tokens per second, because my attention is still scalar.</p>
         </li>
         <li class="entry">
           <h3 class="title"><a href="/projects/attention-numerics/" data-print="github.com/mottopanikeiku/attention-numerics">attention-numerics</a></h3>
@@ -118,12 +118,12 @@
         <li class="entry brief">
           <h3 class="title"><a href="/projects/heliostune/" data-print="github.com/mottopanikeiku/heliostune">HeliosTune</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">A Thompson-sampling autotuner for Triton matmul kernels, built to test whether timings from cheaper GPUs can warm-start H100 tuning. Transfer didn’t improve this study, and torch.matmul beat all 36 configurations on all 96 H100 workloads: the action set, not the search, was the limit. Ten new Hopper-aware actions cut the geometric-mean gap from 1.61× to 1.17× torch and won 9 of 96 workloads.</p>
+          <p class="desc">A Thompson-sampling autotuner for Triton matmuls, built to test whether timings from cheaper GPUs can warm-start H100 tuning. They couldn’t, and torch.matmul beat every original kernel; ten new kernels, including split-K, cut the gap from 1.61× to 1.17× and won 9 of 96 workloads.</p>
         </li>
         <li class="entry">
           <h3 class="title">Open source</h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">Landed pull requests in <a href="https://github.com/pytorch/pytorch/pull/196711">PyTorch</a>, <a href="https://github.com/ray-project/ray/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">Ray</a>, <a href="https://github.com/onnx/onnx/pull/8435">ONNX</a>, <a href="https://github.com/huggingface/sentence-transformers/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">Sentence Transformers</a>, <a href="https://github.com/sgl-project/sglang/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">SGLang</a>, and <a href="https://github.com/celery/celery/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">Celery</a>.</p>
+          <p class="desc">Landed pull requests in <a href="https://github.com/pytorch/pytorch/pull/196711">PyTorch</a>, <a href="https://github.com/ray-project/ray/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">Ray</a>, <a href="https://github.com/onnx/onnx/pull/8435">ONNX</a>, <a href="https://github.com/huggingface/sentence-transformers/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">Sentence Transformers</a>, <a href="https://github.com/sgl-project/sglang/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">SGLang</a>, <a href="https://github.com/celery/celery/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">Celery</a>, the <a href="https://github.com/Farama-Foundation/Arcade-Learning-Environment/pull/743">Arcade Learning Environment</a> and <a href="https://github.com/Farama-Foundation/Gymnasium-Robotics/pull/344">Gymnasium-Robotics</a>.</p>
         </li>
       </ul>
     </section>
@@ -134,7 +134,7 @@
         <li class="entry">
           <h3 class="title"><a href="https://mottopanikeiku.github.io/kan-visualizer/" data-print="mottopanikeiku.github.io/kan-visualizer">KAN visualizer</a></h3>
           <p class="year"><time datetime="2025">2025</time></p>
-          <p class="desc">I compare Gaussian-edge networks with parameter-matched MLPs and show the exported models’ real activations. <a href="https://github.com/mottopanikeiku/kan-visualizer/blob/298419407d3251bdaeb5f70426ec2ed526480799/results/mlp_comparison/summary.json">MLPs won both two-dimensional tasks in every paired seed; the edge network won the one-dimensional task.</a> These are small synthetic regression tasks.</p>
+          <p class="desc">Small Gaussian-edge networks, a KAN variant, with their real activations. <a href="https://github.com/mottopanikeiku/kan-visualizer/blob/298419407d3251bdaeb5f70426ec2ed526480799/results/mlp_comparison/summary.json">Parameter-matched MLPs won both 2D tasks; the edge network won the 1D one.</a></p>
         </li>
         <li class="entry">
           <h3 class="title"><a href="https://mottopanikeiku.github.io/attention-numerics/">Attention numerics explorable</a></h3>
@@ -154,12 +154,12 @@
         <li class="entry">
           <h3 class="title"><a href="https://mottopanikeiku.github.io/pdbview/" data-print="mottopanikeiku.github.io/pdbview">PDBView</a></h3>
           <p class="year"><time datetime="2025">2025</time></p>
-          <p class="desc">I inspect protein structures in the browser with 3Dmol.js. Load an RCSB PDB ID or drop a local file, click an observed residue to highlight it, measure atom distances, and share a view of a public structure.</p>
+          <p class="desc">Protein structures in the browser with 3Dmol.js: load a PDB ID or a local file, select residues, measure atom distances and share a view.</p>
         </li>
         <li class="entry">
           <h3 class="title"><a href="https://mottopanikeiku.github.io/terrasim/">Terrasim</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">I built a browser terrarium in Three.js and TypeScript. Pour soil and water, plant a garden, and return to a browser-local save. Its water and plant-care rules are a playable illustration, not a validated ecosystem model.</p>
+          <p class="desc">A browser terrarium in Three.js: pour soil and water, plant a garden, and come back to it later.</p>
         </li>
       </ul>
     </section>
