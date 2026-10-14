@@ -1,0 +1,59 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/verge-lab",
+  "commit": "c70f5cf9731957b912d0c6c1e3399aa85377648a",
+  "path": "results/day-dpo/summary.json",
+  "url": "https://github.com/mottopanikeiku/verge-lab/blob/c70f5cf9731957b912d0c6c1e3399aa85377648a/results/day-dpo/summary.json"
+ },
+ "prompts": 192,
+ "seeds": [
+  1701,
+  1702,
+  1703
+ ],
+ "bootstrap_draws": 10000,
+ "reward_model": "OpenAssistant/reward-model-deberta-v3-large-v2",
+ "conditions": [
+  {
+   "key": "start",
+   "name": "Untrained start",
+   "mean_reward": 0.5501249292768383,
+   "records": 192,
+   "mean_tokens": 159.88541666666666
+  },
+  {
+   "key": "pareto",
+   "name": "Pareto",
+   "mean_reward": 0.6197554350785341,
+   "records": 576,
+   "mean_tokens": 161.81597222222223
+  },
+  {
+   "key": "gap",
+   "name": "Helpfulness gap",
+   "mean_reward": 0.7314071889406679,
+   "records": 576,
+   "mean_tokens": 157.67881944444446
+  },
+  {
+   "key": "human",
+   "name": "Human reference",
+   "mean_reward": 0.6512409123170073,
+   "records": 576,
+   "mean_tokens": 159.66493055555554
+  }
+ ],
+ "pareto_minus_gap": {
+  "mean": -0.11165175386213377,
+  "ci": [
+   -0.2567360822823427,
+   0.031770176391119544
+  ],
+  "per_seed": [
+   -0.027171047372879304,
+   -0.11790505394583306,
+   -0.18987916026768895
+  ],
+  "conclusion": "inconclusive"
+ }
+}

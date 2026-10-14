@@ -1,0 +1,1069 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/attention-numerics",
+  "commit": "11281b844d8b0cd55e93bdfaff486e0fed20f3ab",
+  "path": "results/accuracy/summary.json",
+  "url": "https://github.com/mottopanikeiku/attention-numerics/blob/11281b844d8b0cd55e93bdfaff486e0fed20f3ab/results/accuracy/summary.json"
+ },
+ "denominators": {
+  "arc_challenge": 1172,
+  "hellaswag": 2000,
+  "mmlu": 2000
+ },
+ "harm_rule": {
+  "minimum_drop": 0.02,
+  "interval_upper_below": 0,
+  "definition": "variant accuracy minus BF16 <= -0.02 and the upper endpoint of its paired 95% interval < 0"
+ },
+ "bootstrap_replicates": 20000,
+ "rows": [
+  {
+   "key": "qwen05",
+   "name": "Qwen2.5-0.5B-Instruct",
+   "bf16_accuracy": {
+    "arc_challenge": 0.3387372013651877,
+    "hellaswag": 0.5375,
+    "mmlu": 0.4475
+   },
+   "variants": {
+    "tile": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.017918088737201365,
+       "ci": [
+        -0.034129692832764506,
+        -0.0017064846416382253
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": -0.0145,
+       "ci": [
+        -0.023,
+        -0.006
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": -0.014,
+       "ci": [
+        -0.029,
+        0.001
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.017918088737201365
+    },
+    "rotate": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.03583617747440273,
+       "ci": [
+        -0.06313993174061433,
+        -0.00938566552901024
+       ],
+       "harm_flag": true
+      },
+      "hellaswag": {
+       "delta": -0.106,
+       "ci": [
+        -0.126,
+        -0.086
+       ],
+       "harm_flag": true
+      },
+      "mmlu": {
+       "delta": -0.122,
+       "ci": [
+        -0.1455,
+        -0.098
+       ],
+       "harm_flag": true
+      }
+     },
+     "flags": 3,
+     "worst_delta": -0.122
+    },
+    "smooth_k": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.008532423208191127,
+       "ci": [
+        -0.02218430034129693,
+        0.005119453924914676
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": -0.006,
+       "ci": [
+        -0.013,
+        0.001
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": 0.0015,
+       "ci": [
+        -0.01,
+        0.013
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.008532423208191127
+    },
+    "rotate_smooth_k": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": 0.0017064846416382253,
+       "ci": [
+        -0.016211604095563138,
+        0.01877133105802048
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": -0.0075,
+       "ci": [
+        -0.016,
+        0.0005124999999989086
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": -0.0115,
+       "ci": [
+        -0.027,
+        0.004
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.0115
+    }
+   }
+  },
+  {
+   "key": "qwen15",
+   "name": "Qwen2.5-1.5B-Instruct",
+   "bf16_accuracy": {
+    "arc_challenge": 0.4684300341296928,
+    "hellaswag": 0.6955,
+    "mmlu": 0.6195
+   },
+   "variants": {
+    "tile": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.09300341296928327,
+       "ci": [
+        -0.11945392491467577,
+        -0.06655290102389079
+       ],
+       "harm_flag": true
+      },
+      "hellaswag": {
+       "delta": -0.1175,
+       "ci": [
+        -0.1375,
+        -0.098
+       ],
+       "harm_flag": true
+      },
+      "mmlu": {
+       "delta": -0.2105,
+       "ci": [
+        -0.2345,
+        -0.187
+       ],
+       "harm_flag": true
+      }
+     },
+     "flags": 3,
+     "worst_delta": -0.2105
+    },
+    "rotate": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.05802047781569966,
+       "ci": [
+        -0.08361774744027303,
+        -0.033276450511945395
+       ],
+       "harm_flag": true
+      },
+      "hellaswag": {
+       "delta": -0.109,
+       "ci": [
+        -0.128,
+        -0.0905
+       ],
+       "harm_flag": true
+      },
+      "mmlu": {
+       "delta": -0.1735,
+       "ci": [
+        -0.1965,
+        -0.1505
+       ],
+       "harm_flag": true
+      }
+     },
+     "flags": 3,
+     "worst_delta": -0.1735
+    },
+    "smooth_k": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.0034129692832764505,
+       "ci": [
+        -0.016211604095563138,
+        0.00938566552901024
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": -0.004,
+       "ci": [
+        -0.009,
+        0.001
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": -0.015,
+       "ci": [
+        -0.025,
+        -0.005
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.015
+    },
+    "rotate_smooth_k": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.00938566552901024,
+       "ci": [
+        -0.01962457337883959,
+        0.0008532423208191126
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": -0.003,
+       "ci": [
+        -0.008,
+        0.002
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": -0.0105,
+       "ci": [
+        -0.0185,
+        -0.003
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.0105
+    }
+   }
+  },
+  {
+   "key": "qwen3",
+   "name": "Qwen2.5-3B-Instruct",
+   "bf16_accuracy": {
+    "arc_challenge": 0.48378839590443684,
+    "hellaswag": 0.768,
+    "mmlu": 0.65
+   },
+   "variants": {
+    "tile": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.0008532423208191126,
+       "ci": [
+        -0.01877133105802048,
+        0.017064846416382253
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": -0.013,
+       "ci": [
+        -0.0225,
+        -0.0035
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": -0.0285,
+       "ci": [
+        -0.042,
+        -0.01598750000000109
+       ],
+       "harm_flag": true
+      }
+     },
+     "flags": 1,
+     "worst_delta": -0.0285
+    },
+    "rotate": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": 0.005119453924914676,
+       "ci": [
+        -0.008532423208191127,
+        0.01962457337883959
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": 0.0,
+       "ci": [
+        -0.006,
+        0.006
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": -0.0095,
+       "ci": [
+        -0.0185,
+        -0.0005
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.0095
+    },
+    "smooth_k": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.007679180887372013,
+       "ci": [
+        -0.021331058020477817,
+        0.005972696245733789
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": -0.005,
+       "ci": [
+        -0.011,
+        0.0005
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": -0.005,
+       "ci": [
+        -0.013,
+        0.003
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.007679180887372013
+    },
+    "rotate_smooth_k": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": 0.005972696245733789,
+       "ci": [
+        -0.005119453924914676,
+        0.017064846416382253
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": -0.003,
+       "ci": [
+        -0.008,
+        0.0015
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": -0.004,
+       "ci": [
+        -0.0115,
+        0.0035
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.004
+    }
+   }
+  },
+  {
+   "key": "qwen7",
+   "name": "Qwen2.5-7B-Instruct",
+   "bf16_accuracy": {
+    "arc_challenge": 0.5520477815699659,
+    "hellaswag": 0.809,
+    "mmlu": 0.716
+   },
+   "variants": {
+    "tile": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.13225255972696245,
+       "ci": [
+        -0.1621160409556314,
+        -0.10238907849829351
+       ],
+       "harm_flag": true
+      },
+      "hellaswag": {
+       "delta": -0.172,
+       "ci": [
+        -0.1925,
+        -0.152
+       ],
+       "harm_flag": true
+      },
+      "mmlu": {
+       "delta": -0.144,
+       "ci": [
+        -0.1655,
+        -0.1225
+       ],
+       "harm_flag": true
+      }
+     },
+     "flags": 3,
+     "worst_delta": -0.172
+    },
+    "rotate": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.14590443686006827,
+       "ci": [
+        -0.17832764505119453,
+        -0.11348122866894197
+       ],
+       "harm_flag": true
+      },
+      "hellaswag": {
+       "delta": -0.354,
+       "ci": [
+        -0.379,
+        -0.329
+       ],
+       "harm_flag": true
+      },
+      "mmlu": {
+       "delta": -0.093,
+       "ci": [
+        -0.112,
+        -0.074
+       ],
+       "harm_flag": true
+      }
+     },
+     "flags": 3,
+     "worst_delta": -0.354
+    },
+    "smooth_k": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": 0.006825938566552901,
+       "ci": [
+        -0.005972696245733789,
+        0.01962457337883959
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": -0.0005,
+       "ci": [
+        -0.005,
+        0.004
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": -0.0005,
+       "ci": [
+        -0.0075,
+        0.0065
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.0005
+    },
+    "rotate_smooth_k": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": 0.0017064846416382253,
+       "ci": [
+        -0.008532423208191127,
+        0.011945392491467578
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": 0.0015,
+       "ci": [
+        -0.002,
+        0.0055
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": -0.0035,
+       "ci": [
+        -0.0085,
+        0.0015
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.0035
+    }
+   }
+  },
+  {
+   "key": "qwen14",
+   "name": "Qwen2.5-14B-Instruct",
+   "bf16_accuracy": {
+    "arc_challenge": 0.6228668941979523,
+    "hellaswag": 0.854,
+    "mmlu": 0.7875
+   },
+   "variants": {
+    "tile": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.002559726962457338,
+       "ci": [
+        -0.013651877133105802,
+        0.00938566552901024
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": -0.0015,
+       "ci": [
+        -0.005,
+        0.0015
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": -0.0045,
+       "ci": [
+        -0.011,
+        0.002
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.0045
+    },
+    "rotate": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.005119453924914676,
+       "ci": [
+        -0.015358361774744027,
+        0.005119453924914676
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": -0.001,
+       "ci": [
+        -0.004,
+        0.0015
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": 0.0005,
+       "ci": [
+        -0.0045,
+        0.0055
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.005119453924914676
+    },
+    "smooth_k": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.00938566552901024,
+       "ci": [
+        -0.021331058020477817,
+        0.002559726962457338
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": -0.002,
+       "ci": [
+        -0.0055,
+        0.0015
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": -0.0015,
+       "ci": [
+        -0.0075,
+        0.0045
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.00938566552901024
+    },
+    "rotate_smooth_k": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.005972696245733789,
+       "ci": [
+        -0.015358361774744027,
+        0.0034129692832764505
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": -0.001,
+       "ci": [
+        -0.0045,
+        0.0025
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": 0.0005,
+       "ci": [
+        -0.004,
+        0.005
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.005972696245733789
+    }
+   }
+  },
+  {
+   "key": "mistral7",
+   "name": "Mistral-7B-v0.3",
+   "bf16_accuracy": {
+    "arc_challenge": 0.5435153583617748,
+    "hellaswag": 0.815,
+    "mmlu": 0.584
+   },
+   "variants": {
+    "tile": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.0008532423208191126,
+       "ci": [
+        -0.007679180887372013,
+        0.005972696245733789
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": 0.002,
+       "ci": [
+        -0.003,
+        0.007
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": -0.002,
+       "ci": [
+        -0.01,
+        0.006
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.002
+    },
+    "rotate": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": 0.0008532423208191126,
+       "ci": [
+        -0.006825938566552901,
+        0.008532423208191127
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": 0.0005,
+       "ci": [
+        -0.0035,
+        0.005
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": -0.0055,
+       "ci": [
+        -0.012,
+        0.0005
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.0055
+    },
+    "smooth_k": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.0008532423208191126,
+       "ci": [
+        -0.00938566552901024,
+        0.007679180887372013
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": 0.0005,
+       "ci": [
+        -0.004,
+        0.005
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": 0.001,
+       "ci": [
+        -0.006,
+        0.008
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.0008532423208191126
+    },
+    "rotate_smooth_k": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": 0.0,
+       "ci": [
+        -0.005972696245733789,
+        0.005972696245733789
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": 0.004,
+       "ci": [
+        0.0,
+        0.0085
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": 0.0025,
+       "ci": [
+        -0.004,
+        0.009
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": 0.0
+    }
+   }
+  },
+  {
+   "key": "olmo7",
+   "name": "OLMo-2-1124-7B",
+   "bf16_accuracy": {
+    "arc_challenge": 0.5716723549488054,
+    "hellaswag": 0.8125,
+    "mmlu": 0.595
+   },
+   "variants": {
+    "tile": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": 0.004266211604095563,
+       "ci": [
+        -0.002559726962457338,
+        0.011092150170648464
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": 0.0015,
+       "ci": [
+        -0.002,
+        0.005
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": -0.0005,
+       "ci": [
+        -0.0075,
+        0.0065
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.0005
+    },
+    "rotate": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.0017064846416382253,
+       "ci": [
+        -0.008532423208191127,
+        0.004266211604095563
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": 0.0015,
+       "ci": [
+        -0.001,
+        0.004
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": 0.0015,
+       "ci": [
+        -0.0045,
+        0.0075
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.0017064846416382253
+    },
+    "smooth_k": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": 0.002559726962457338,
+       "ci": [
+        -0.004266211604095563,
+        0.00938566552901024
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": 0.001,
+       "ci": [
+        -0.0025,
+        0.0045
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": -0.0015,
+       "ci": [
+        -0.008,
+        0.005
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.0015
+    },
+    "rotate_smooth_k": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": 0.0017064846416382253,
+       "ci": [
+        -0.004266211604095563,
+        0.007679180887372013
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": 0.0015,
+       "ci": [
+        -0.002,
+        0.005
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": -0.004,
+       "ci": [
+        -0.0105,
+        0.002
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.004
+    }
+   }
+  },
+  {
+   "key": "smol17",
+   "name": "SmolLM2-1.7B",
+   "bf16_accuracy": {
+    "arc_challenge": 0.47440273037542663,
+    "hellaswag": 0.7295,
+    "mmlu": 0.486
+   },
+   "variants": {
+    "tile": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.014505119453924915,
+       "ci": [
+        -0.026450511945392493,
+        -0.0034129692832764505
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": -0.005,
+       "ci": [
+        -0.0105,
+        0.0005
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": -0.0155,
+       "ci": [
+        -0.028,
+        -0.003
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.0155
+    },
+    "rotate": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.005972696245733789,
+       "ci": [
+        -0.016211604095563138,
+        0.004266211604095563
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": -0.001,
+       "ci": [
+        -0.006,
+        0.004
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": 0.0015,
+       "ci": [
+        -0.008,
+        0.0115
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.005972696245733789
+    },
+    "smooth_k": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.011945392491467578,
+       "ci": [
+        -0.023890784982935155,
+        0.0
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": -0.002,
+       "ci": [
+        -0.008,
+        0.004
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": 0.001,
+       "ci": [
+        -0.01,
+        0.012
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.011945392491467578
+    },
+    "rotate_smooth_k": {
+     "tasks": {
+      "arc_challenge": {
+       "delta": -0.005972696245733789,
+       "ci": [
+        -0.015358361774744027,
+        0.0034129692832764505
+       ],
+       "harm_flag": false
+      },
+      "hellaswag": {
+       "delta": -0.0015,
+       "ci": [
+        -0.0065,
+        0.0035
+       ],
+       "harm_flag": false
+      },
+      "mmlu": {
+       "delta": -0.0055,
+       "ci": [
+        -0.0155,
+        0.004
+       ],
+       "harm_flag": false
+      }
+     },
+     "flags": 0,
+     "worst_delta": -0.005972696245733789
+    }
+   }
+  }
+ ]
+}

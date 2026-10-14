@@ -1,0 +1,186 @@
+{
+ "source": {
+  "repo": "mottopanikeiku/heliostune",
+  "commit": "f50b27e2c0664d7c9c082e2483867b1381623200",
+  "path": "results/action-expansion-summary.json",
+  "url": "https://github.com/mottopanikeiku/heliostune/blob/f50b27e2c0664d7c9c082e2483867b1381623200/results/action-expansion-summary.json"
+ },
+ "plan_commit": "adf5eb4a854f8fd37ea888280861bead9024df77",
+ "gpu": "NVIDIA H100 80GB HBM3",
+ "action_counts": {
+  "new": 10,
+  "old": 36
+ },
+ "overall": {
+  "workloads": 96,
+  "unique_shapes": 84,
+  "arms": {
+   "new": {
+    "wins": 9,
+    "ties": 1,
+    "losses": 86,
+    "ratio": 1.1740615871650928
+   },
+   "old": {
+    "wins": 0,
+    "ties": 0,
+    "losses": 96,
+    "ratio": 1.6082273459702048
+   },
+   "union": {
+    "wins": 9,
+    "ties": 1,
+    "losses": 86,
+    "ratio": 1.1730170156445219
+   }
+  },
+  "new_to_old": 0.7300345875270575,
+  "new_faster": 95
+ },
+ "by_m": [
+  {
+   "m": 1,
+   "workloads": 16,
+   "arms": {
+    "new": {
+     "wins": 5,
+     "ties": 0,
+     "losses": 11,
+     "ratio": 1.0445435964108922
+    },
+    "old": {
+     "wins": 0,
+     "ties": 0,
+     "losses": 16,
+     "ratio": 1.653287073840005
+    },
+    "union": {
+     "wins": 5,
+     "ties": 0,
+     "losses": 11,
+     "ratio": 1.0445435964108922
+    }
+   }
+  },
+  {
+   "m": 7,
+   "workloads": 16,
+   "arms": {
+    "new": {
+     "wins": 3,
+     "ties": 0,
+     "losses": 13,
+     "ratio": 1.0593011053607688
+    },
+    "old": {
+     "wins": 0,
+     "ties": 0,
+     "losses": 16,
+     "ratio": 1.6520266657114884
+    },
+    "union": {
+     "wins": 3,
+     "ties": 0,
+     "losses": 13,
+     "ratio": 1.0593011053607688
+    }
+   }
+  },
+  {
+   "m": 31,
+   "workloads": 16,
+   "arms": {
+    "new": {
+     "wins": 0,
+     "ties": 0,
+     "losses": 16,
+     "ratio": 1.111528209175751
+    },
+    "old": {
+     "wins": 0,
+     "ties": 0,
+     "losses": 16,
+     "ratio": 1.6761434281596463
+    },
+    "union": {
+     "wins": 0,
+     "ties": 0,
+     "losses": 16,
+     "ratio": 1.111528209175751
+    }
+   }
+  },
+  {
+   "m": 96,
+   "workloads": 16,
+   "arms": {
+    "new": {
+     "wins": 1,
+     "ties": 1,
+     "losses": 14,
+     "ratio": 1.3776494249930606
+    },
+    "old": {
+     "wins": 0,
+     "ties": 0,
+     "losses": 16,
+     "ratio": 1.675460986195991
+    },
+    "union": {
+     "wins": 1,
+     "ties": 1,
+     "losses": 14,
+     "ratio": 1.3776494249930606
+    }
+   }
+  },
+  {
+   "m": 257,
+   "workloads": 16,
+   "arms": {
+    "new": {
+     "wins": 0,
+     "ties": 0,
+     "losses": 16,
+     "ratio": 1.3730381068292146
+    },
+    "old": {
+     "wins": 0,
+     "ties": 0,
+     "losses": 16,
+     "ratio": 1.6096563071006782
+    },
+    "union": {
+     "wins": 0,
+     "ties": 0,
+     "losses": 16,
+     "ratio": 1.365724775879236
+    }
+   }
+  },
+  {
+   "m": 1024,
+   "workloads": 16,
+   "arms": {
+    "new": {
+     "wins": 0,
+     "ties": 0,
+     "losses": 16,
+     "ratio": 1.1257902499736718
+    },
+    "old": {
+     "wins": 0,
+     "ties": 0,
+     "losses": 16,
+     "ratio": 1.4013308334085595
+    },
+    "union": {
+     "wins": 0,
+     "ties": 0,
+     "losses": 16,
+     "ratio": 1.1257902499736718
+    }
+   }
+  }
+ ]
+}

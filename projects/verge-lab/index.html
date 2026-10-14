@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Verge Lab · Alp Cetin</title>
-  <meta name="description" content="I tested whether refusing aspect tradeoffs selects better human preference labels on HelpSteer2. I found no clear advantage over an overall-score-gap baseline.">
+  <meta name="description" content="I tested whether refusing aspect tradeoffs selects better preference pairs on HelpSteer2. Human-label agreement and a nine-adapter DPO experiment both found no clear advantage over an overall-score-gap baseline.">
   <link rel="canonical" href="https://mottopanikeiku.github.io/projects/verge-lab/">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f4ef">
@@ -17,7 +17,7 @@
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="Alp Cetin">
   <meta property="og:title" content="Verge Lab">
-  <meta property="og:description" content="I tested whether refusing aspect tradeoffs selects better human preference labels.">
+  <meta property="og:description" content="DPO on pairs that refuse aspect tradeoffs: no clear advantage over a helpfulness-gap baseline.">
   <meta property="og:url" content="https://mottopanikeiku.github.io/projects/verge-lab/">
   <meta property="og:image" content="https://mottopanikeiku.github.io/og/verge-lab.png">
   <meta property="og:image:width" content="1200">
@@ -42,7 +42,7 @@
     <section class="block" aria-labelledby="question">
       <h2 id="question">Question</h2>
       <div class="prose">
-        <p>Does refusing aspect tradeoffs select better human preference labels than choosing pairs with a large overall-score gap? I keep a pair only when one response is at least as good on every chosen aspect and better on at least one, rather than averaging away disagreement.</p>
+        <p>Does refusing aspect tradeoffs select better preference pairs than choosing pairs with a large overall-score gap, and does DPO on those pairs produce a better model? I keep a pair only when one response is at least as good on every chosen aspect and better on at least one, rather than averaging away disagreement.</p>
       </div>
     </section>
 
@@ -50,14 +50,21 @@
       <h2 id="method">Method</h2>
       <div class="prose">
         <p>I joined HelpSteer2’s human aspect ratings to its separately collected pairwise preferences by exact prompt and response hashes. My primary Pareto rule compares correctness and coherence. I hold out overall helpfulness for the baseline, which selects the largest absolute helpfulness gaps and predicts their direction. I exclude helpfulness ties from both selectors, match their selected pair counts, and evaluate against the separate human preferences. Equal-gap tie-breaking does not use preference labels.</p>
-        <p>I take the normalized ratings at face value, with no uncertainty penalty. Complexity and verbosity describe style, so I do not maximize them in the primary rule. Kept pairs can be exported for DPO, but I did not train a model.</p>
+        <p>I take the normalized ratings at face value, with no uncertainty penalty. Complexity and verbosity describe style, so I do not maximize them in the primary rule.</p>
+        <p>To test training benefit, I built three fixed sets of 1,024 pairs from the same eligible pool: a hash-ordered sample of Pareto pairs, the largest absolute helpfulness gaps, and a hash-ordered human-preference reference. I trained nine Qwen2.5-1.5B-Instruct LoRA adapters with identical TRL DPO settings, three seeds per set, and scored their answers to 192 held-out HelpSteer2 prompts with a pinned <a href="https://huggingface.co/OpenAssistant/reward-model-deberta-v3-large-v2/blob/c355404efa9ad2ad069f3a197cae0523c14244fc/README.md">OpenAssistant DeBERTa reward model</a>. I committed the <a href="https://github.com/mottopanikeiku/verge-lab/commit/12c887e">plan and exact datasets</a> before training.</p>
       </div>
     </section>
 
     <section class="block" aria-labelledby="result">
       <h2 id="result">Result</h2>
       <div class="prose">
-        <p>I found no clear advantage on HelpSteer2 validation. Both selectors kept 310 pairs. Pareto agreed with 281/286 strict human preferences (98.25%); the matched overall-score-gap baseline agreed with 277/282 (98.23%). Both contradicted 5 human preferences.</p>
+        <p>DPO on Pareto pairs did not beat the helpfulness-gap baseline. Pareto minus gap reward was −0.112 logits, with a crossed prompt/seed 95% interval of −0.257 to +0.032. The gap selector had the higher point estimate in all three seeds, but my precommitted decision is inconclusive, not superiority or equivalence.</p>
+        <figure class="figure">
+          <div class="scroll" tabindex="0" role="region" aria-labelledby="verge-dpo-title"><!-- figure:verge-dpo --><svg class="chart" viewBox="0 0 560 304" role="img" aria-labelledby="verge-dpo-title verge-dpo-desc"><title id="verge-dpo-title">DPO on Pareto pairs versus helpfulness-gap pairs: no clear difference</title><desc id="verge-dpo-desc">Mean reward-model logit on 192 held-out HelpSteer2 prompts: untrained start 0.550, Pareto 0.620, helpfulness gap 0.731, human reference 0.651, each trained row over three seeds. Pareto minus gap is -0.112 with a crossed prompt and seed bootstrap 95% interval of -0.257 to +0.032; seed means are -0.027, -0.118 and -0.190.</desc><text x="0" y="18">mean reward-model logit; 192 held-out prompts × 3 seeds</text><line class="grid" x1="170" y1="34" x2="170" y2="150"/><text text-anchor="middle" x="170" y="168">0.5</text><line class="grid" x1="294.7" y1="34" x2="294.7" y2="150"/><text text-anchor="middle" x="294.7" y="168">0.6</text><line class="grid" x1="419.3" y1="34" x2="419.3" y2="150"/><text text-anchor="middle" x="419.3" y="168">0.7</text><line class="grid" x1="544" y1="34" x2="544" y2="150"/><text text-anchor="middle" x="544" y="168">0.8</text><text text-anchor="end" x="158" y="54">Untrained start</text><circle class="dot" cx="232.5" cy="50" r="4"/><text x="242.5" y="54">0.550</text><text class="em" text-anchor="end" x="158" y="82">Pareto</text><circle class="dot em" cx="319.3" cy="78" r="4"/><text class="em" x="329.3" y="82">0.620</text><text class="strong" text-anchor="end" x="158" y="110">Helpfulness gap</text><circle class="dot strong" cx="458.5" cy="106" r="4"/><text class="strong" x="468.5" y="110">0.731</text><text class="strong" text-anchor="end" x="158" y="138">Human reference</text><circle class="dot strong" cx="358.5" cy="134" r="4"/><text class="strong" x="368.5" y="138">0.651</text><text x="0" y="200">Pareto − gap; crossed prompt/seed bootstrap 95% interval</text><line class="grid" x1="170" y1="214" x2="170" y2="262"/><text text-anchor="middle" x="170" y="280">-0.3</text><line class="grid" x1="263.5" y1="214" x2="263.5" y2="262"/><text text-anchor="middle" x="263.5" y="280">-0.2</text><line class="grid" x1="357" y1="214" x2="357" y2="262"/><text text-anchor="middle" x="357" y="280">-0.1</text><line class="axis" x1="450.5" y1="214" x2="450.5" y2="262"/><text text-anchor="middle" x="450.5" y="280">0</text><line class="grid" x1="544" y1="214" x2="544" y2="262"/><text text-anchor="middle" x="544" y="280">+0.1</text><text class="em" text-anchor="end" x="158" y="232">Pareto − gap</text><line class="ci em" x1="210.5" y1="228" x2="480.2" y2="228"/><circle class="dot em" cx="346.1" cy="228" r="4"/><text text-anchor="end" x="158" y="254">seed means</text><circle class="dot hollow strong" cx="425.1" cy="250" r="3.2"/><circle class="dot hollow strong" cx="340.3" cy="250" r="3.2"/><circle class="dot hollow strong" cx="273" cy="250" r="3.2"/><text text-anchor="middle" x="357" y="300">reward difference (logit)</text></svg><!-- /figure:verge-dpo --></div>
+          <figcaption>Reward-model logits for answers to 192 held-out prompts; each trained row averages three seeds. The lower row is Pareto minus gap with a 10,000-draw crossed prompt/seed bootstrap interval, and the three seed means. Data: <a href="https://github.com/mottopanikeiku/verge-lab/blob/c70f5cf9731957b912d0c6c1e3399aa85377648a/results/day-dpo/summary.json">day-dpo/summary.json</a>.</figcaption>
+        </figure>
+        <p>Pareto answers were about 4.1 tokens longer than gap answers, and every condition’s median length reached the 192-token generation cap, so longer-answer behavior is not evaluated.</p>
+        <p>Before training, I compared the selectors against HelpSteer2’s separate human preferences on validation and also found no clear advantage. Both selectors kept 310 pairs. Pareto agreed with 281/286 strict human preferences (98.25%); the matched overall-score-gap baseline agreed with 277/282 (98.23%). Both contradicted 5 human preferences.</p>
         <figure class="figure">
           <div class="scroll" tabindex="0" role="region" aria-labelledby="verge-human-title"><!-- figure:verge-human --><svg class="chart" viewBox="0 0 560 220" role="img" aria-labelledby="verge-human-title verge-human-desc"><title id="verge-human-title">Agreement with strict human preferences at matched yield</title><desc id="verge-human-desc">At 310 selected pairs each, Pareto selection agreed with 281 of 286 strict preferences, 98.25%, and the overall-score-gap baseline with 277 of 282, 98.23%. Wilson 95% intervals overlap. Human ties are excluded from agreement.</desc><line class="grid" x1="170" y1="40" x2="170" y2="158"/><text text-anchor="middle" x="170" y="183">95%</text><line class="grid" x1="244.8" y1="40" x2="244.8" y2="158"/><text text-anchor="middle" x="244.8" y="183">96%</text><line class="grid" x1="319.6" y1="40" x2="319.6" y2="158"/><text text-anchor="middle" x="319.6" y="183">97%</text><line class="grid" x1="394.4" y1="40" x2="394.4" y2="158"/><text text-anchor="middle" x="394.4" y="183">98%</text><line class="grid" x1="469.2" y1="40" x2="469.2" y2="158"/><text text-anchor="middle" x="469.2" y="183">99%</text><line class="grid" x1="544" y1="40" x2="544" y2="158"/><text text-anchor="middle" x="544" y="183">100%</text><text text-anchor="end" x="158" y="69">Pareto selection</text><line class="ci em" x1="242.8" y1="65" x2="488" y2="65"/><circle class="dot em" cx="413.2" cy="65" r="4"/><text class="em" text-anchor="middle" x="413.2" y="87">281/286 (98.25%)</text><text text-anchor="end" x="158" y="134">Overall-score gap</text><line class="ci strong" x1="238.6" y1="130" x2="487.2" y2="130"/><circle class="dot strong" cx="411.4" cy="130" r="4"/><text class="strong" text-anchor="middle" x="411.4" y="152">277/282 (98.23%)</text><text text-anchor="middle" x="357" y="212">strict agreement; Wilson 95% intervals</text></svg><!-- /figure:verge-human --></div>
           <figcaption>Human preference agreement on HelpSteer2 validation at matched yield. Human ties stay in the selected count, but not the strict agreement denominator. Data: <a href="https://github.com/mottopanikeiku/verge-lab/blob/efa08d133f22501b2dedcb7a7aa636bf37bbc826/results/human-preferences/summary.json">human-preferences/summary.json</a>.</figcaption>
@@ -74,16 +81,18 @@
     <section class="block" aria-labelledby="limits">
       <h2 id="limits">Limits</h2>
       <div class="prose">
-        <p>I tested a small HelpSteer2 validation sample. Its human ratings are rounded, filtered annotations, not objective truth; separately collected preferences do not guarantee independent annotators. The earlier UltraFeedback sample is a deterministic prefix, not a random sample, and uses unverified GPT-4 ratings rather than human labels. I measured agreement with recorded preferences, not downstream training benefit. The browser review tool uses authored illustrative examples, not these benchmark rows.</p>
+        <p>I tested small HelpSteer2 samples. Their human ratings are rounded, filtered annotations, not objective truth; separately collected preferences do not guarantee independent annotators. The DPO comparison uses an older reward model as a proxy, not a human judge; its declared training sources predate HelpSteer2, but shared pretraining is not ruled out. Three seeds and 1,024 pairs per set limit generalization, and the three sets select different pairs, so this tests complete selectors rather than label direction alone. The earlier UltraFeedback sample is a deterministic prefix, not a random sample, and uses unverified GPT-4 ratings rather than human labels. The browser review tool uses authored illustrative examples, not these benchmark rows.</p>
       </div>
     </section>
 
     <section class="block" aria-labelledby="links">
       <h2 id="links">Links</h2>
       <ul class="rows">
-        <li class="entry"><p class="title"><a href="https://github.com/mottopanikeiku/verge-lab/tree/efa08d133f22501b2dedcb7a7aa636bf37bbc826">Code and results</a> <span class="org">GitHub · pinned revision</span></p></li>
+        <li class="entry"><p class="title"><a href="https://github.com/mottopanikeiku/verge-lab/tree/c70f5cf9731957b912d0c6c1e3399aa85377648a">Code and results</a> <span class="org">GitHub · pinned revision</span></p></li>
+        <li class="entry"><p class="title"><a href="https://github.com/mottopanikeiku/verge-lab/blob/c70f5cf9731957b912d0c6c1e3399aa85377648a/docs/DPO_PLAN.md">DPO experiment plan</a> <span class="org">Verge Lab</span></p></li>
         <li class="entry"><p class="title"><a href="https://mottopanikeiku.github.io/verge-lab/">Interactive review tool</a> <span class="org">illustrative examples, in the browser</span></p></li>
         <li class="entry"><p class="title"><a href="https://arxiv.org/abs/2406.08673">HelpSteer2</a> · <a href="https://arxiv.org/abs/2410.01257">HelpSteer2-Preference</a> <span class="org">human ratings and preferences</span></p></li>
+        <li class="entry"><p class="title"><a href="https://arxiv.org/abs/2305.18290">Direct Preference Optimization</a> <span class="org">Rafailov et al., 2023</span></p></li>
         <li class="entry"><p class="title"><a href="https://huggingface.co/datasets/openbmb/UltraFeedback">UltraFeedback</a> <span class="org">Cui et al., 2023</span></p></li>
       </ul>
     </section>

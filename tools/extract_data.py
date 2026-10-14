@@ -44,12 +44,20 @@ SOURCES = {
                          "results/sampled-summary.json"),
     "branchpilot-math": ("branchpilot", "1dfa8dea2c5e201b171102aadd9bf3e8883136c5",
                          "benchmarks/math500/result.json"),
-    "alignmenttax": ("alignmenttax", "e8d788bc9da81833739868b407dd138e769eeff9",
-                     "results/cross_family/analysis/summary.json"),
+    "alignmenttax": ("alignmenttax", "61b0ffb6890ca7f53b3e37b117b28167f57b8e88",
+                     "results/day_scale/analysis/summary.json"),
     "helios-audit": ("heliostune", "75f18ed8ee2d93e2d58935e3d5599ae95a32a46d",
                     "results/action-set-audit.json"),
     "eval-prospective": ("eval-power", "f739bfa20ea000cf639e551d2c3523213e814b53",
                          "results/prospective/summary.json"),
+    "seed-power-neural": ("seed-power", "06fe936715ccba056e1e5e44971e52e051df901c",
+                          "results/neural/summary.json"),
+    "verge-dpo": ("verge-lab", "c70f5cf9731957b912d0c6c1e3399aa85377648a",
+                  "results/day-dpo/summary.json"),
+    "helios-expansion": ("heliostune", "f50b27e2c0664d7c9c082e2483867b1381623200",
+                         "results/action-expansion-summary.json"),
+    "attention-accuracy": ("attention-numerics", "11281b844d8b0cd55e93bdfaff486e0fed20f3ab",
+                           "results/accuracy/summary.json"),
 }
 
 
@@ -274,6 +282,28 @@ def verge_human(raw: dict) -> dict:
     }
 
 
+def verge_dpo(raw: dict) -> dict:
+    names = {"start": "Untrained start", "pareto": "Pareto", "gap": "Helpfulness gap",
+             "human": "Human reference"}
+    primary = raw["primary_pareto_minus_gap_reward"]
+    return {
+        "prompts": raw["design"]["prompts"],
+        "seeds": raw["design"]["training_seeds"],
+        "bootstrap_draws": raw["bootstrap"]["draws"],
+        "reward_model": raw["reward_measure"]["model"],
+        "conditions": [
+            {"key": key, "name": name,
+             "mean_reward": raw["conditions"][key]["mean_reward"],
+             "records": raw["conditions"][key]["records"],
+             "mean_tokens": raw["conditions"][key]["response_tokens"]["mean"]}
+            for key, name in names.items()
+        ],
+        "pareto_minus_gap": {"mean": primary["mean"], "ci": primary["ci95"],
+                             "per_seed": [row["mean"] for row in primary["per_seed"]],
+                             "conclusion": primary["conclusion"]},
+    }
+
+
 def control_clock_gpu(raw: dict) -> dict:
     return {"hardware": raw["hardware"], "protocol": raw["protocol"],
             "groups": [{key: group[key] for key in ("task", "runs", "solved", "median_seconds")}
@@ -337,26 +367,35 @@ def alignmenttax(raw: dict) -> dict:
         "qwen2_5_0_5b": "Qwen2.5-0.5B",
         "qwen2_5_1_5b": "Qwen2.5-1.5B",
         "qwen2_5_7b": "Qwen2.5-7B",
-        "olmo2_0425_1b": "OLMo-2 1B (0425)",
-        "olmo2_1124_7b": "OLMo-2 7B (1124)",
+        "qwen2_5_14b": "Qwen2.5-14B",
+        "qwen2_5_32b": "Qwen2.5-32B",
+        "olmo2_0425_1b": "OLMo-2 1B",
+        "olmo2_1124_7b": "OLMo-2 7B",
         "smollm2_1_7b": "SmolLM2-1.7B",
         "mistral_7b_v0_3": "Mistral-7B-v0.3",
     }
+    metrics = {"binary": ("accuracy", "ece"), "standard": ("mc1_accuracy", "mc1_ece")}
+    protocol = "shared_plain_ab_label"
     by_id = {pair["pair_id"]: pair for pair in raw["pairs"]}
     rows = []
     for key, name in names.items():
-        primary = by_id[key]["protocols"]["shared_plain_ab_label"]
-        metrics = primary["deltas"]["metrics"]
-        rows.append({
-            "key": key, "name": name,
-            "classification": primary["classification"]["outcome"],
-            **{metric: {"delta": metrics[metric]["point"],
-                        "ci": [metrics[metric]["ci_low"], metrics[metric]["ci_high"]]}
-               for metric in ("accuracy", "ece")},
-        })
-    return {"questions": raw["question_count"], "pairs": raw["pair_count"],
-            "resamples": raw["iterations"], "ece": raw["ece"],
-            "protocol": "shared_plain_ab_label", "rows": rows}
+        row = {"key": key, "name": name}
+        for benchmark, (accuracy, ece) in metrics.items():
+            primary = by_id[key]["benchmarks"][benchmark]["protocols"][protocol]
+            deltas = primary["deltas"]["metrics"]
+            row[benchmark] = {
+                "classification": primary["classification"]["truth_calibration"][accuracy],
+                **{label: {"delta": deltas[metric]["point"],
+                           "ci": [deltas[metric]["ci_low"], deltas[metric]["ci_high"]]}
+                   for label, metric in (("accuracy", accuracy), ("ece", ece))},
+            }
+        rows.append(row)
+    return {"questions": {name: raw["benchmarks"][name]["question_count"] for name in metrics},
+            "pairs": raw["pair_count"], "resamples": raw["iterations"], "ece": raw["ece"],
+            "protocol": protocol,
+            "outcome_counts": {name: raw["outcome_counts"][name][protocol][accuracy]
+                               for name, (accuracy, _) in metrics.items()},
+            "rows": rows}
 
 
 def helios_audit(raw: dict) -> dict:
@@ -376,6 +415,50 @@ def helios_audit(raw: dict) -> dict:
              "ratio": row["reference_over_torch_geomean"]}
             for row in raw["by_gpu"]
         ],
+    }
+
+
+def attention_accuracy(raw: dict) -> dict:
+    names = {"qwen05": "Qwen2.5-0.5B-Instruct", "qwen15": "Qwen2.5-1.5B-Instruct",
+             "qwen3": "Qwen2.5-3B-Instruct", "qwen7": "Qwen2.5-7B-Instruct",
+             "qwen14": "Qwen2.5-14B-Instruct", "mistral7": "Mistral-7B-v0.3",
+             "olmo7": "OLMo-2-1124-7B", "smol17": "SmolLM2-1.7B"}
+    variants = ("tile", "rotate", "smooth_k", "rotate_smooth_k")
+    rows = []
+    for key, name in names.items():
+        cells = {}
+        for variant in variants:
+            tasks = {row["task"]: {"delta": row["delta"], "ci": row["ci95"],
+                                   "harm_flag": row["harm_flag"]}
+                     for row in raw["rows"] if row["model"] == key and row["variant"] == variant}
+            cells[variant] = {"tasks": tasks,
+                              "flags": sum(task["harm_flag"] for task in tasks.values()),
+                              "worst_delta": min(task["delta"] for task in tasks.values())}
+        baseline = {row["task"]: row["baseline_accuracy"] for row in raw["rows"]
+                    if row["model"] == key and row["variant"] == "bf16"}
+        rows.append({"key": key, "name": name, "bf16_accuracy": baseline, "variants": cells})
+    return {"denominators": raw["denominators"], "harm_rule": raw["harm_rule"],
+            "bootstrap_replicates": raw["bootstrap"]["replicates"], "rows": rows}
+
+
+def helios_expansion(raw: dict) -> dict:
+    def arms(row: dict) -> dict:
+        return {
+            name: {"wins": arm["comparable_win_count"], "ties": arm["comparable_tie_count"],
+                   "losses": arm["comparable_loss_count"],
+                   "ratio": arm["geometric_mean_to_torch"]}
+            for name, arm in row["arms"].items()
+        }
+    return {
+        "plan_commit": raw["plan_commit"], "gpu": raw["hardware"]["device_name"],
+        "action_counts": {name: len(actions) for name, actions in raw["action_set"].items()},
+        "overall": {"workloads": raw["overall"]["named_workload_count"],
+                    "unique_shapes": raw["overall"]["unique_shape_count"],
+                    "arms": arms(raw["overall"]),
+                    "new_to_old": raw["overall"]["old_new_comparison"]["geometric_mean_new_to_old"],
+                    "new_faster": raw["overall"]["old_new_comparison"]["new_faster_count"]},
+        "by_m": [{"m": row["m"], "workloads": row["named_workload_count"], "arms": arms(row)}
+                 for row in raw["by_m"]],
     }
 
 
@@ -415,6 +498,10 @@ TRANSFORMS = {
     "alignmenttax": alignmenttax,
     "helios-audit": helios_audit,
     "eval-prospective": eval_prospective,
+    "seed-power-neural": seed_power,
+    "verge-dpo": verge_dpo,
+    "helios-expansion": helios_expansion,
+    "attention-accuracy": attention_accuracy,
 }
 
 
