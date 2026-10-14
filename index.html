@@ -90,19 +90,9 @@
           <p class="desc">Does instruction tuning trade calibration for truthfulness? Across nine base/instruct pairs, the answer depends on scoring. On a binary TruthfulQA derivative, six pairs gained accuracy while calibration worsened; on standard MC1, four improved both and none made that trade.</p>
         </li>
         <li class="entry brief">
-          <h3 class="title"><a href="/projects/branchpilot/" data-print="github.com/mottopanikeiku/branchpilot">BranchPilot</a></h3>
-          <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">I learned a stopping rule for self-consistency sampling: decide after each answer whether another sample is worth its penalty. It failed the fixed success rule on GSM8K and on an internal 200-problem MATH-500 holdout; simple rules did better.</p>
-        </li>
-        <li class="entry brief">
-          <h3 class="title"><a href="/projects/faultline/" data-print="github.com/mottopanikeiku/faultline">Faultline</a></h3>
-          <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">A factory simulator where hidden faults look the same until a cheap test tells them apart. Across 375 matched training seeds, ambiguous-only PPO beat random sampling by 10 points but lost to a difficulty curriculum by 6; the hoped-for advantage over both is ruled out.</p>
-        </li>
-        <li class="entry brief">
           <h3 class="title"><a href="/projects/quantile-cycles/" data-print="github.com/mottopanikeiku/quantile-cycles">Quantile cycles</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">I constructed an exact quantile-control operator that alternates forever between the optimal and a worse action, with no fixed point. Lean checks its smallest rational cycle. A separate 32-seed sampled test did not find the specified Huber failure; the hard-operator result is not a QR-DQN training failure.</p>
+          <p class="desc">I constructed an exact quantile-control operator that alternates forever between the optimal and a worse action, with no fixed point, and checked its smallest rational cycle in Lean. Sampled Huber updates did not reproduce the cycle, so it belongs to the exact operator, not to QR-DQN training.</p>
         </li>
       </ul>
     </section>
@@ -113,12 +103,12 @@
         <li class="entry">
           <h3 class="title"><a href="/projects/cpu-decode/" data-print="github.com/mottopanikeiku/cpu-decode">cpu-decode</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">A from-scratch C++ int8 decoder for Qwen2.5-0.5B on a laptop CPU. With 2 threads and short context it reaches 69 tokens per second, 83% of the memory-read ceiling and faster than llama.cpp; at 4,096 tokens of context llama.cpp wins, 44 to 32, because my attention is still scalar.</p>
+          <p class="desc">A from-scratch C++ int8 decoder for Qwen2.5-0.5B on a laptop CPU. With 2 threads and short context it reaches 69 tokens per second, 83% of the estimated memory-read ceiling, ahead of llama.cpp at the same thread count (62) and level with its best (68.5). At 4,096 tokens of context llama.cpp wins, 44 to 32, because my attention is still scalar.</p>
         </li>
         <li class="entry">
           <h3 class="title"><a href="/projects/attention-numerics/" data-print="github.com/mottopanikeiku/attention-numerics">attention-numerics</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">I ran real FlashAttention-3 FP8 attention in every layer on an H100. Rotating queries and keys cut Qwen2.5-7B’s HellaSwag accuracy by 35.4 points and raised Qwen2.5-1.5B’s batch exp-CE ratio to 12.56× versus native BF16. Centering keys first brought that ratio to 1.004× and had no accuracy-harm flags across eight checkpoints.</p>
+          <p class="desc">I ran real FlashAttention-3 FP8 attention in every layer on an H100. Plain FP8 cost Qwen2.5-7B 17 points of HellaSwag accuracy against native BF16 (80.9% to 63.7%), and rotating queries and keys first doubled the loss (45.5%). With keys centered first, none of the eight checkpoints lost two points or more.</p>
         </li>
         <li class="entry">
           <h3 class="title">Aperture</h3>
@@ -133,7 +123,7 @@
         <li class="entry">
           <h3 class="title">Open source</h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">Landed pull requests in <a href="https://github.com/pytorch/pytorch/pull/196711">PyTorch</a>, <a href="https://github.com/ray-project/ray/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">Ray</a>, <a href="https://github.com/huggingface/sentence-transformers/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">Sentence Transformers</a>, <a href="https://github.com/sgl-project/sglang/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">SGLang</a>, and <a href="https://github.com/celery/celery/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">Celery</a>.</p>
+          <p class="desc">Landed pull requests in <a href="https://github.com/pytorch/pytorch/pull/196711">PyTorch</a>, <a href="https://github.com/ray-project/ray/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">Ray</a>, <a href="https://github.com/onnx/onnx/pull/8435">ONNX</a>, <a href="https://github.com/huggingface/sentence-transformers/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">Sentence Transformers</a>, <a href="https://github.com/sgl-project/sglang/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">SGLang</a>, and <a href="https://github.com/celery/celery/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">Celery</a>.</p>
         </li>
       </ul>
     </section>
@@ -160,11 +150,6 @@
           <h3 class="title"><a href="https://mottopanikeiku.github.io/durability-debt/">Durability debt</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">Step through a synthetic producer–consumer handoff where a write becomes visible before it survives a crash. Compare publishing first with flushing first.</p>
-        </li>
-        <li class="entry">
-          <h3 class="title"><a href="https://mottopanikeiku.github.io/SouthsideAnalysis/">South Side census map</a></h3>
-          <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">Explore Census block groups clustered by demographic similarity around Chicago’s South Side. These are exploratory partitions, not validated neighborhood boundaries.</p>
         </li>
         <li class="entry">
           <h3 class="title"><a href="https://mottopanikeiku.github.io/pdbview/" data-print="mottopanikeiku.github.io/pdbview">PDBView</a></h3>
@@ -195,7 +180,7 @@
         <li class="entry screen-only">
           <h3 class="title">Department of Biology <span class="org">Illinois Tech</span></h3>
           <p class="year"><time datetime="2023-08">2023</time>–24</p>
-          <p class="desc">A <a href="https://github.com/mottopanikeiku/py-closewat">Python rewrite</a> of the lab’s C tools for finding water molecules in crystal structures, 90% faster, and a protein viewer used by more than 20 researchers.</p>
+          <p class="desc">A Python rewrite of the lab’s C tools for finding water molecules in crystal structures, 90% faster, and a protein viewer used by more than 20 researchers.</p>
         </li>
       </ul>
     </section>

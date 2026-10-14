@@ -64,97 +64,6 @@ class SVG:
         return head + "".join(self.parts) + "</svg>"
 
 
-def branchpilot() -> str:
-    data = load("branchpilot")
-    rows = data["rows"]
-    by = {fam: sorted((r for r in rows if r["family"] == fam), key=lambda r: r["samples"])
-          for fam in ("fixed", "confidence", "agreement", "learned")}
-    W, H, L, R, T, B = 560, 368, 50, 16, 80, 46
-    x = scale(1, 8, L, W - R)
-    y = scale(0.66, 0.82, H - B, T)
-    s = SVG("branchpilot", W, H,
-            "GSM8K test accuracy against average samples per problem",
-            "Fixed sample counts from one to eight rise from 68.8% to 80.1%. Stopping after two "
-            "matching answers in a row reaches 78.8% at 3.2 samples. The learned stopping rule "
-            "lies between, from 72.5% at 1.5 samples to 76.3% at 3.4 samples, below the "
-            "agreement rule.")
-
-    def key(lx, ly, mark, label, cls=""):
-        if mark == "line":
-            s.line(lx, ly - 4, lx + 20, ly - 4, f"line {cls}".strip())
-            s.circle(lx + 10, ly - 4, 3, f"dot {cls}".strip())
-        else:
-            s.circle(lx + 10, ly - 4, 3, mark)
-        s.text(lx + 28, ly, label, cls)
-
-    key(L, 18, "line", "learned stopping rule", "em")
-    key(L + 250, 18, "dot strong", "stop at 2 or 3 matching answers", "strong")
-    key(L, 40, "line", "fixed number of samples")
-    key(L + 250, 40, "dot hollow", "vote-share thresholds")
-
-    for v in (0.68, 0.72, 0.76, 0.80):
-        s.line(L, y(v), W - R, y(v), "grid")
-        s.text(L - 8, y(v) + 4, f"{v * 100:.0f}%", anchor="end")
-    s.text(L - 8, T - 14, "test accuracy, 1,319 problems")
-    s.line(L, H - B, W - R, H - B, "axis")
-    for n in range(1, 9):
-        s.line(x(n), H - B, x(n), H - B + 4, "axis")
-        s.text(x(n), H - B + 18, str(n), anchor="middle")
-    s.text((L + W - R) / 2, H - 6, "average samples per problem", anchor="middle")
-
-    s.path([(x(r["samples"]), y(r["accuracy"])) for r in by["fixed"]], "line")
-    for r in by["fixed"]:
-        s.circle(x(r["samples"]), y(r["accuracy"]), 2.6, "dot")
-    for r in by["confidence"]:
-        s.circle(x(r["samples"]), y(r["accuracy"]), 2.6, "dot hollow")
-
-    for fam, cls in (("learned", "em"), ("agreement", "strong")):
-        for r in by[fam]:
-            (alo, ahi), (slo, shi) = r["accuracy_ci"], r["samples_ci"]
-            s.line(x(r["samples"]), y(alo), x(r["samples"]), y(ahi), f"ci {cls}")
-            s.line(x(slo), y(r["accuracy"]), x(shi), y(r["accuracy"]), f"ci {cls}")
-    s.path([(x(r["samples"]), y(r["accuracy"])) for r in by["learned"]], "line em")
-    for r in by["learned"]:
-        s.circle(x(r["samples"]), y(r["accuracy"]), 3.2, "dot em")
-    for r in by["agreement"]:
-        s.circle(x(r["samples"]), y(r["accuracy"]), 3.2, "dot strong")
-
-    agree = {r["policy"]: r for r in by["agreement"]}
-    a2, a3 = agree["agreement-2"], agree["agreement-3"]
-    s.text(x(a2["samples_ci"][0]) - 6, y(a2["accuracy"]) + 4, "2 in a row", "strong", "end")
-    s.text(x(a3["samples_ci"][1]) + 6, y(a3["accuracy"]) + 4, "3 in a row", "strong")
-    return s.render()
-
-
-def faultline() -> str:
-    data = load("faultline")
-    rows = (("random", "Random (50/50 mix)"), ("difficulty", "Difficulty-adaptive"),
-            ("epistemic", "All ambiguous"))
-    desc = "; ".join(f'{label}: {data["arms"][key]["mean"] * 100:.1f}%'
-                     for key, label in rows)
-    s = SVG("faultline", 560, 258,
-            f'Diagnostic success in the independent {data["seed_count"]}-seed confirmation',
-            f'{data["seed_count"]} matched training seeds per curriculum. Means: {desc}. '
-            "Bars are separate 95% bootstrap intervals over training seeds. Ambiguous-only "
-            "training beats random sampling but loses to difficulty-adaptive sampling.")
-    L, R, top, bottom = 174, 16, 52, 200
-    x = scale(0, 1, L, 560 - R)
-    s.text(0, 18, f'{data["seed_count"]} matched seeds; 95% seed-bootstrap intervals')
-    for value in (0, 0.25, 0.5, 0.75, 1):
-        s.line(x(value), top, x(value), bottom, "grid")
-        s.text(x(value), bottom + 21, f"{value * 100:.0f}%", anchor="middle")
-    for index, (key, label) in enumerate(rows):
-        row = data["arms"][key]
-        y = 68 + index * 50
-        cls = "em" if key == "epistemic" else "strong"
-        s.text(L - 12, y + 4, label, anchor="end")
-        s.line(x(row["ci"][0]), y, x(row["ci"][1]), y, f"ci {cls}")
-        s.circle(x(row["mean"]), y, 4, f"dot {cls}")
-        s.text(x(row["mean"]), y + 21, f'{row["mean"] * 100:.1f}%', cls, "middle")
-    s.text((L + 560 - R) / 2, 252, "diagnostic success on validation pairs", anchor="middle")
-    return s.render()
-
-
 def heliostune() -> str:
     data = load("heliostune")
     methods = data["methods"]
@@ -546,30 +455,6 @@ def quantile_sampled() -> str:
     return s.render()
 
 
-def branchpilot_math() -> str:
-    data = load("branchpilot-math")
-    s = SVG("branchpilot-math", 560, 228,
-            "Learned stopping loses utility on an internal 200-problem MATH-500 holdout",
-            "At sample penalties 0.05, 0.075 and 0.10, learned-minus-comparator utility "
-            "is -0.0825, -0.1048 and -0.0955. All paired 95% intervals lie below zero. "
-            "Validation selected the fixed-one comparator at all three penalties.")
-    x = scale(-0.16, 0.02, 114, 544)
-    s.text(114, 18, "utility = accuracy − cost × (samples − 1)")
-    for value in (-0.15, -0.1, -0.05, 0):
-        s.line(x(value), 38, x(value), 176, "grid")
-        s.text(x(value), 200, f"{value:.2f}", anchor="middle")
-    s.line(x(0), 38, x(0), 176, "axis")
-    for index, row in enumerate(data["comparisons"]):
-        y = 61 + index * 48
-        s.text(102, y + 4, f'cost {row["cost"]:g}', anchor="end")
-        s.line(x(row["ci"][0]), y, x(row["ci"][1]), y, "ci em")
-        s.circle(x(row["utility_delta"]), y, 3.5, "dot em")
-        s.text(x(row["utility_delta"]), y + 20,
-               f'{row["utility_delta"]:.4f}', "em", "middle")
-    s.text(329, 224, "paired utility difference: learned − fixed one", anchor="middle")
-    return s.render()
-
-
 def alignmenttax() -> str:
     data = load("alignmenttax")
     s = SVG("alignmenttax", 560, 356,
@@ -733,11 +618,9 @@ def eval_prospective() -> str:
 
 FIGURES = {
     "attention-numerics": attention_numerics,
-    "branchpilot": branchpilot,
     "control-clock": control_clock,
     "cpu-decode": cpu_decode,
     "eval-power": eval_power,
-    "faultline": faultline,
     "heliostune": heliostune,
     "verge-lab": verge_lab,
     "seed-power": seed_power,
@@ -746,7 +629,6 @@ FIGURES = {
     "helios-expansion": helios_expansion,
     "attention-accuracy": attention_accuracy,
     "quantile-sampled": quantile_sampled,
-    "branchpilot-math": branchpilot_math,
     "alignmenttax": alignmenttax,
     "helios-audit": helios_audit,
     "eval-prospective": eval_prospective,

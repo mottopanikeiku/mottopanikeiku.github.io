@@ -18,16 +18,12 @@ OWNER = "mottopanikeiku"
 SOURCES = {
     "attention-numerics": ("attention-numerics", "911d642a5aab42f7ced2bcc7c9f13995cdeb8eb0",
                            "results/hardware/summary.json"),
-    "branchpilot": ("branchpilot", "6f2ff8654aec07e806c3fcfea4f5e2514c36928d",
-                    "benchmarks/gsm8k-sampling-bootstrap.json"),
     "control-clock": ("control-clock", "ee9c303de8e7698ca25569fc585e173e3e172bb8",
                       "results/summary.json"),
     "cpu-decode": ("cpu-decode", "d98ba9c9ac792f01a0969c861917e730533c88d0",
                    "results/summary.json"),
     "eval-power": ("eval-power", "ef7c451d678e7eece94344b0c87567a60e28e330",
                    "results/calibration.csv"),
-    "faultline": ("faultline", "ac6ed689866de6cff18b51fc29fa1ab3c2cf2d50",
-                  "artifacts/results/seed-confirmation-analysis.json"),
     "heliostune": ("heliostune", "d1f5ab6fb6ff8b1862baf635dc8abd9241052809",
                    "benchmarks/results/parhelion-h100-final.json"),
     "verge-lab": ("verge-lab", "efa08d133f22501b2dedcb7a7aa636bf37bbc826",
@@ -42,8 +38,6 @@ SOURCES = {
                            "results/gpu/cost.json"),
     "quantile-sampled": ("quantile-cycles", "bc0fbc5218be69f0e88acf6ff200d199cdfb4aab",
                          "results/sampled-summary.json"),
-    "branchpilot-math": ("branchpilot", "1dfa8dea2c5e201b171102aadd9bf3e8883136c5",
-                         "benchmarks/math500/result.json"),
     "alignmenttax": ("alignmenttax", "61b0ffb6890ca7f53b3e37b117b28167f57b8e88",
                      "results/day_scale/analysis/summary.json"),
     "helios-audit": ("heliostune", "75f18ed8ee2d93e2d58935e3d5599ae95a32a46d",
@@ -77,58 +71,6 @@ def source(repo: str, commit: str, path: str) -> dict:
         "path": path,
         "url": f"https://github.com/{OWNER}/{repo}/blob/{commit}/{path}",
     }
-
-
-def interval(value: dict) -> list[float]:
-    return [value["lower"], value["upper"]]
-
-
-def branchpilot(raw: dict) -> dict:
-    test = raw["splits"]["test"]
-    rows = [
-        {
-            "policy": row["policy"],
-            "family": row["family"],
-            "accuracy": row["accuracy"],
-            "accuracy_ci": interval(row["accuracy_interval"]),
-            "samples": row["average_samples"],
-            "samples_ci": interval(row["average_samples_interval"]),
-        }
-        for row in test["rows"]
-    ]
-    paired = [
-        {
-            "cost": item["cost"],
-            "learned": item["learned"],
-            "baseline": item["baseline"],
-            "utility_delta": item["utility_delta"],
-            "utility_delta_ci": interval(item["utility_delta_interval"]),
-        }
-        for item in test["paired_comparisons"]
-    ]
-    return {"prompts": test["prompts"], "rows": rows, "paired": paired}
-
-
-def faultline(raw: dict) -> dict:
-    arms = {}
-    for name, arm in raw["arms"].items():
-        primary = arm["primary"]
-        arms[name] = {
-            "mean": primary["estimate"],
-            "ci": [primary["lower"], primary["upper"]],
-        }
-    paired = {
-        name: {"estimate": p["estimate"], "ci": [p["lower"], p["upper"]]}
-        for name, p in raw["paired_comparisons"].items()
-    }
-    protocol = raw["protocol"]
-    return {"arms": arms, "paired": paired, "decision": raw["decision"],
-            "seed_count": len(protocol["training_seeds"]),
-            "seed_range": [protocol["training_seeds"][0], protocol["training_seeds"][-1]],
-            "bootstrap_resamples": protocol["bootstrap_resamples"],
-            "training_steps": protocol["training_decision_steps"],
-            "evaluation_split": protocol["evaluation_split"],
-            "evaluation_base_pairs": protocol["evaluation_base_pair_count"]}
 
 
 def heliostune(raw: dict) -> dict:
@@ -338,30 +280,6 @@ def quantile_sampled(raw: dict) -> dict:
     }
 
 
-def branchpilot_math(raw: dict) -> dict:
-    test = raw["test"]
-    costs = sorted(float(cost) for cost in raw["decision"]["utility_interval_lower_bounds"])
-    return {
-        "prompts": test["records"],
-        "max_samples": test["max_samples"],
-        "success": raw["decision"]["success"],
-        "comparisons": [
-            {"cost": row["scoring_cost"], "baseline": row["baseline_policy"],
-             "utility_delta": row["utility_delta"],
-             "ci": interval(row["utility_delta_interval"])}
-            for row in test["comparisons"] if row["scoring_cost"] in costs
-        ],
-        "illustration_cost": costs[0],
-        "rows": [
-            {"policy": row["policy"], "accuracy": row["accuracy"],
-             "samples": row["average_samples"]}
-            for row in test["rows"] if row["scoring_cost"] == costs[0]
-            and (row["family"] == "offline-rl"
-                 or row["policy"] in ("fixed-1", "fixed-8", "agreement-2"))
-        ],
-    }
-
-
 def alignmenttax(raw: dict) -> dict:
     names = {
         "qwen2_5_0_5b": "Qwen2.5-0.5B",
@@ -482,11 +400,9 @@ def eval_prospective(raw: dict) -> dict:
 
 TRANSFORMS = {
     "attention-numerics": attention_numerics,
-    "branchpilot": branchpilot,
     "control-clock": control_clock,
     "cpu-decode": cpu_decode,
     "eval-power": eval_power,
-    "faultline": faultline,
     "heliostune": heliostune,
     "verge-lab": verge_lab,
     "seed-power": seed_power,
@@ -494,7 +410,6 @@ TRANSFORMS = {
     "control-clock-gpu": control_clock_gpu,
     "control-clock-cost": control_clock_cost,
     "quantile-sampled": quantile_sampled,
-    "branchpilot-math": branchpilot_math,
     "alignmenttax": alignmenttax,
     "helios-audit": helios_audit,
     "eval-prospective": eval_prospective,
