@@ -72,7 +72,7 @@
         <li class="entry">
           <h3 class="title"><a href="/projects/eval-power/" data-print="github.com/mottopanikeiku/rayleigh">rayleigh</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">How many benchmark items it takes to tell two language models apart. Across 395 leaderboard models, almost no neighboring gaps were significant, and budgets planned from small pilots found differences 49–79% of the time instead of 80%. In a live test on six models, 23 of 27 planned comparisons found the difference they were sized for.</p>
+          <p class="desc">How many benchmark items it takes to tell two language models apart. Across 395 leaderboard models, almost no neighboring gaps were significant, and budgets planned from small pilots found differences 49–79% of the time instead of 80%. In a live test on six models, 23 of 27 planned comparisons found a difference uncorrected, 17–19 after post hoc Holm, at a median realized gap of 16.9 points.</p>
         </li>
         <li class="entry brief">
           <h3 class="title"><a href="/projects/seed-power/" data-print="github.com/mottopanikeiku/mendel">mendel</a></h3>
@@ -92,7 +92,7 @@
         <li class="entry brief">
           <h3 class="title"><a href="/projects/alignmenttax/" data-print="github.com/mottopanikeiku/tithe">tithe</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">Does instruction tuning trade calibration for truthfulness? Across nine base/instruct pairs it depends on the scoring: on a binary TruthfulQA variant six pairs made that trade, while on standard MC1 none did and four improved on both.</p>
+          <p class="desc">Does instruction tuning trade calibration for truthfulness? Across nine base/instruct pairs it depends on the scoring: on a binary TruthfulQA variant six pairs made that trade, while on standard MC1 none did and four improved on both. On the same 779 questions and answers with shared prompts, calibration worsens in 8 pairs under A/B-label scoring and improves in 6 under full-answer scoring, counting 95% intervals that exclude zero.</p>
         </li>
         <li class="entry brief">
           <h3 class="title"><a href="/projects/quantile-cycles/" data-print="github.com/mottopanikeiku/quantile-cycles">Quantile cycles</a></h3>
@@ -113,7 +113,7 @@
         <li class="entry">
           <h3 class="title"><a href="/projects/attention-numerics/" data-print="github.com/mottopanikeiku/temperament">temperament</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">I ran real FlashAttention-3 FP8 attention in every layer on an H100. Plain FP8 cost Qwen2.5-7B 17 points of HellaSwag accuracy against native BF16 (80.9% to 63.7%), and rotating queries and keys first doubled the loss (45.5%). With keys centered first, none of the eight checkpoints lost two points or more.</p>
+          <p class="desc">I ran real FlashAttention-3 FP8 attention in every layer on an H100. Against native BF16, plain FP8 cost Qwen2.5-7B 17.2 HellaSwag points; against plain FP8, rotating queries and keys cost 18.2 more but gained 5.1 on MMLU. With keys centered first, no checkpoint lost two points or more against BF16.</p>
         </li>
         <li class="entry">
           <h3 class="title">Aperture</h3>
