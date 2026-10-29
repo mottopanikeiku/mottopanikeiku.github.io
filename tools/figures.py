@@ -460,10 +460,12 @@ def alignmenttax() -> str:
     s = SVG("alignmenttax", 560, 356,
             "Instruction tuning worsens binary-derivative ECE but not standard MC1 ECE",
             "Expected calibration error change, instruct minus base, for nine pairs under shared "
-            "prompts. On the 790-question binary derivative, six pairs gain accuracy while ECE "
-            "worsens and two lose accuracy while ECE worsens; Qwen2.5-0.5B is uncertain. On "
-            "817-question standard MC1, four pairs improve both accuracy and ECE and five are "
-            "uncertain. Bars are separate 95% question-bootstrap intervals.")
+            "prompts. A pair is classified only when its accuracy and ECE 95% intervals both "
+            "exclude zero; otherwise it is uncertain. On the 790-question binary derivative, six "
+            "pairs gain accuracy while ECE worsens and two lose accuracy while ECE worsens; "
+            "Qwen2.5-0.5B is uncertain. On 817-question standard MC1, on the same basis, four "
+            "pairs improve both accuracy and ECE and five are uncertain. Bars are separate 95% "
+            "question-bootstrap intervals.")
     styles = {
         "truth_gain_ece_worse": ("dot em", "ci em", "accuracy up, ECE worse"),
         "truth_and_calibration_improve": ("dot strong", "ci strong", "both better"),
@@ -524,12 +526,14 @@ def helios_audit() -> str:
 def attention_accuracy() -> str:
     data = load("attention-accuracy")
     s = SVG("attention-accuracy", 560, 300,
-            "FP8 attention answer-accuracy harm by checkpoint and variant",
+            "FP8 attention accuracy change versus BF16 by checkpoint and variant",
             "Worst accuracy change versus native BF16 across ARC-Challenge, HellaSwag and MMLU, "
-            "with real FA3 E4M3 attention in every layer on H100. Rotation is flagged on all "
-            "three tasks for Qwen2.5-0.5B, 1.5B and 7B, down to -35.4 points on Qwen2.5-7B "
-            "HellaSwag. Unrotated FA3 is flagged seven times. Key centering, with or without "
-            "rotation, has no harm flags in 48 comparisons; its worst change is -1.5 points.")
+            "with real FA3 E4M3 attention in every layer on H100. These changes include plain "
+            "FP8's own loss, so the rotate column does not isolate rotation. Rotated FP8 is "
+            "flagged on all three tasks for Qwen2.5-0.5B, 1.5B and 7B, down to -35.4 points on "
+            "Qwen2.5-7B HellaSwag, of which unrotated FA3 already loses 17.2. Unrotated FA3 is "
+            "flagged seven times. Key centering, with or without rotation, has no harm flags in "
+            "48 comparisons; its worst change is -1.5 points.")
     labels = {"tile": "unrotated", "rotate": "rotate", "smooth_k": "center K",
               "rotate_smooth_k": "center K + rotate"}
     s.text(0, 18, "worst accuracy change across ARC, HellaSwag and MMLU (points) vs BF16")
@@ -592,7 +596,7 @@ def helios_expansion() -> str:
 def eval_prospective() -> str:
     data = load("eval-prospective")
     s = SVG("eval-prospective", 560, 250,
-            "Decoding-noise share differs sharply between GSM8K and direct-choice ARC",
+            "Estimated share of variance from decoding on GSM8K and direct-choice ARC",
             "Estimated decoding contribution to paired item-mean variance with five stochastic "
             "answers per question. Fifteen model pairs per benchmark; median share is 33.2% "
             "on GSM8K and 4.6% on guided direct-choice ARC. These finite-pilot estimates are "

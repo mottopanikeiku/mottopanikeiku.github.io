@@ -67,37 +67,37 @@
         <li class="entry">
           <h3 class="title"><a href="https://github.com/mottopanikeiku/weeble" data-print="github.com/mottopanikeiku/weeble">weeble</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">Walking policies for a Go1 dog and a G1 humanoid, trained with RL on one GPU and running live in the browser, where you can shove them. Training with random shoves raised the shove the dog survives half the time from 24.1 to 32.9 N·s (three seeds per arm). Two of three get-up policies recovered from every fall I tested.</p>
+          <p class="desc">I trained walking policies for a Go1 dog and a G1 humanoid with RL on one GPU. They run live in the browser, and you can shove them. Training with random shoves raised the shove the dog survives half the time from 24.1 to 32.9 N·s (three seeds per arm). Two of three get-up policies recovered from every fall I tested.</p>
         </li>
         <li class="entry">
           <h3 class="title"><a href="/projects/eval-power/" data-print="github.com/mottopanikeiku/rayleigh">rayleigh</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">How many benchmark items it takes to tell two language models apart. Across 395 leaderboard models, almost no neighboring gaps were significant, and budgets planned from small pilots found differences 49–79% of the time instead of 80%. In a live test on six models, 23 of 27 planned comparisons found the difference they were sized for.</p>
+          <p class="desc">I measured how many benchmark items it takes to tell two language models apart. Across 395 leaderboard models, almost no neighboring gaps were significant, and budgets planned from small pilots found differences 49–79% of the time instead of 80%. In a prospective test on six models, 23 of 27 planned comparisons found a difference uncorrected, 17–19 after post hoc Holm, at a median gap of 16.9 points.</p>
         </li>
         <li class="entry brief">
           <h3 class="title"><a href="/projects/seed-power/" data-print="github.com/mottopanikeiku/mendel">mendel</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">The same question for RL seeds. On more than 77,000 fresh training runs, plans built for 80% power detected the difference 56% of the time with policy search and 45% with PPO.</p>
+          <p class="desc">I asked the same question for RL seeds. On more than 77,000 fresh training runs, plans built for 80% power detected the difference 56% of the time with policy search and 45% with PPO.</p>
         </li>
         <li class="entry brief">
           <h3 class="title"><a href="/projects/control-clock/" data-print="github.com/mottopanikeiku/coldstart">coldstart</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">Seconds from a cold Python start to a policy that passes CartPole or Acrobot, with every evaluation on the clock. Random search over linear policies won CartPole in 1.1 seconds, about four times faster than any PPO; tuned PPO won Acrobot.</p>
+          <p class="desc">I timed the seconds from a cold Python start to a policy that passes CartPole or Acrobot, counting the time of every evaluation. Random search over linear policies was fastest on CartPole, at 1.1 seconds, about four times faster than any PPO. Tuned PPO was fastest on Acrobot.</p>
         </li>
         <li class="entry brief">
           <h3 class="title"><a href="/projects/verge-lab/" data-print="github.com/mottopanikeiku/verge-lab">Verge Lab</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">A rule that picks preference pairs only when every quality aspect agrees. It matched human preferences no better than a simple score-gap rule (98.25% against 98.23%), and DPO on its pairs showed no clear gain.</p>
+          <p class="desc">I tested a rule that picks preference pairs only when every quality aspect agrees. It matched human preferences no better than a simple score-gap rule (98.25% against 98.23%), and DPO on its pairs showed no clear gain.</p>
         </li>
         <li class="entry brief">
           <h3 class="title"><a href="/projects/alignmenttax/" data-print="github.com/mottopanikeiku/tithe">tithe</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">Does instruction tuning trade calibration for truthfulness? Across nine base/instruct pairs it depends on the scoring: on a binary TruthfulQA variant six pairs made that trade, while on standard MC1 none did and four improved on both.</p>
+          <p class="desc">I asked whether instruction tuning trades calibration for truthfulness. Across nine base/instruct pairs, it depends on the scoring. On a binary TruthfulQA variant six pairs made that trade, while on standard MC1 none did and four improved on both. On the same 779 questions and answers with shared prompts, calibration got worse in 8 pairs under A/B-label scoring and better in 6 under full-answer scoring, counting 95% intervals that exclude zero.</p>
         </li>
         <li class="entry brief">
           <h3 class="title"><a href="/projects/quantile-cycles/" data-print="github.com/mottopanikeiku/quantile-cycles">Quantile cycles</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">An exact quantile-control operator that alternates forever between the best action and a worse one, with no fixed point. Lean checks the smallest cycle; sampled Huber updates don’t reproduce it.</p>
+          <p class="desc">A counterexample in distributional RL: an exact quantile-control operator that alternates forever between the best action and a worse one. It has no fixed point. Lean checks the smallest cycle. Sampled Huber updates do not reproduce it.</p>
         </li>
       </ul>
     </section>
@@ -108,27 +108,27 @@
         <li class="entry">
           <h3 class="title"><a href="/projects/cpu-decode/" data-print="github.com/mottopanikeiku/abacus">abacus</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">A from-scratch C++ int8 decoder for Qwen2.5-0.5B on a laptop CPU. At short context it reaches 83% of the estimated memory-read ceiling and matches llama.cpp’s best speed; at 4,096 tokens llama.cpp wins, 44 to 32 tokens per second, because my attention is still scalar.</p>
+          <p class="desc">I wrote a from-scratch C++ int8 decoder for Qwen2.5-0.5B on a laptop CPU. At short context it reaches 83% of the estimated memory-read ceiling and matches llama.cpp’s best speed. At 4,096 tokens llama.cpp is faster, 44 to 32 tokens per second, as my attention is still scalar.</p>
         </li>
         <li class="entry">
           <h3 class="title"><a href="/projects/attention-numerics/" data-print="github.com/mottopanikeiku/temperament">temperament</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">I ran real FlashAttention-3 FP8 attention in every layer on an H100. Plain FP8 cost Qwen2.5-7B 17 points of HellaSwag accuracy against native BF16 (80.9% to 63.7%), and rotating queries and keys first doubled the loss (45.5%). With keys centered first, none of the eight checkpoints lost two points or more.</p>
+          <p class="desc">I ran real FlashAttention-3 FP8 attention in every layer on an H100. Plain FP8 cost Qwen2.5-7B 17.2 HellaSwag points against native BF16 (80.9% to 63.7%). Compared with plain FP8, rotating queries and keys cost 18.2 more points (45.5%) but gained 5.1 on MMLU. With keys centered first, none of the eight checkpoints lost two points or more against BF16.</p>
         </li>
         <li class="entry">
           <h3 class="title">Aperture</h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">Time to first token for a 27B model on one <span class="nb">RTX 6000 Ada</span>: under a second at p99 on cold 3,072-token prompts (803&nbsp;ms), and 1.09&nbsp;s at 4,096 tokens, which is where the claim stops.</p>
+          <p class="desc">Time to first token for a 27B model on one <span class="nb">RTX 6000 Ada</span>: under a second at p99 on cold 3,072-token prompts (803&nbsp;ms), and 1.09&nbsp;s at 4,096 tokens. I claim nothing beyond that.</p>
         </li>
         <li class="entry brief">
           <h3 class="title"><a href="/projects/heliostune/" data-print="github.com/mottopanikeiku/quartet">quartet</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">A Thompson-sampling autotuner for Triton matmuls, built to test whether timings from cheaper GPUs can warm-start H100 tuning. They couldn’t, and torch.matmul beat every original kernel; ten new kernels, including split-K, cut the gap from 1.61× to 1.17× and won 9 of 96 workloads.</p>
+          <p class="desc">I built a Thompson-sampling autotuner for Triton matmuls to test whether timings from cheaper GPUs can warm-start H100 tuning. They could not, and torch.matmul beat every original kernel. Ten new kernels, including split-K, cut the gap from 1.61× to 1.17× and beat torch on 9 of 96 workloads.</p>
         </li>
         <li class="entry">
           <h3 class="title">Open source</h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">Landed pull requests in <a href="https://github.com/pytorch/pytorch/pull/196711">PyTorch</a>, <a href="https://github.com/ray-project/ray/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">Ray</a>, <a href="https://github.com/onnx/onnx/pull/8435">ONNX</a>, <a href="https://github.com/huggingface/sentence-transformers/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">Sentence Transformers</a>, <a href="https://github.com/sgl-project/sglang/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">SGLang</a>, <a href="https://github.com/celery/celery/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">Celery</a>, the <a href="https://github.com/Farama-Foundation/Arcade-Learning-Environment/pull/743">Arcade Learning Environment</a> and <a href="https://github.com/Farama-Foundation/Gymnasium-Robotics/pull/344">Gymnasium-Robotics</a>.</p>
+          <p class="desc">I have had pull requests merged in <a href="https://github.com/pytorch/pytorch/pull/196711">PyTorch</a>, <a href="https://github.com/ray-project/ray/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">Ray</a>, <a href="https://github.com/onnx/onnx/pull/8435">ONNX</a>, <a href="https://github.com/huggingface/sentence-transformers/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">Sentence Transformers</a>, <a href="https://github.com/sgl-project/sglang/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">SGLang</a>, <a href="https://github.com/celery/celery/pulls?q=is%3Apr+author%3Amottopanikeiku+is%3Amerged">Celery</a>, the <a href="https://github.com/Farama-Foundation/Arcade-Learning-Environment/pull/743">Arcade Learning Environment</a> and <a href="https://github.com/Farama-Foundation/Gymnasium-Robotics/pull/344">Gymnasium-Robotics</a>.</p>
         </li>
       </ul>
     </section>
@@ -139,12 +139,12 @@
         <li class="entry">
           <h3 class="title"><a href="https://mottopanikeiku.github.io/weeble/" data-print="mottopanikeiku.github.io/weeble">Weeble</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">Steer a robot dog or a humanoid around a small test field, shove them, throw balls at them or walk the rough-ground dog across its terrain; the dog gets back up.</p>
+          <p class="desc">You can steer a robot dog or a humanoid around a small test field, shove them, throw balls at them, or walk the rough-ground dog across its terrain. The dog gets back up.</p>
         </li>
         <li class="entry">
           <h3 class="title"><a href="https://mottopanikeiku.github.io/kan-visualizer/" data-print="mottopanikeiku.github.io/kan-visualizer">KAN visualizer</a></h3>
           <p class="year"><time datetime="2025">2025</time></p>
-          <p class="desc">Small Gaussian-edge networks, a KAN variant, with their real activations. <a href="https://github.com/mottopanikeiku/kan-visualizer/blob/298419407d3251bdaeb5f70426ec2ed526480799/results/mlp_comparison/summary.json">Parameter-matched MLPs won both 2D tasks; the edge network won the 1D one.</a></p>
+          <p class="desc">Small Gaussian-edge networks, a KAN variant, shown with their real activations. <a href="https://github.com/mottopanikeiku/kan-visualizer/blob/298419407d3251bdaeb5f70426ec2ed526480799/results/mlp_comparison/summary.json">Parameter-matched MLPs did better on both 2D tasks, and the edge network did better on the 1D task.</a></p>
         </li>
         <li class="entry">
           <h3 class="title"><a href="https://mottopanikeiku.github.io/temperament/">Attention numerics explorable</a></h3>
