@@ -1,9 +1,9 @@
 {
  "source": {
-  "repo": "mottopanikeiku/control-clock",
+  "repo": "mottopanikeiku/coldstart",
   "commit": "ee9c303de8e7698ca25569fc585e173e3e172bb8",
   "path": "results/summary.json",
-  "url": "https://github.com/mottopanikeiku/control-clock/blob/ee9c303de8e7698ca25569fc585e173e3e172bb8/results/summary.json"
+  "url": "https://github.com/mottopanikeiku/coldstart/blob/ee9c303de8e7698ca25569fc585e173e3e172bb8/results/summary.json"
  },
  "cohorts": [
   {

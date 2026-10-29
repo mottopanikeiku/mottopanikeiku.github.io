@@ -1,9 +1,9 @@
 {
  "source": {
-  "repo": "mottopanikeiku/eval-power",
+  "repo": "mottopanikeiku/rayleigh",
   "commit": "ef7c451d678e7eece94344b0c87567a60e28e330",
   "path": "results/calibration.csv",
-  "url": "https://github.com/mottopanikeiku/eval-power/blob/ef7c451d678e7eece94344b0c87567a60e28e330/results/calibration.csv"
+  "url": "https://github.com/mottopanikeiku/rayleigh/blob/ef7c451d678e7eece94344b0c87567a60e28e330/results/calibration.csv"
  },
  "target_power": 0.8,
  "benchmarks": [

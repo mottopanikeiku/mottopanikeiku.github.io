@@ -65,22 +65,22 @@
       <h2 id="evals">Evals and RL</h2>
       <ul>
         <li class="entry">
-          <h3 class="title"><a href="https://github.com/mottopanikeiku/pushable" data-print="github.com/mottopanikeiku/pushable">pushable</a></h3>
+          <h3 class="title"><a href="https://github.com/mottopanikeiku/weeble" data-print="github.com/mottopanikeiku/weeble">weeble</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">Walking policies for a Go1 dog and a G1 humanoid, trained with RL on one GPU and running live in the browser, where you can shove them. Training with random shoves raised the shove the dog survives half the time from 24.1 to 32.9 N·s (three seeds per arm). Two of three get-up policies recovered from every fall I tested.</p>
         </li>
         <li class="entry">
-          <h3 class="title"><a href="/projects/eval-power/" data-print="github.com/mottopanikeiku/eval-power">eval-power</a></h3>
+          <h3 class="title"><a href="/projects/eval-power/" data-print="github.com/mottopanikeiku/rayleigh">rayleigh</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">How many benchmark items it takes to tell two language models apart. Across 395 leaderboard models, almost no neighboring gaps were significant, and budgets planned from small pilots found differences 49–79% of the time instead of 80%. In a live test on six models, 23 of 27 planned comparisons found the difference they were sized for.</p>
         </li>
         <li class="entry brief">
-          <h3 class="title"><a href="/projects/seed-power/" data-print="github.com/mottopanikeiku/seed-power">seed-power</a></h3>
+          <h3 class="title"><a href="/projects/seed-power/" data-print="github.com/mottopanikeiku/mendel">mendel</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">The same question for RL seeds. On more than 77,000 fresh training runs, plans built for 80% power detected the difference 56% of the time with policy search and 45% with PPO.</p>
         </li>
         <li class="entry brief">
-          <h3 class="title"><a href="/projects/control-clock/" data-print="github.com/mottopanikeiku/control-clock">control-clock</a></h3>
+          <h3 class="title"><a href="/projects/control-clock/" data-print="github.com/mottopanikeiku/coldstart">coldstart</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">Seconds from a cold Python start to a policy that passes CartPole or Acrobot, with every evaluation on the clock. Random search over linear policies won CartPole in 1.1 seconds, about four times faster than any PPO; tuned PPO won Acrobot.</p>
         </li>
@@ -90,7 +90,7 @@
           <p class="desc">A rule that picks preference pairs only when every quality aspect agrees. It matched human preferences no better than a simple score-gap rule (98.25% against 98.23%), and DPO on its pairs showed no clear gain.</p>
         </li>
         <li class="entry brief">
-          <h3 class="title"><a href="/projects/alignmenttax/" data-print="github.com/mottopanikeiku/alignmenttax">AlignmentTax</a></h3>
+          <h3 class="title"><a href="/projects/alignmenttax/" data-print="github.com/mottopanikeiku/tithe">tithe</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">Does instruction tuning trade calibration for truthfulness? Across nine base/instruct pairs it depends on the scoring: on a binary TruthfulQA variant six pairs made that trade, while on standard MC1 none did and four improved on both.</p>
         </li>
@@ -106,12 +106,12 @@
       <h2 id="systems">Systems</h2>
       <ul>
         <li class="entry">
-          <h3 class="title"><a href="/projects/cpu-decode/" data-print="github.com/mottopanikeiku/cpu-decode">cpu-decode</a></h3>
+          <h3 class="title"><a href="/projects/cpu-decode/" data-print="github.com/mottopanikeiku/abacus">abacus</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">A from-scratch C++ int8 decoder for Qwen2.5-0.5B on a laptop CPU. At short context it reaches 83% of the estimated memory-read ceiling and matches llama.cpp’s best speed; at 4,096 tokens llama.cpp wins, 44 to 32 tokens per second, because my attention is still scalar.</p>
         </li>
         <li class="entry">
-          <h3 class="title"><a href="/projects/attention-numerics/" data-print="github.com/mottopanikeiku/attention-numerics">attention-numerics</a></h3>
+          <h3 class="title"><a href="/projects/attention-numerics/" data-print="github.com/mottopanikeiku/temperament">temperament</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">I ran real FlashAttention-3 FP8 attention in every layer on an H100. Plain FP8 cost Qwen2.5-7B 17 points of HellaSwag accuracy against native BF16 (80.9% to 63.7%), and rotating queries and keys first doubled the loss (45.5%). With keys centered first, none of the eight checkpoints lost two points or more.</p>
         </li>
@@ -121,7 +121,7 @@
           <p class="desc">Time to first token for a 27B model on one <span class="nb">RTX 6000 Ada</span>: under a second at p99 on cold 3,072-token prompts (803&nbsp;ms), and 1.09&nbsp;s at 4,096 tokens, which is where the claim stops.</p>
         </li>
         <li class="entry brief">
-          <h3 class="title"><a href="/projects/heliostune/" data-print="github.com/mottopanikeiku/heliostune">HeliosTune</a></h3>
+          <h3 class="title"><a href="/projects/heliostune/" data-print="github.com/mottopanikeiku/quartet">quartet</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">A Thompson-sampling autotuner for Triton matmuls, built to test whether timings from cheaper GPUs can warm-start H100 tuning. They couldn’t, and torch.matmul beat every original kernel; ten new kernels, including split-K, cut the gap from 1.61× to 1.17× and won 9 of 96 workloads.</p>
         </li>
@@ -137,7 +137,7 @@
       <h2 id="tools">In the browser</h2>
       <ul>
         <li class="entry">
-          <h3 class="title"><a href="https://mottopanikeiku.github.io/pushable/" data-print="mottopanikeiku.github.io/pushable">Pushable</a></h3>
+          <h3 class="title"><a href="https://mottopanikeiku.github.io/weeble/" data-print="mottopanikeiku.github.io/weeble">Weeble</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">Steer a robot dog or a humanoid around a small test field, shove them, throw balls at them or walk the rough-ground dog across its terrain; the dog gets back up.</p>
         </li>
@@ -147,12 +147,12 @@
           <p class="desc">Small Gaussian-edge networks, a KAN variant, with their real activations. <a href="https://github.com/mottopanikeiku/kan-visualizer/blob/298419407d3251bdaeb5f70426ec2ed526480799/results/mlp_comparison/summary.json">Parameter-matched MLPs won both 2D tasks; the edge network won the 1D one.</a></p>
         </li>
         <li class="entry">
-          <h3 class="title"><a href="https://mottopanikeiku.github.io/attention-numerics/">Attention numerics explorable</a></h3>
+          <h3 class="title"><a href="https://mottopanikeiku.github.io/temperament/">Attention numerics explorable</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">Explore when rotating queries and keys before low-precision rounding changes attention error. The illustrations and measured results are labelled separately.</p>
         </li>
         <li class="entry">
-          <h3 class="title"><a href="https://mottopanikeiku.github.io/eval-power/">Eval power calculator</a></h3>
+          <h3 class="title"><a href="https://mottopanikeiku.github.io/rayleigh/">Eval power calculator</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
           <p class="desc">Plan a paired model comparison from the smallest accuracy difference that matters, rather than trusting the gap in a small pilot.</p>
         </li>

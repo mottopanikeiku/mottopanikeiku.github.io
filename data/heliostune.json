@@ -1,9 +1,9 @@
 {
  "source": {
-  "repo": "mottopanikeiku/heliostune",
+  "repo": "mottopanikeiku/quartet",
   "commit": "d1f5ab6fb6ff8b1862baf635dc8abd9241052809",
   "path": "benchmarks/results/parhelion-h100-final.json",
-  "url": "https://github.com/mottopanikeiku/heliostune/blob/d1f5ab6fb6ff8b1862baf635dc8abd9241052809/benchmarks/results/parhelion-h100-final.json"
+  "url": "https://github.com/mottopanikeiku/quartet/blob/d1f5ab6fb6ff8b1862baf635dc8abd9241052809/benchmarks/results/parhelion-h100-final.json"
  },
  "auc": {
   "cold_thompson": 0.9584336131554305,

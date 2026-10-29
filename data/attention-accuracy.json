@@ -1,9 +1,9 @@
 {
  "source": {
-  "repo": "mottopanikeiku/attention-numerics",
+  "repo": "mottopanikeiku/temperament",
   "commit": "11281b844d8b0cd55e93bdfaff486e0fed20f3ab",
   "path": "results/accuracy/summary.json",
-  "url": "https://github.com/mottopanikeiku/attention-numerics/blob/11281b844d8b0cd55e93bdfaff486e0fed20f3ab/results/accuracy/summary.json"
+  "url": "https://github.com/mottopanikeiku/temperament/blob/11281b844d8b0cd55e93bdfaff486e0fed20f3ab/results/accuracy/summary.json"
  },
  "denominators": {
   "arc_challenge": 1172,

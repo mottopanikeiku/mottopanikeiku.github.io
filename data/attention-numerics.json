@@ -1,9 +1,9 @@
 {
  "source": {
-  "repo": "mottopanikeiku/attention-numerics",
+  "repo": "mottopanikeiku/temperament",
   "commit": "911d642a5aab42f7ced2bcc7c9f13995cdeb8eb0",
   "path": "results/hardware/summary.json",
-  "url": "https://github.com/mottopanikeiku/attention-numerics/blob/911d642a5aab42f7ced2bcc7c9f13995cdeb8eb0/results/hardware/summary.json"
+  "url": "https://github.com/mottopanikeiku/temperament/blob/911d642a5aab42f7ced2bcc7c9f13995cdeb8eb0/results/hardware/summary.json"
  },
  "definition": "Batch next-token teacher forcing; native GPU BF16 is the matched baseline, not CPU v2. exp(delta CE) is a batch exp-CE ratio, not streaming decoder perplexity.",
  "models": [

@@ -1,9 +1,9 @@
 {
  "source": {
-  "repo": "mottopanikeiku/alignmenttax",
+  "repo": "mottopanikeiku/tithe",
   "commit": "61b0ffb6890ca7f53b3e37b117b28167f57b8e88",
   "path": "results/day_scale/analysis/summary.json",
-  "url": "https://github.com/mottopanikeiku/alignmenttax/blob/61b0ffb6890ca7f53b3e37b117b28167f57b8e88/results/day_scale/analysis/summary.json"
+  "url": "https://github.com/mottopanikeiku/tithe/blob/61b0ffb6890ca7f53b3e37b117b28167f57b8e88/results/day_scale/analysis/summary.json"
  },
  "questions": {
   "binary": 790,

@@ -1,9 +1,9 @@
 {
  "source": {
-  "repo": "mottopanikeiku/control-clock",
+  "repo": "mottopanikeiku/coldstart",
   "commit": "b090dad8a3b53f937782676c6033ba3557cedfa1",
   "path": "results/gpu/cost.json",
-  "url": "https://github.com/mottopanikeiku/control-clock/blob/b090dad8a3b53f937782676c6033ba3557cedfa1/results/gpu/cost.json"
+  "url": "https://github.com/mottopanikeiku/coldstart/blob/b090dad8a3b53f937782676c6033ba3557cedfa1/results/gpu/cost.json"
  },
  "hardware": "Modal NVIDIA L4",
  "total_all_in_cost_estimate_usd": 0.3745,
