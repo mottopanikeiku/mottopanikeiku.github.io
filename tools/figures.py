@@ -596,7 +596,7 @@ def helios_expansion() -> str:
 def eval_prospective() -> str:
     data = load("eval-prospective")
     s = SVG("eval-prospective", 560, 250,
-            "Decoding-noise share differs sharply between GSM8K and direct-choice ARC",
+            "Estimated share of variance from decoding on GSM8K and direct-choice ARC",
             "Estimated decoding contribution to paired item-mean variance with five stochastic "
             "answers per question. Fifteen model pairs per benchmark; median share is 33.2% "
             "on GSM8K and 4.6% on guided direct-choice ARC. These finite-pilot estimates are "
