@@ -64,13 +64,15 @@
         </figure>
         <p>Faster simulation didn’t make my PPO the fastest learner. Its objective, normalization and evaluation schedule all differ from the libraries’, so this comparison can’t say which difference is responsible. CartPole mostly shows that a linear controller is enough for CartPole. One Acrobot run passed before any training, because its random initial policy already averaged −95.6. It counts, as the protocol says, so these are times to qualify, not times spent learning.</p>
         <p>Separately, I ran JAX PPO on a cloud NVIDIA L4. With Python startup, CUDA initialization, JIT compilation and every evaluation on the process clock, CartPole passed in a median 26.38 seconds and Acrobot in 97.43 seconds, with 3 of 3 seeds passing each task (<a href="https://github.com/mottopanikeiku/coldstart/blob/b090dad8a3b53f937782676c6033ba3557cedfa1/results/gpu/summary.json">GPU summary</a>). Both were slower than the laptop winners. This changes hardware, backend and PPO settings together; it is not an isolated GPU speedup test. The total conservative cloud-cost estimate was about $0.37, including failed setup attempts (<a href="https://github.com/mottopanikeiku/coldstart/blob/b090dad8a3b53f937782676c6033ba3557cedfa1/results/gpu/cost.json">cost file</a>).</p>
+        <p>Later I split the clock into parts. In an exclusive window on one pinned laptop core, I reran seeds 0–4 of my three methods. Every rerun reproduced its published evaluations exactly, and the measured phases account for each run to within 0.05%. Evaluation was the largest cost: 64–81% of the time for ARS and CEM on both tasks and for PPO on Acrobot. The environment steps took 2–26%. For PPO on CartPole, optimizer epochs took 47%.</p>
+        <p>I also measured the environments alone. At 4,096 copies, my NumPy Acrobot ran 3.84 million transitions per second. That is 140 times Gymnasium’s loop and 2.5 times single-thread EnvPool. JAX-compiled Gymnax ran 6.06 million, after a compile of up to 0.8 seconds. My CartPole batch ran 3.07 million, against 28.2 million for Gymnasium’s own vectorized CartPole. Seeding each reset exactly like Gymnasium took 90% of its time (<a href="https://github.com/mottopanikeiku/coldstart/blob/main/docs/SYSTEMS.md">systems benchmark</a>).</p>
       </div>
     </section>
 
     <section class="block" aria-labelledby="limits">
       <h2 id="limits">Limits</h2>
       <div class="prose">
-        <p>One laptop. The libraries ran 5 seeds and the rest 20, so these are descriptive comparisons, not significance tests. The same 100 evaluation seeds decided when to stop and guided development choices, so they are not an untouched test set. LunarLander was planned as a stretch goal and has no final runs.</p>
+        <p>One laptop. The libraries ran 5 seeds and the rest 20, so these are descriptive comparisons, not significance tests. The same 100 evaluation seeds decided when to stop and guided development choices, so they are not an untouched test set. I replayed the 30 rerun winners on 1,000 fresh episodes, and 26 still passed. On Acrobot, though, only 31 to 37 of each method’s 50 fresh 100-episode blocks passed, pooled over five policies. A run that qualifies stops close to the bar. LunarLander was planned as a stretch goal and has no final runs.</p>
       </div>
     </section>
 
