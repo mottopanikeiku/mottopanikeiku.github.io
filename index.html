@@ -97,7 +97,7 @@
         <li class="entry brief">
           <h3 class="title"><a href="/projects/quantile-cycles/" data-print="github.com/mottopanikeiku/quantile-cycles">Quantile cycles</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">A counterexample in distributional RL: an exact quantile-control operator that alternates between the best action and a worse one and never reaches a fixed point. Lean checks the smallest cycle. Sampled Huber updates do not reproduce it.</p>
+          <p class="desc">A counterexample in distributional RL: an exact quantile-control operator that alternates forever between the best action and a worse one. It has no fixed point. Lean checks the smallest cycle. Sampled Huber updates do not reproduce it.</p>
         </li>
       </ul>
     </section>
@@ -113,7 +113,7 @@
         <li class="entry">
           <h3 class="title"><a href="/projects/attention-numerics/" data-print="github.com/mottopanikeiku/temperament">temperament</a></h3>
           <p class="year"><time datetime="2026">2026</time></p>
-          <p class="desc">I ran real FlashAttention-3 FP8 attention in every layer on an H100. Plain FP8 cost Qwen2.5-7B 17.2 HellaSwag points against native BF16 (80.9% to 63.7%). Compared with plain FP8, rotating queries and keys cost 18.2 more points (45.5%) but gained 5.1 on MMLU. With keys centered first, no checkpoint lost two points or more against BF16.</p>
+          <p class="desc">I ran real FlashAttention-3 FP8 attention in every layer on an H100. Plain FP8 cost Qwen2.5-7B 17.2 HellaSwag points against native BF16 (80.9% to 63.7%). Compared with plain FP8, rotating queries and keys cost 18.2 more points (45.5%) but gained 5.1 on MMLU. With keys centered first, none of the eight checkpoints lost two points or more against BF16.</p>
         </li>
         <li class="entry">
           <h3 class="title">Aperture</h3>
