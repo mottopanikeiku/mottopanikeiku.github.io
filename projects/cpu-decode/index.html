@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>abacus · Alp Cetin</title>
-  <meta name="description" content="A from-scratch C++ int8 decoder for Qwen2.5-0.5B on a laptop CPU, measured against its memory-read ceiling and llama.cpp.">
+  <meta name="description" content="A C++ decoder for Qwen2.5-0.5B that I wrote from scratch, compared with llama.cpp Q8_0 on one cloud CPU and, in its first version, on my laptop.">
   <link rel="canonical" href="https://mottopanikeiku.github.io/projects/cpu-decode/">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f4ef">
@@ -17,7 +17,7 @@
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="Alp Cetin">
   <meta property="og:title" content="abacus">
-  <meta property="og:description" content="How close can a hand-written int8 decoder get to a laptop’s memory-read limit?">
+  <meta property="og:description" content="A C++ decoder for Qwen2.5-0.5B that I wrote from scratch, compared with llama.cpp on CPUs.">
   <meta property="og:url" content="https://mottopanikeiku.github.io/projects/cpu-decode/">
   <meta property="og:image" content="https://mottopanikeiku.github.io/og/cpu-decode.png">
   <meta property="og:image:width" content="1200">
@@ -36,25 +36,26 @@
 
     <div class="intro">
       <h1>abacus</h1>
-      <p>How close can a hand-written int8 decoder get to a laptop’s memory-read limit?</p>
+      <p>A C++ decoder for Qwen2.5-0.5B that I wrote from scratch, and what I found when I compared it with llama.cpp.</p>
     </div>
 
     <section class="block" aria-labelledby="question">
       <h2 id="question">Question</h2>
       <div class="prose">
         <p>Generating text one token at a time is usually limited by memory: every new token reads all of the model’s weights. I wanted to know how close a small engine written from scratch could get to that limit on a laptop CPU, and how it would compare with llama.cpp, the standard tool for the job.</p>
+        <p>The first version answered that on my laptop. In the second version I changed the weight format and the kernels. I checked that the new format stays at least as close to the full-precision model as llama.cpp’s Q8_0, and then timed both engines on a cloud CPU. <a href="https://github.com/mottopanikeiku/abacus/blob/1def601cb3c09c34753c8faa75a86d25b635c083/docs/BASELINE.md">The baseline notes</a> describe each comparison separately: the cloud run I did, the stricter laptop run I haven’t done, and the first version.</p>
       </div>
     </section>
 
     <section class="block" aria-labelledby="method">
-      <h2 id="method">Method</h2>
+      <h2 id="method">First version, on my laptop</h2>
       <div class="prose">
-        <p>The engine is a complete C++ forward pass for Qwen2.5-0.5B-Instruct: memory-mapped weights quantized to int8 with one scale per output row, a 32-bit key-value cache, and matrix-vector kernels in scalar, 256-bit and 512-bit SIMD code. Without quantization it matches Hugging Face Transformers to within 0.00044 on every logit checked, and all 32 greedy tokens agree. The ceiling divides the measured read bandwidth, 39 to 43 GB/s depending on thread count, by the bytes each token has to read: about 500 MB of weights plus the cache. llama.cpp ran at a pinned commit with Q8_0 weights, its closest 8-bit format, at the same thread counts. Each point is the median of three runs of 16 tokens.</p>
+        <p>The first version is a complete C++ forward pass for Qwen2.5-0.5B-Instruct: memory-mapped weights quantized to int8 with one scale per output row, a 32-bit key-value cache, and matrix-vector kernels in scalar, 256-bit and 512-bit SIMD code. The SIMD kernels widen the int8 weights and multiply them in 32-bit floating point. Without quantization it matches Hugging Face Transformers to within 0.00044 on every logit checked, and all 32 greedy tokens agree. The ceiling divides the measured read bandwidth, 39 to 43 GB/s depending on thread count, by the bytes each token has to read: about 500 MB of weights plus the cache. llama.cpp ran at a pinned commit with Q8_0 weights, its closest 8-bit format, at the same thread counts. Each point is the median of three runs of 16 tokens.</p>
       </div>
     </section>
 
     <section class="block" aria-labelledby="result">
-      <h2 id="result">Result</h2>
+      <h2 id="result">First version results</h2>
       <div class="prose">
         <p>At short context the engine gets close to the ceiling. With 2 threads and 128 tokens of context it decodes 69.0 tokens per second, 83% of the ceiling, against 61.8 for llama.cpp. That is its best case: at 4 threads the two are level, and at 1 and 6 threads llama.cpp is faster. Long context is where the engine loses. At 4,096 tokens llama.cpp decodes 44.1 tokens per second and the engine 31.7, because its attention is still scalar code, which takes 17.2 of the 31.6 milliseconds per token.</p>
         <figure class="figure">
@@ -66,10 +67,64 @@
       </div>
     </section>
 
+    <section class="block" aria-labelledby="quality">
+      <h2 id="quality">Second version: weight format and quality</h2>
+      <div class="prose">
+        <p>The second version stores int8 weights in groups of 64, each group with a 16-bit scale: 8.25 bits per weight against Q8_0’s 8.50, and a 509.73 MB file against 531.07 MB. I chose this format among four candidates on calibration text from <i>Frankenstein</i>, before scoring anything on the held-out text from <i>Pride and Prejudice</i>. The format had to beat Q8_0 on mean KL, 99th-percentile KL and top-1 agreement, and the smallest file that did was picked. Activations can stay in 32-bit floats, or be quantized to 16-bit integers so the matrix products run on AVX-512 VNNI integer instructions.</p>
+        <p>Each activation path had to pass its own quality rule before it could enter a final timing. With 8-bit activations, the rule required mean KL, 99th-percentile KL, top-1 agreement and perplexity all to be at least as good as Q8_0. That path failed, so it is left out of the comparisons below. With 16-bit activations, mean KL and 99th-percentile KL had to be lower than Q8_0’s and top-1 agreement higher, on both the calibration and the held-out text. Perplexity was reported but not required. That path passed. On 2,048 held-out positions with a 16-bit cache:</p>
+        <table class="table">
+          <thead>
+            <tr><th scope="col">Path</th><th scope="col" class="num">Mean KL, nats</th><th scope="col" class="num">99th-percentile KL</th><th scope="col" class="num">Top-1 agreement</th><th scope="col" class="num">Perplexity</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="https://github.com/mottopanikeiku/abacus/blob/1def601cb3c09c34753c8faa75a86d25b635c083/results/v2/heldout-g64f16-vnni16-final-f16.json">This engine, 16-bit activations</a></td><td class="num">0.00093877</td><td class="num">0.00336880</td><td class="num">97.75%</td><td class="num">16.60984</td></tr>
+            <tr><td><a href="https://github.com/mottopanikeiku/abacus/blob/1def601cb3c09c34753c8faa75a86d25b635c083/results/v2/heldout-final-q8_0.json">llama.cpp Q8_0</a></td><td class="num">0.00240027</td><td class="num">0.00813769</td><td class="num">95.90%</td><td class="num">16.60406</td></tr>
+          </tbody>
+        </table>
+        <p>So my format is closer to the full-precision model by KL and top-1, but its perplexity is slightly worse. These are agreement measures, not task accuracy. <a href="https://github.com/mottopanikeiku/abacus/blob/1def601cb3c09c34753c8faa75a86d25b635c083/results/v2/quality-vnni16-final.json">The 16-bit decision</a> records every report it used.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="cloud">
+      <h2 id="cloud">Second version: speed on one cloud CPU</h2>
+      <div class="prose">
+        <p>I timed the 16-bit path against llama.cpp Q8_0 on one rented virtual machine. Its CPU reported family 25, model 17, which AMD documents as a Zen 4 EPYC; the model name itself was hidden. It exposed 24 virtual CPUs, which may not be dedicated physical cores. Both engines were compiled on that machine, used a 16-bit cache and the same CPUs, and greedily decoded 128 tokens per sample. I fixed the six cells in advance: 1, 2 and 4 threads at 128 and 4,096 tokens of context. Each cell has sixteen paired samples taken in an ABBA order. For llama.cpp, a short pilot in each cell picked its faster flash-attention setting, and those pilot runs are not counted. My engine held its CPU binding for the whole worker’s life, which is not how the laptop command line runs. The engine columns are median tokens per second; the ratio is my engine’s speed over llama.cpp’s.</p>
+        <table class="table">
+          <thead>
+            <tr><th scope="col" class="num">Threads</th><th scope="col" class="num">Context</th><th scope="col" class="num">This engine</th><th scope="col" class="num">llama.cpp</th><th scope="col" class="num">Paired ratio</th><th scope="col" class="num">95% interval</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="num">1</td><td class="num">128</td><td class="num">39.887</td><td class="num">32.110</td><td class="num">1.2335</td><td class="num">1.1649–1.2970</td></tr>
+            <tr><td class="num">2</td><td class="num">128</td><td class="num">55.135</td><td class="num">50.394</td><td class="num">1.1361</td><td class="num">1.0631–1.2054</td></tr>
+            <tr><td class="num">4</td><td class="num">128</td><td class="num">93.067</td><td class="num">87.622</td><td class="num">1.0898</td><td class="num">1.0183–1.1318</td></tr>
+            <tr><td class="num">1</td><td class="num">4,096</td><td class="num">30.111</td><td class="num">21.854</td><td class="num">1.3436</td><td class="num">1.3235–1.4431</td></tr>
+            <tr><td class="num">2</td><td class="num">4,096</td><td class="num">45.312</td><td class="num">29.774</td><td class="num">1.5306</td><td class="num">1.4643–1.5969</td></tr>
+            <tr><td class="num">4</td><td class="num">4,096</td><td class="num">68.643</td><td class="num">49.774</td><td class="num">1.3627</td><td class="num">1.2594–1.4882</td></tr>
+          </tbody>
+        </table>
+        <p>My engine was faster in all six cells, by a median paired ratio of 1.090 to 1.531, and every interval is above 1. Each interval comes from resampling the ABBA quartets 20,000 times. They hold for each cell separately, not for all six at once, and the paired ratio is not the ratio of the two medians shown. An earlier run with 32-bit activations on a different cloud machine finished only 2 of its 6 cells and lost both, at 0.4108 and 0.3079. Because the machines differ, I can’t say how much of the change came from the VNNI instructions. The estimated cost of all cloud attempts, failures included, was $1.6074, an estimate rather than an invoice. Sources: <a href="https://github.com/mottopanikeiku/abacus/blob/1def601cb3c09c34753c8faa75a86d25b635c083/results/v2/cloud-vnni/final/summary.json">summary</a>, <a href="https://github.com/mottopanikeiku/abacus/blob/1def601cb3c09c34753c8faa75a86d25b635c083/results/v2/cloud-vnni/final/raw.json">raw samples</a>, <a href="https://github.com/mottopanikeiku/abacus/blob/1def601cb3c09c34753c8faa75a86d25b635c083/results/v2/cloud/summary.json">earlier attempt</a> and <a href="https://github.com/mottopanikeiku/abacus/blob/1def601cb3c09c34753c8faa75a86d25b635c083/results/v2/cloud-vnni/run-cost.json">cost</a>.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="laptop">
+      <h2 id="laptop">Laptop comparison I haven’t run yet</h2>
+      <div class="prose">
+        <p>The code for a stricter laptop comparison is ready but I haven’t run it. It covers 1, 2, 4, 6 and 12 threads at three context lengths. In each cell it tries nine llama.cpp configurations and compares my engine with the fastest one. Until I run it, I make no laptop speed claim for the second version.</p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="lookup">
+      <h2 id="lookup">Exact lookup and a smaller cache</h2>
+      <div class="prose">
+        <p>I also added prompt lookup, which guesses upcoming tokens from earlier text and checks them in one batched pass. On twelve prompts it produced the same 768 tokens as plain greedy decoding. It accepted 263 of 944 guesses: 53.9% on prompts that copy text and 6.7% on open-ended ones, 27.9% overall. Accepted guesses don’t prove a speedup, and I haven’t measured one. <a href="https://github.com/mottopanikeiku/abacus/blob/1def601cb3c09c34753c8faa75a86d25b635c083/results/v3/lookup-acceptance.json">Lookup results</a>.</p>
+        <p>An 8-bit cache that subtracts a fixed per-head key mean takes 27.54 MB at 4,096 tokens against 50.33 MB for the 16-bit cache, 45.3% less. On 64 held-out positions near 2,000 and 4,000 tokens its mean KL is 0.005105, against 0.000855 for the 16-bit cache and 0.030889 for a plain 8-bit cache. It is still numerically worse than 16 bits. The mean comes from the first 64 keys, which are kept at full precision, and that warm-up is mixed into the comparison. The 16-bit cache stays the default. <a href="https://github.com/mottopanikeiku/abacus/blob/1def601cb3c09c34753c8faa75a86d25b635c083/results/v3/kv-quality.json">Cache results</a>.</p>
+      </div>
+    </section>
+
     <section class="block" aria-labelledby="limits">
       <h2 id="limits">Limits</h2>
       <div class="prose">
-        <p>One model on one laptop, with clock speeds and temperatures not fixed. The ceiling is an estimate from a read benchmark, not a measured DRAM utilization. Quality was checked on four short prompts; agreement at long context wasn’t tested.</p>
+        <p>Everything here uses one model. The first version ran on one laptop, with clock speeds and temperatures not fixed. Its ceiling is an estimate from a read benchmark, not a measured DRAM utilization. Its quality was checked on four short prompts, and agreement at long context wasn’t tested for it. The second version’s timing comes from one cloud machine whose load, clocks and memory layout I couldn’t control, and I have no read ceiling for that machine. None of this measures task accuracy or batched serving.</p>
       </div>
     </section>
 
