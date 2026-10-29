@@ -562,7 +562,7 @@ def attention_accuracy() -> str:
 def helios_expansion() -> str:
     data = load("helios-expansion")
     s = SVG("helios-expansion", 560, 300,
-            "Ten new Triton actions narrow, but rarely close, the H100 gap to torch.matmul",
+            "H100 latency relative to torch.matmul by row count, for the old and new Triton actions",
             "Geometric-mean bank-2 latency relative to torch by row count M, 16 workloads per "
             "group. The old 36 actions range from 1.401 to 1.676 times torch. With the new "
             "actions selected on bank 1, ratios range from 1.045 at M=1 to 1.378 at M=96. New "
