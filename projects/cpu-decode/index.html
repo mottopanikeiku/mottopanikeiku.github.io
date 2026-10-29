@@ -72,6 +72,8 @@
       <div class="prose">
         <p>The second version stores int8 weights in groups of 64, each group with a 16-bit scale: 8.25 bits per weight against Q8_0’s 8.50, and a 509.73 MB file against 531.07 MB. I chose this format among four candidates on calibration text from <i>Frankenstein</i>, before scoring anything on the held-out text from <i>Pride and Prejudice</i>. The format had to beat Q8_0 on mean KL, 99th-percentile KL and top-1 agreement, and the smallest file that did was picked. Activations can stay in 32-bit floats, or be quantized to 16-bit integers so the matrix products run on AVX-512 VNNI integer instructions.</p>
         <p>Each activation path had to pass its own quality rule before it could enter a final timing. With 8-bit activations, the rule required mean KL, 99th-percentile KL, top-1 agreement and perplexity all to be at least as good as Q8_0. That path failed, so it is left out of the comparisons below. With 16-bit activations, mean KL and 99th-percentile KL had to be lower than Q8_0’s and top-1 agreement higher, on both the calibration and the held-out text. Perplexity was reported but not required. That path passed. On 2,048 held-out positions with a 16-bit cache:</p>
+        <figure class="figure">
+        <div class="scroll" tabindex="0" role="region" aria-label="Held-out quality of this engine and llama.cpp Q8_0">
         <table class="table">
           <thead>
             <tr><th scope="col">Path</th><th scope="col" class="num">Mean KL, nats</th><th scope="col" class="num">99th-percentile KL</th><th scope="col" class="num">Top-1 agreement</th><th scope="col" class="num">Perplexity</th></tr>
@@ -81,6 +83,8 @@
             <tr><td><a href="https://github.com/mottopanikeiku/abacus/blob/1def601cb3c09c34753c8faa75a86d25b635c083/results/v2/heldout-final-q8_0.json">llama.cpp Q8_0</a></td><td class="num">0.00240027</td><td class="num">0.00813769</td><td class="num">95.90%</td><td class="num">16.60406</td></tr>
           </tbody>
         </table>
+        </div>
+        </figure>
         <p>So my format is closer to the full-precision model by KL and top-1, but its perplexity is slightly worse. These are agreement measures, not task accuracy. <a href="https://github.com/mottopanikeiku/abacus/blob/1def601cb3c09c34753c8faa75a86d25b635c083/results/v2/quality-vnni16-final.json">The 16-bit decision</a> records every report it used.</p>
       </div>
     </section>
@@ -89,6 +93,8 @@
       <h2 id="cloud">Second version: speed on one cloud CPU</h2>
       <div class="prose">
         <p>I timed the 16-bit path against llama.cpp Q8_0 on one rented virtual machine. Its CPU reported family 25, model 17, which AMD documents as a Zen 4 EPYC; the model name itself was hidden. It exposed 24 virtual CPUs, which may not be dedicated physical cores. Both engines were compiled on that machine, used a 16-bit cache and the same CPUs, and greedily decoded 128 tokens per sample. I fixed the six cells in advance: 1, 2 and 4 threads at 128 and 4,096 tokens of context. Each cell has sixteen paired samples taken in an ABBA order. For llama.cpp, a short pilot in each cell picked its faster flash-attention setting, and those pilot runs are not counted. My engine held its CPU binding for the whole worker’s life, which is not how the laptop command line runs. The engine columns are median tokens per second; the ratio is my engine’s speed over llama.cpp’s.</p>
+        <figure class="figure">
+        <div class="scroll" tabindex="0" role="region" aria-label="Cloud decoding speed and paired ratios for six cells">
         <table class="table">
           <thead>
             <tr><th scope="col" class="num">Threads</th><th scope="col" class="num">Context</th><th scope="col" class="num">This engine</th><th scope="col" class="num">llama.cpp</th><th scope="col" class="num">Paired ratio</th><th scope="col" class="num">95% interval</th></tr>
@@ -102,6 +108,8 @@
             <tr><td class="num">4</td><td class="num">4,096</td><td class="num">68.643</td><td class="num">49.774</td><td class="num">1.3627</td><td class="num">1.2594–1.4882</td></tr>
           </tbody>
         </table>
+        </div>
+        </figure>
         <p>My engine was faster in all six cells, by a median paired ratio of 1.090 to 1.531, and every interval is above 1. Each interval comes from resampling the ABBA quartets 20,000 times. They hold for each cell separately, not for all six at once, and the paired ratio is not the ratio of the two medians shown. An earlier run with 32-bit activations on a different cloud machine finished only 2 of its 6 cells and lost both, at 0.4108 and 0.3079. Because the machines differ, I can’t say how much of the change came from the VNNI instructions. The estimated cost of all cloud attempts, failures included, was $1.6074, an estimate rather than an invoice. Sources: <a href="https://github.com/mottopanikeiku/abacus/blob/1def601cb3c09c34753c8faa75a86d25b635c083/results/v2/cloud-vnni/final/summary.json">summary</a>, <a href="https://github.com/mottopanikeiku/abacus/blob/1def601cb3c09c34753c8faa75a86d25b635c083/results/v2/cloud-vnni/final/raw.json">raw samples</a>, <a href="https://github.com/mottopanikeiku/abacus/blob/1def601cb3c09c34753c8faa75a86d25b635c083/results/v2/cloud/summary.json">earlier attempt</a> and <a href="https://github.com/mottopanikeiku/abacus/blob/1def601cb3c09c34753c8faa75a86d25b635c083/results/v2/cloud-vnni/run-cost.json">cost</a>.</p>
       </div>
     </section>
